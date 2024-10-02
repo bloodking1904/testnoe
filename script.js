@@ -89,9 +89,9 @@ function adicionarMotorista(nome, salvar = true) {
 
     if (salvar) {
         salvarMotoristasSelecionados();
-       fecharSelecao();
+        fecharSelecao();
     }
-      fecharSelecao();
+    fecharSelecao();
 }
 
 // Remove o motorista e o retorna à lista
@@ -128,6 +128,7 @@ function mostrarSelecaoStatus(nome, btn) {
     `;
     document.getElementById('selecao-status').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
+    fecharSelecao();
 }
 
 // Adiciona o status selecionado à célula correspondente
@@ -139,13 +140,13 @@ function adicionarStatus(nome, status, cor) {
 
     if (statusDiv) {
         statusDiv.remove();
-      fecharSelecao();
+ 	fecharSelecao();
     }
-     
+
     celula.insertAdjacentHTML('beforeend', `
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
     `);
-    fecharSelecao();
+     fecharSelecao();
 }
 
 // Mostra a seleção de atendimento
