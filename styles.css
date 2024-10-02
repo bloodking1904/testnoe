@@ -9,8 +9,12 @@ body {
     height: 100vh;
 }
 
-h1 {
+.login-container {
     text-align: center;
+}
+
+h1 {
+    margin-bottom: 20px;
 }
 
 form {
