@@ -84,7 +84,7 @@ button:hover {
     z-index: 100;
 }
 
-.selecao-motorista, .selecao-status {
+.selecao-status {
     display: none;
     position: fixed;
     top: 50%;
@@ -98,18 +98,10 @@ button:hover {
 
 .motorista {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     width: 100%;
-}
-
-.remover {
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.8em;
 }
 
 .adicionar {
@@ -119,7 +111,7 @@ button:hover {
     border-radius: 3px;
     cursor: pointer;
     font-size: 0.8em;
-    margin-right: 5px;
+    margin-bottom: 5px;
 }
 
 .status {
@@ -129,21 +121,6 @@ button:hover {
     margin: 5px;
     text-align: center;
     width: 100%;
-}
-
-/* Estilos para a Seleção de Motoristas */
-.motorista-selecao .motorista {
-    padding: 10px;
-    margin: 5px 0;
-    background: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.motorista-selecao .motorista:hover {
-    background: #e0e0e0;
 }
 
 /* Media Queries para Responsividade */
