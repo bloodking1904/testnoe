@@ -10,8 +10,9 @@
     <div class="header">
         <h1>Painel de Motoristas</h1>
         <button onclick="logout()">Logout</button>
+        <button id="limpar-cache" onclick="limparCache()" style="display: none;">Limpar Cache</button> <!-- Botão Limpar Cache -->
     </div>
-    <div class="tabela">
+    <div class="tabela" id="tabela-motoristas">
         <div class="linha cabecalho">
             <div class="celula">DOMINGO</div>
             <div class="celula">SEGUNDA</div>
@@ -21,74 +22,23 @@
             <div class="celula">SEXTA</div>
             <div class="celula">SÁBADO</div>
         </div>
-        <!-- Linhas de botões clicáveis -->
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 0)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 0)"></div>
-        </div>
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 1)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 1)"></div>
-        </div>
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 2)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 2)"></div>
-        </div>
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 3)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 3)"></div>
-        </div>
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 4)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 4)"></div>
-        </div>
-        <div class="linha">
-            <div class="celula" onclick="mostrarSelecao('domingo', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('segunda', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('terca', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('quarta', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('quinta', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('sexta', 5)"></div>
-            <div class="celula" onclick="mostrarSelecao('sabado', 5)"></div>
-        </div>
     </div>
 
     <div id="overlay" class="overlay"></div>
-    <div id="selecao-motorista" class="selecao-motorista">
-        <div id="motorista-selecao"></div>
-        <button onclick="fecharSelecao()">Fechar</button>
-    </div>
-
     <div id="selecao-status" class="selecao-status">
         <div id="status-selecao"></div>
         <button onclick="fecharSelecaoStatus()">Fechar</button>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
+        document.addEventListener('DOMContentLoaded', function() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser === 'admin') {
+                document.getElementById('limpar-cache').style.display = 'inline-block';
+            }
+        });
+    </script>
 </body>
 </html>
