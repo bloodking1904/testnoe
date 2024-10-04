@@ -1,41 +1,13 @@
 const motoristas = [
-    'Reginaldo',
-    'Gevanildo',
-    'Jaderson',
-    'Leandro',
-    'Paulo',
-    'Ronaldo'
+    { nome: 'gevanildo', status: 'Disponível' },
+    { nome: 'jaderson', status: 'Disponível' },
+    { nome: 'leandro', status: 'Disponível' },
+    { nome: 'paulo', status: 'Disponível' },
+    { nome: 'reginaldo', status: 'Disponível' },
+    { nome: 'ronaldo', status: 'Disponível' }
 ];
 
-let diaAtual;
-let linhaAtual;
-let motoristasSelecionados = [];
 const loggedInUser = localStorage.getItem('loggedInUser');
-
-// Atualiza a lista de motoristas disponíveis
-function atualizarListaSelecionados() {
-    const listaSelecionados = document.getElementById('motorista-selecao');
-    listaSelecionados.innerHTML = '';
-
-    motoristas.forEach(motorista => {
-        if (!motoristasSelecionados.includes(motorista)) {
-            const motoristaDiv = document.createElement('div');
-            motoristaDiv.classList.add('motorista');
-            motoristaDiv.textContent = motorista;
-            motoristaDiv.style.fontWeight = 'bold';
-
-            motoristaDiv.onclick = () => {
-                if (loggedInUser === 'admin' || loggedInUser === motorista.toLowerCase()) {
-                    adicionarMotorista(motorista);
-                } else {
-                    alert('Você só pode alterar suas próprias informações.');
-                }
-            };
-
-            listaSelecionados.appendChild(motoristaDiv);
-        }
-    });
-}
 
 // Função de logout
 function logout() {
@@ -43,135 +15,205 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// Mostra a seleção de motoristas
-function mostrarSelecao(dia, linha) {
-    diaAtual = dia;
-    linhaAtual = linha;
-    atualizarListaSelecionados();
-    document.getElementById('selecao-motorista').style.display = 'flex';
+// Função para atualizar o status no localStorage
+function atualizarStatusLocalStorage(nome, dia, status) {
+    const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
+    if (!motoristaStatus[nome]) {
+        motoristaStatus[nome] = {
+            '0': 'Disponível', // Domingo
+            '1': 'Disponível', // Segunda
+            '2': 'Disponível', // Terça
+            '3': 'Disponível', // Quarta
+            '4': 'Disponível', // Quinta
+            '5': 'Disponível', // Sexta
+            '6': 'Disponível'  // Sábado
+        };
+    }
+    motoristaStatus[nome][dia] = status; // Atualiza o status para o dia específico
+    localStorage.setItem('motoristaStatus', JSON.stringify(motoristaStatus));
+}
+
+
+// Função para limpar cache
+function limparCache() {
+    localStorage.clear(); // Limpa todos os dados do localStorage
+    alert('Cache e dados armazenados foram limpos.'); // Mensagem de confirmação
+}
+
+// Mostra a seleção de status
+function mostrarSelecaoStatus(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+    let statusOptions = `
+        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Disponível', 'green', ${dia}, ${linha})">Disponível</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
+    `;
+
+    if (loggedInUser === 'admin') {
+        statusOptions += `
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Em Viagem', 'yellow', ${dia}, ${linha})">Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Compensando', 'red', ${dia}, ${linha})">Compensando</div>
+        `;
+    }
+
+    statusSelecao.innerHTML = statusOptions;
+    document.getElementById('selecao-status').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
 }
 
-// Fecha a seleção de motoristas
-function fecharSelecao() {
-    document.getElementById('selecao-motorista').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+// Mostra a seleção de atendimento
+function mostrarSelecaoAtendimento(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const atendimentoOptions = `
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, ${linha})">5º Andar</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, ${linha})">Eremita</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, ${linha})">Laisa</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, ${linha})">Czarina</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, ${linha})">Regis</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, ${linha})">Rodolpho</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, ${linha})">Robson</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, ${linha})">Crosara</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, ${linha})">Presidente</div>
+    `;
+
+    statusSelecao.innerHTML = atendimentoOptions;
+    document.getElementById('selecao-status').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
 }
 
-// Fecha a seleção de status
+// Adiciona o status selecionado à célula correspondente
+function adicionarStatus(nome, status, cor, dia, linha) {
+    fecharSelecaoStatus();
+
+    // Acessa a célula correta do motorista usando data attributes
+    const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
+
+    if (!celula) {
+        console.error('Célula não encontrada para o motorista:', nome);
+        return;
+    }
+
+    const motoristaDiv = celula.querySelector('.motorista');
+
+    // Atualiza o status na célula correta
+    let statusDiv = motoristaDiv.querySelector('.status');
+    if (statusDiv) {
+        statusDiv.remove();
+    }
+
+    // Adiciona o novo status à célula
+    motoristaDiv.insertAdjacentHTML('beforeend', `
+        <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
+    `);
+
+    // Atualiza o status do motorista apenas para o dia específico
+    atualizarStatusLocalStorage(nome, dia, status); // Atualiza o status no localStorage
+}
+
+// Atualiza visualmente o status no painel
+function atualizarStatusVisual(nome) {
+    const motoristaDivs = document.querySelectorAll('.motorista');
+    motoristaDivs.forEach(motoristaDiv => {
+        const motoristaNome = motoristaDiv.querySelector('span').textContent.toLowerCase();
+        const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
+        const dias = ['0', '1', '2', '3', '4', '5', '6']; // Representa os dias da semana
+
+        if (motoristaNome === nome.toLowerCase()) {
+            dias.forEach(dia => {
+                const statusAtual = motoristaStatus[motoristaNome] ? motoristaStatus[motoristaNome][dia] : 'Disponível';
+                const celulaDia = motoristaDiv.closest('.celula').getAttribute('data-dia');
+                if (celulaDia == dia) {
+                    const statusDiv = motoristaDiv.querySelector('.status');
+                    if (statusDiv) {
+                        statusDiv.textContent = statusAtual;
+                        statusDiv.style.color = statusAtual === 'Disponível' ? 'green' : 'red'; // Altera a cor do status
+                    }
+                }
+            });
+        }
+    });
+}
+
+// Inicializa a lista de motoristas
+function inicializarMotoristas() {
+    const diaAtual = new Date().getDay();
+    const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    const tabela = document.getElementById('tabela-motoristas');
+
+    // Limpa a tabela antes de adicionar motoristas
+    tabela.innerHTML = '';
+
+    // Criação do cabeçalho
+    const cabecalho = document.createElement('div');
+    cabecalho.classList.add('linha', 'cabecalho');
+
+    // Se o usuário for admin, exibe todos os dias
+    if (loggedInUser === 'admin') {
+        dias.forEach(dia => {
+            cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
+        });
+    } else {
+        // Se o usuário for um motorista, exibe apenas o dia atual
+        cabecalho.innerHTML += `<div class="celula">${dias[diaAtual].toUpperCase()}</div>`;
+    }
+
+    tabela.appendChild(cabecalho);
+
+    // Lógica para adicionar motoristas
+    if (loggedInUser === 'admin') {
+        motoristas.forEach((motorista, linhaIndex) => {
+            const linha = document.createElement('div');
+            linha.classList.add('linha');
+            linha.setAttribute('data-linha', linhaIndex); 
+
+            dias.forEach((dia, diaIndex) => {
+                const celula = document.createElement('div');
+                celula.classList.add('celula');
+                celula.setAttribute('data-dia', diaIndex); 
+
+                const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
+                const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaIndex] : motorista.status;
+
+                celula.innerHTML = `
+                    <div class="motorista">
+                        <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista.nome}', ${diaIndex}, ${linhaIndex})">+</button>
+                        <span style="font-weight: bold;">${motorista.nome}</span>
+                        <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
+                    </div>
+                `;
+                linha.appendChild(celula);
+            });
+            tabela.appendChild(linha);
+        });
+    } else {
+        // Apenas o motorista logado é exibido
+        const motorista = motoristas.find(m => m.nome === loggedInUser);
+        const linha = document.createElement('div');
+        linha.classList.add('linha');
+        linha.setAttribute('data-linha', '0');
+
+        const celula = document.createElement('div');
+        celula.classList.add('celula');
+        celula.setAttribute('data-dia', diaAtual); 
+
+        const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
+        const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaAtual] : motorista.status;
+
+        celula.innerHTML = `
+            <div class="motorista">
+                <button class="adicionar" onclick="mostrarSelecaoStatus('${loggedInUser}', ${diaAtual}, 0)">+</button>
+                <span style="font-weight: bold;">${motorista.nome}</span>
+                <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
+            </div>
+        `;
+        linha.appendChild(celula);
+        tabela.appendChild(linha);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', inicializarMotoristas);
+
+// Função para fechar a seleção de status
 function fecharSelecaoStatus() {
     document.getElementById('selecao-status').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
-
-// Adiciona o motorista selecionado à célula correspondente
-function adicionarMotorista(nome, salvar = true) {
-    const celula = document.querySelector(`.linha:nth-child(${linhaAtual + 2}) .celula:nth-child(${getDiaIndex(diaAtual) + 1})`);
-
-    if (celula.querySelector('.motorista')) {
-        alert('Este campo já está ocupado por um motorista.');
-        return;
-    }
-
-    motoristasSelecionados.push(nome);
-
-    celula.innerHTML = `
-        <div class="motorista">
-            <button class="adicionar" onclick="mostrarSelecaoStatus('${nome}', this)">+</button>
-            <span style="font-weight: bold;">${nome}</span>
-            <button class="remover" onclick="removerMotorista('${nome}', this)">X</button>
-        </div>
-    `;
-
-    motoristas.splice(motoristas.indexOf(nome), 1);
-    atualizarListaSelecionados();
-    fecharSelecao();
-
-    if (salvar) {
-        salvarMotoristasSelecionados();
-        fecharSelecao();
-    }
-    fecharSelecao();
-}
-
-// Remove o motorista e o retorna à lista
-function removerMotorista(nome, btn) {
-    if (loggedInUser !== 'admin' && loggedInUser !== nome.toLowerCase()) {
-        alert('Você só pode remover suas próprias informações.');
-        return;
-    }
-
-    const celula = btn.parentElement.parentElement;
-    celula.innerHTML = '';
-
-    motoristasSelecionados = motoristasSelecionados.filter(m => m !== nome);
-    motoristas.push(nome);
-
-    fecharSelecao();
-    salvarMotoristasSelecionados();
-}
-
-// Mostra a seleção de status
-function mostrarSelecaoStatus(nome, btn) {
-    if (loggedInUser !== 'admin' && loggedInUser !== nome.toLowerCase()) {
-        alert('Você só pode alterar seu próprio status.');
-        return;
-    }
-
-    fecharSelecao();
-
-    const statusSelecao = document.getElementById('status-selecao');
-    statusSelecao.innerHTML = `
-        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Disponível', 'green')">Disponível</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', this)">Em Atendimento</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Em Viagem', 'yellow')">Viagem</div>
-    `;
-    document.getElementById('selecao-status').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
-    fecharSelecao();
-}
-
-// Adiciona o status selecionado à célula correspondente
-function adicionarStatus(nome, status, cor) {
-    fecharSelecaoStatus();
-
-    const celula = document.querySelector(`.linha:nth-child(${linhaAtual + 2}) .celula:nth-child(${getDiaIndex(diaAtual) + 1}) .motorista`);
-    const statusDiv = celula.querySelector('.status');
-
-    if (statusDiv) {
-        statusDiv.remove();
- 	fecharSelecao();
-    }
-
-    celula.insertAdjacentHTML('beforeend', `
-        <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
-    `);
-     fecharSelecao();
-}
-
-// Mostra a seleção de atendimento
-function mostrarSelecaoAtendimento(nome, btn) {
-    const statusSelecao = document.getElementById('status-selecao');
-    statusSelecao.innerHTML = `
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5° Andar', 'red')">5° Andar</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red')">Eremita</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red')">Laisa</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red')">Czarina</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red')">Regis</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red')">Rodolpho</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red')">Robson</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red')">Crosara</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red')">Presidente</div>
-    `;
-    document.getElementById('selecao-status').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
-}
-
-// Retorna o índice do dia
-function getDiaIndex(dia) {
-    const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-    return dias.indexOf(dia);
-}
-
-// Inicializa a lista de motoristas
-atualizarListaSelecionados();
