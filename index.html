@@ -22,6 +22,9 @@
             <div class="celula">SEXTA</div>
             <div class="celula">SÁBADO</div>
         </div>
+        <div class="linha" id="motoristas-linha">
+            <!-- Os motoristas serão preenchidos aqui via JavaScript -->
+        </div>
     </div>
 
     <div id="overlay" class="overlay"></div>
@@ -31,7 +34,6 @@
 
     <script src="script.js"></script>
     <script>
-        // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
         document.addEventListener('DOMContentLoaded', function() {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser === 'admin') {
