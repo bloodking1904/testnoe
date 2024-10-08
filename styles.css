@@ -85,23 +85,53 @@ h1 {
     width: 100%;
 }
 
-/* Estilização dos botões "Sair" e "Limpar Cache" */
-.btn-sair,
-.btn-limpar-cache {
-    background-color: #dc3545; /* Cor do botão */
+/* Estilização dos botões "+" */
+.adicionar {
+    background: green; /* Cor do botão "+" */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 0.8em;
+    margin-bottom: 5px;
+    padding: 10px 15px; /* Aumenta o tamanho do botão "+" */
+}
+
+/* Estilo da seleção de status */
+#status-selecao {
+    display: none; /* Inicialmente escondido */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centraliza na tela */
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 1000; /* Acima do overlay */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo do botão Fechar */
+#status-selecao button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #dc3545; /* Cor do botão fechar */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 16px;
-    padding: 10px 20px;
-    margin: 10px; /* Margem entre os botões */
-    transition: background 0.3s; /* Efeito de clique */
 }
 
-.btn-sair:hover,
-.btn-limpar-cache:hover {
-    background-color: #c82333; /* Cor ao passar o mouse */
+/* Estilo do overlay */
+.overlay {
+    display: none; /* Inicialmente escondido */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Acima de outros elementos */
 }
 
 /* Media Queries para Responsividade */
