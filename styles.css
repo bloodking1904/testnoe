@@ -45,7 +45,7 @@ h1 {
 /* Estilos para a Página Principal */
 .tabela {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas fixas */
     gap: 10px;
     width: 100%;
     max-width: 1200px;
@@ -69,8 +69,7 @@ h1 {
 }
 
 .linha {
-    display: flex; /* Mudado para flex para centralizar */
-    justify-content: center; /* Centraliza os itens */
+    display: contents; /* Permite que os filhos sejam tratados como filhos da tabela */
 }
 
 .cabecalho {
