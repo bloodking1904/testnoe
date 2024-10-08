@@ -7,8 +7,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Mudado para flex-start para manter os itens no topo */
-    height: auto; /* Alterado para auto para permitir que a altura se ajuste ao conteúdo */
+    justify-content: flex-start; /* Manter os itens no topo */
+    height: auto; /* Permitir que a altura se ajuste ao conteúdo */
     min-height: 100vh; /* Garante que a altura mínima seja 100vh */
 }
 
@@ -29,7 +29,8 @@ body {
     }
 
     .tabela {
-        grid-template-columns: 1fr; /* Uma coluna para melhor visualização */
+        display: grid; /* Garante que a tabela use grid */
+        grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
         width: 100%; /* Garante que a tabela ocupe a largura total */
     }
 
@@ -138,7 +139,7 @@ body {
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .tabela {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr); /* Para telas menores que 768px */
     }
 
     .celula {
@@ -148,7 +149,7 @@ body {
 
 @media (max-width: 480px) {
     .tabela {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(7, 1fr); /* Mantém a estrutura em 7 colunas */
     }
 
     .linha.cabecalho {
