@@ -11,31 +11,41 @@ body {
     height: 100vh;
 }
 
-.header {
-    text-align: center;
-    margin-bottom: 20px;
-}
+/* Adicionando estilos específicos para dispositivos móveis */
+@media (max-width: 480px) {
+    /* Aumenta a largura das caixas de texto e botões */
+    input[type="text"],
+    input[type="password"],
+    button {
+        width: 90%; /* 90% da largura da tela */
+        padding: 15px; /* Aumenta o padding para facilitar o toque */
+        font-size: 1.2em; /* Aumenta o tamanho da fonte */
+    }
 
-h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #333;
-}
+    .login-container {
+        width: 100%; /* Ocupa toda a largura da tela */
+        padding: 10px;
+    }
 
-button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background 0.3s;
-}
+    .tabela {
+        grid-template-columns: 1fr; /* Uma coluna para melhor visualização */
+    }
 
-button:hover {
-    background-color: #0056b3;
+    .celula {
+        padding: 15px; /* Aumenta o espaço dentro das células */
+    }
+
+    /* Ajusta o tamanho do overlay e da seleção de status */
+    .selecao-status {
+        width: 90%; /* Largura da seleção de status */
+        max-height: 80%; /* Altura máxima da seleção */
+        overflow-y: auto; /* Permite rolagem vertical */
+    }
+
+    .overlay {
+        width: 100%;
+        height: 100%;
+    }
 }
 
 /* Estilos para a Página Principal */
@@ -128,6 +138,7 @@ button:hover {
     .tabela {
         grid-template-columns: repeat(4, 1fr);
     }
+
     .celula {
         padding: 15px;
     }
@@ -137,14 +148,17 @@ button:hover {
     .tabela {
         grid-template-columns: 1fr;
     }
+
     .linha.cabecalho {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
     }
+
     .linha:not(.cabecalho) {
         display: grid;
         grid-template-columns: 1fr;
     }
+
     .celula {
         padding: 10px;
     }
