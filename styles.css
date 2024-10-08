@@ -7,8 +7,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: flex-start; /* Mudado para flex-start para manter os itens no topo */
+    height: auto; /* Alterado para auto para permitir que a altura se ajuste ao conteúdo */
+    min-height: 100vh; /* Garante que a altura mínima seja 100vh */
 }
 
 /* Adicionando estilos específicos para dispositivos móveis */
@@ -29,6 +30,7 @@ body {
 
     .tabela {
         grid-template-columns: 1fr; /* Uma coluna para melhor visualização */
+        width: 100%; /* Garante que a tabela ocupe a largura total */
     }
 
     .celula {
