@@ -12,10 +12,9 @@ body {
     min-height: 100vh; /* Garante que a altura mínima seja 100vh */
 }
 
-.login-container {
-    text-align: center; /* Centraliza o conteúdo */
-    width: 100%; /* Ocupa toda a largura da tela */
-    padding: 10px;
+.header {
+    text-align: center; /* Centraliza o cabeçalho */
+    margin-bottom: 20px; /* Espaçamento inferior */
 }
 
 h1 {
@@ -25,38 +24,25 @@ h1 {
     text-transform: uppercase; /* Título em maiúsculas */
 }
 
-/* Estilização dos campos de entrada */
-input[type="text"],
-input[type="password"] {
-    width: 90%; /* 90% da largura da tela */
-    padding: 15px; /* Aumenta o padding para facilitar o toque */
-    font-size: 1.2em; /* Aumenta o tamanho da fonte */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin: 10px 0; /* Margem entre campos */
-}
-
-/* Estilização do botão "Entrar" */
-.btn-entrar {
-    background-color: #007BFF; /* Cor do botão */
+.btn-sair,
+.btn-limpar-cache {
+    background-color: #dc3545; /* Cor do botão */
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     padding: 10px 20px;
+    margin: 10px; /* Margem entre os botões */
     transition: background 0.3s; /* Efeito de clique */
 }
 
-.btn-entrar:hover {
-    background-color: #0056b3; /* Cor ao passar o mouse */
+.btn-sair:hover,
+.btn-limpar-cache:hover {
+    background-color: #c82333; /* Cor ao passar o mouse */
 }
 
 /* Estilos para a Página Principal */
-.header {
-    text-align: center; /* Centraliza o cabeçalho */
-}
-
 .tabela {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -64,6 +50,27 @@ input[type="password"] {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+}
+
+.celula {
+    background: #e0e0e0; /* Fundo da célula */
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.3s;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.celula:hover {
+    background: #ccc; /* Efeito ao passar o mouse */
+}
+
+.linha {
+    display: flex; /* Mudado para flex para centralizar */
+    justify-content: center; /* Centraliza os itens */
 }
 
 .cabecalho {
@@ -100,11 +107,12 @@ input[type="password"] {
 
 /* Media Queries para Responsividade */
 @media (max-width: 480px) {
-    .login-container {
-        padding: 20px; /* Aumenta padding em telas pequenas */
-    }
-
     .tabela {
         grid-template-columns: repeat(7, 1fr); /* Mantém a estrutura em 7 colunas */
+    }
+
+    .linha.cabecalho {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
     }
 }
