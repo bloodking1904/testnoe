@@ -30,23 +30,23 @@ function atualizarStatusLocalStorage(nome, dia, status) {
     const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
     if (!motoristaStatus[nome]) {
         motoristaStatus[nome] = {
-            '0': 'Disponível', // Domingo
-            '1': 'Disponível', // Segunda
-            '2': 'Disponível', // Terça
-            '3': 'Disponível', // Quarta
-            '4': 'Disponível', // Quinta
-            '5': 'Disponível', // Sexta
-            '6': 'Disponível'  // Sábado
+            '0': 'Disponível',
+            '1': 'Disponível',
+            '2': 'Disponível',
+            '3': 'Disponível',
+            '4': 'Disponível',
+            '5': 'Disponível',
+            '6': 'Disponível'
         };
     }
-    motoristaStatus[nome][dia] = status; // Atualiza o status para o dia específico
+    motoristaStatus[nome][dia] = status;
     localStorage.setItem('motoristaStatus', JSON.stringify(motoristaStatus));
 }
 
 // Função para limpar cache
 function limparCache() {
-    localStorage.clear(); // Limpa todos os dados do localStorage
-    alert('Cache e dados armazenados foram limpos.'); // Mensagem de confirmação
+    localStorage.clear();
+    alert('Cache e dados armazenados foram limpos.');
 }
 
 // Mostra a seleção de status
@@ -67,12 +67,10 @@ function mostrarSelecaoStatus(nome, dia, linha) {
     }
 
     statusSelecao.innerHTML = statusOptions;
-    statusSelecao.style.display = 'flex'; // Mostrar o retângulo de seleção
-    document.getElementById('overlay').style.display = 'block'; // Mostrar o overlay
-
-    // Centraliza a seleção de status na tela
+    statusSelecao.style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
     statusSelecao.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    adicionarBotaoFechar(); // Adiciona o botão fechar
+    adicionarBotaoFechar();
 }
 
 // Adiciona o botão Fechar
@@ -81,22 +79,22 @@ function adicionarBotaoFechar() {
     const fecharBotao = document.createElement('button');
 
     fecharBotao.innerText = 'Fechar';
-    fecharBotao.onclick = fecharSelecaoStatus; // Chama a função para fechar a seleção
+    fecharBotao.onclick = fecharSelecaoStatus;
     fecharBotao.style.marginTop = '10px';
     fecharBotao.style.padding = '10px 20px';
-    fecharBotao.style.backgroundColor = '#dc3545'; // Cor do botão fechar
+    fecharBotao.style.backgroundColor = '#dc3545';
     fecharBotao.style.color = 'white';
     fecharBotao.style.border = 'none';
     fecharBotao.style.borderRadius = '5px';
     fecharBotao.style.cursor = 'pointer';
 
-    statusSelecao.appendChild(fecharBotao); // Adiciona o botão ao DOM
+    statusSelecao.appendChild(fecharBotao);
 }
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
-    document.getElementById('status-selecao').style.display = 'none'; // Esconde o retângulo de seleção
-    document.getElementById('overlay').style.display = 'none'; // Esconde o overlay
+    document.getElementById('status-selecao').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
 }
 
 // Inicializa a lista de motoristas
@@ -105,26 +103,21 @@ function inicializarMotoristas() {
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
 
-    // Limpa a tabela antes de adicionar motoristas
     tabela.innerHTML = '';
 
-    // Criação do cabeçalho
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    // Se o usuário for admin, exibe todos os dias
     if (loggedInUser === 'admin') {
         dias.forEach(dia => {
             cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
         });
     } else {
-        // Se o usuário for um motorista, exibe apenas o dia atual
         cabecalho.innerHTML += `<div class="celula">${dias[diaAtual].toUpperCase()}</div>`;
     }
 
     tabela.appendChild(cabecalho);
 
-    // Lógica para adicionar motoristas
     if (loggedInUser === 'admin') {
         motoristas.forEach((motorista, linhaIndex) => {
             const linha = document.createElement('div');
@@ -151,7 +144,6 @@ function inicializarMotoristas() {
             tabela.appendChild(linha);
         });
     } else {
-        // Apenas o motorista logado é exibido
         const motorista = motoristas.find(m => m.nome.toLowerCase() === loggedInUser.toLowerCase());
         const linha = document.createElement('div');
         linha.classList.add('linha');
