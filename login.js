@@ -10,7 +10,7 @@ const users = {
 
 document.getElementById('login-form').addEventListener('submit', function(event) {
     event.preventDefault();
-    const username = document.getElementById('username').value.toLowerCase();
+    const username = document.getElementById('username').value.toLowerCase(); // Força o username para lowercase
     const password = document.getElementById('password').value;
 
     if (users[username] && users[username] === password) {
