@@ -55,82 +55,51 @@ function mostrarSelecaoStatus(nome, dia, linha) {
     }
 
     statusSelecao.innerHTML = statusOptions;
-    document.getElementById('selecao-status').style.display = 'flex';
+    statusSelecao.style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
+
+    // Centraliza a seleção de status na tela
+    statusSelecao.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    adicionarBotaoFechar();
 }
 
-// Mostra a seleção de atendimento
-function mostrarSelecaoAtendimento(nome, dia, linha) {
+// Adiciona o botão Fechar
+function adicionarBotaoFechar() {
     const statusSelecao = document.getElementById('status-selecao');
-    const atendimentoOptions = `
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, ${linha})">5º Andar</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, ${linha})">Eremita</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, ${linha})">Laisa</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, ${linha})">Czarina</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, ${linha})">Regis</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, ${linha})">Rodolpho</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, ${linha})">Robson</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, ${linha})">Crosara</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, ${linha})">Presidente</div>
-    `;
-
-    statusSelecao.innerHTML = atendimentoOptions;
-    document.getElementById('selecao-status').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
+    const fecharBotao = document.createElement('button');
+    
+    fecharBotao.innerText = 'Fechar';
+    fecharBotao.onclick = fecharSelecaoStatus;
+    fecharBotao.style.marginTop = '10px';
+    fecharBotao.style.padding = '10px 20px';
+    fecharBotao.style.backgroundColor = '#dc3545'; // Cor do botão fechar
+    fecharBotao.style.color = 'white';
+    fecharBotao.style.border = 'none';
+    fecharBotao.style.borderRadius = '5px';
+    fecharBotao.style.cursor = 'pointer';
+    
+    statusSelecao.appendChild(fecharBotao);
 }
 
-// Adiciona o status selecionado à célula correspondente
-function adicionarStatus(nome, status, cor, dia, linha) {
-    fecharSelecaoStatus();
-
-    // Acessa a célula correta do motorista usando data attributes
-    const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
-
-    if (!celula) {
-        console.error('Célula não encontrada para o motorista:', nome);
-        return;
-    }
-
-    const motoristaDiv = celula.querySelector('.motorista');
-
-    // Atualiza o status na célula correta
-    let statusDiv = motoristaDiv.querySelector('.status');
-    if (statusDiv) {
-        statusDiv.remove();
-    }
-
-    // Adiciona o novo status à célula
-    motoristaDiv.insertAdjacentHTML('beforeend', `
-        <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
-    `);
-
-    // Atualiza o status do motorista apenas para o dia específico
-    atualizarStatusLocalStorage(nome, dia, status); // Atualiza o status no localStorage
+// Modifique a função para fechar a seleção de status
+function fecharSelecaoStatus() {
+    document.getElementById('status-selecao').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
 }
 
-// Atualiza visualmente o status no painel
-function atualizarStatusVisual(nome) {
-    const motoristaDivs = document.querySelectorAll('.motorista');
-    motoristaDivs.forEach(motoristaDiv => {
-        const motoristaNome = motoristaDiv.querySelector('span').textContent.toLowerCase();
-        const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
-        const dias = ['0', '1', '2', '3', '4', '5', '6']; // Representa os dias da semana
-
-        if (motoristaNome === nome.toLowerCase()) {
-            dias.forEach(dia => {
-                const statusAtual = motoristaStatus[motoristaNome] ? motoristaStatus[motoristaNome][dia] : 'Disponível';
-                const celulaDia = motoristaDiv.closest('.celula').getAttribute('data-dia');
-                if (celulaDia == dia) {
-                    const statusDiv = motoristaDiv.querySelector('.status');
-                    if (statusDiv) {
-                        statusDiv.textContent = statusAtual;
-                        statusDiv.style.color = statusAtual === 'Disponível' ? 'green' : 'red'; // Altera a cor do status
-                    }
-                }
-            });
-        }
-    });
-}
+// Adiciona o retângulo de fundo
+const overlay = document.createElement('div');
+overlay.id = 'overlay';
+overlay.className = 'overlay';
+overlay.style.display = 'none';
+overlay.style.position = 'fixed';
+overlay.style.top = '0';
+overlay.style.left = '0';
+overlay.style.width = '100%';
+overlay.style.height = '100%';
+overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+overlay.style.zIndex = '999'; // Coloca o overlay acima de outros elementos
+document.body.appendChild(overlay);
 
 // Inicializa a lista de motoristas
 function inicializarMotoristas() {
@@ -210,9 +179,3 @@ function inicializarMotoristas() {
 }
 
 document.addEventListener('DOMContentLoaded', inicializarMotoristas);
-
-// Função para fechar a seleção de status
-function fecharSelecaoStatus() {
-    document.getElementById('selecao-status').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-}
