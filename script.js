@@ -55,16 +55,19 @@ function mostrarSelecaoStatus(nome, dia, linha) {
     statusSelecao.innerHTML = '';
 
     let statusOptions = `
-        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Disponível'); fecharSelecaoStatus();">Disponível</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Atendimento'); fecharSelecaoStatus();">Em Atendimento</div>
+        <div style="display: flex; flex-direction: column;">
+            <div class="status" style="background-color: lightgreen; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Disponível'); fecharSelecaoStatus();">Disponível</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Atendimento'); fecharSelecaoStatus();">Em Atendimento</div>
     `;
 
     if (loggedInUser === 'admin') {
         statusOptions += `
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Viagem'); fecharSelecaoStatus();">Em Viagem</div>
-            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Compensando'); fecharSelecaoStatus();">Compensando</div>
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Viagem'); fecharSelecaoStatus();">Em Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Compensando'); fecharSelecaoStatus();">Compensando</div>
         `;
     }
+
+    statusOptions += '</div>';  // Fechar div do flex container
 
     statusSelecao.innerHTML = statusOptions;
     statusSelecao.style.display = 'flex';
