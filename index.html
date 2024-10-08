@@ -40,5 +40,15 @@
             }
         });
     </script>
+<script>
+    function checkOrientation() {
+        if (window.innerWidth < window.innerHeight) {
+            alert("Por favor, gire o dispositivo para o modo paisagem para melhor visualização.");
+        }
+    }
+
+    window.addEventListener("resize", checkOrientation);
+    window.addEventListener("load", checkOrientation);
+</script>
 </body>
 </html>
