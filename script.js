@@ -1,10 +1,10 @@
 const motoristas = [
-    { nome: 'gevanildo', status: 'Disponível' },
-    { nome: 'jaderson', status: 'Disponível' },
-    { nome: 'leandro', status: 'Disponível' },
-    { nome: 'paulo', status: 'Disponível' },
-    { nome: 'reginaldo', status: 'Disponível' },
-    { nome: 'ronaldo', status: 'Disponível' }
+    { nome: 'Gevanildo', status: 'Disponível' },
+    { nome: 'Jaderson', status: 'Disponível' },
+    { nome: 'Leandro', status: 'Disponível' },
+    { nome: 'Paulo', status: 'Disponível' },
+    { nome: 'Reginaldo', status: 'Disponível' },
+    { nome: 'Ronaldo', status: 'Disponível' }
 ];
 
 const loggedInUser = localStorage.getItem('loggedInUser');
@@ -32,7 +32,6 @@ function atualizarStatusLocalStorage(nome, dia, status) {
     motoristaStatus[nome][dia] = status; // Atualiza o status para o dia específico
     localStorage.setItem('motoristaStatus', JSON.stringify(motoristaStatus));
 }
-
 
 // Função para limpar cache
 function limparCache() {
@@ -176,7 +175,7 @@ function inicializarMotoristas() {
                 celula.innerHTML = `
                     <div class="motorista">
                         <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista.nome}', ${diaIndex}, ${linhaIndex})">+</button>
-                        <span style="font-weight: bold;">${motorista.nome}</span>
+                        <span style="font-weight: bold;">${motorista.nome.charAt(0).toUpperCase() + motorista.nome.slice(1)}</span>
                         <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
                     </div>
                 `;
@@ -186,7 +185,7 @@ function inicializarMotoristas() {
         });
     } else {
         // Apenas o motorista logado é exibido
-        const motorista = motoristas.find(m => m.nome === loggedInUser);
+        const motorista = motoristas.find(m => m.nome.toLowerCase() === loggedInUser.toLowerCase());
         const linha = document.createElement('div');
         linha.classList.add('linha');
         linha.setAttribute('data-linha', '0');
@@ -201,7 +200,7 @@ function inicializarMotoristas() {
         celula.innerHTML = `
             <div class="motorista">
                 <button class="adicionar" onclick="mostrarSelecaoStatus('${loggedInUser}', ${diaAtual}, 0)">+</button>
-                <span style="font-weight: bold;">${motorista.nome}</span>
+                <span style="font-weight: bold;">${motorista.nome.charAt(0).toUpperCase() + motorista.nome.slice(1)}</span>
                 <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
             </div>
         `;
