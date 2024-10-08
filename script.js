@@ -1,3 +1,13 @@
+const users = {
+    admin: '1234',
+    reginaldo: '1234',
+    gevanildo: '1234',
+    jaderson: '1234',
+    leandro: '1234',
+    paulo: '1234',
+    ronaldo: '1234'
+};
+
 const motoristas = [
     { nome: 'Gevanildo', status: 'Disponível' },
     { nome: 'Jaderson', status: 'Disponível' },
@@ -42,34 +52,36 @@ function limparCache() {
 // Mostra a seleção de status
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
+    statusSelecao.innerHTML = '';
+
     let statusOptions = `
-        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Disponível', 'green', ${dia}, ${linha})">Disponível</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
+        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Disponível'); fecharSelecaoStatus();">Disponível</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Atendimento'); fecharSelecaoStatus();">Em Atendimento</div>
     `;
 
     if (loggedInUser === 'admin') {
         statusOptions += `
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Em Viagem', 'yellow', ${dia}, ${linha})">Viagem</div>
-            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Compensando', 'red', ${dia}, ${linha})">Compensando</div>
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Viagem'); fecharSelecaoStatus();">Em Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Compensando'); fecharSelecaoStatus();">Compensando</div>
         `;
     }
 
     statusSelecao.innerHTML = statusOptions;
-    statusSelecao.style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
+    statusSelecao.style.display = 'flex'; // Mostrar o retângulo de seleção
+    document.getElementById('overlay').style.display = 'block'; // Mostrar o overlay
 
     // Centraliza a seleção de status na tela
     statusSelecao.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    adicionarBotaoFechar();
+    adicionarBotaoFechar(); // Adiciona o botão fechar
 }
 
 // Adiciona o botão Fechar
 function adicionarBotaoFechar() {
     const statusSelecao = document.getElementById('status-selecao');
     const fecharBotao = document.createElement('button');
-    
+
     fecharBotao.innerText = 'Fechar';
-    fecharBotao.onclick = fecharSelecaoStatus;
+    fecharBotao.onclick = fecharSelecaoStatus; // Chama a função para fechar a seleção
     fecharBotao.style.marginTop = '10px';
     fecharBotao.style.padding = '10px 20px';
     fecharBotao.style.backgroundColor = '#dc3545'; // Cor do botão fechar
@@ -77,29 +89,15 @@ function adicionarBotaoFechar() {
     fecharBotao.style.border = 'none';
     fecharBotao.style.borderRadius = '5px';
     fecharBotao.style.cursor = 'pointer';
-    
-    statusSelecao.appendChild(fecharBotao);
+
+    statusSelecao.appendChild(fecharBotao); // Adiciona o botão ao DOM
 }
 
-// Modifique a função para fechar a seleção de status
+// Função para fechar a seleção de status
 function fecharSelecaoStatus() {
-    document.getElementById('status-selecao').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('status-selecao').style.display = 'none'; // Esconde o retângulo de seleção
+    document.getElementById('overlay').style.display = 'none'; // Esconde o overlay
 }
-
-// Adiciona o retângulo de fundo
-const overlay = document.createElement('div');
-overlay.id = 'overlay';
-overlay.className = 'overlay';
-overlay.style.display = 'none';
-overlay.style.position = 'fixed';
-overlay.style.top = '0';
-overlay.style.left = '0';
-overlay.style.width = '100%';
-overlay.style.height = '100%';
-overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-overlay.style.zIndex = '999'; // Coloca o overlay acima de outros elementos
-document.body.appendChild(overlay);
 
 // Inicializa a lista de motoristas
 function inicializarMotoristas() {
@@ -131,12 +129,12 @@ function inicializarMotoristas() {
         motoristas.forEach((motorista, linhaIndex) => {
             const linha = document.createElement('div');
             linha.classList.add('linha');
-            linha.setAttribute('data-linha', linhaIndex); 
+            linha.setAttribute('data-linha', linhaIndex);
 
             dias.forEach((dia, diaIndex) => {
                 const celula = document.createElement('div');
                 celula.classList.add('celula');
-                celula.setAttribute('data-dia', diaIndex); 
+                celula.setAttribute('data-dia', diaIndex);
 
                 const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
                 const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaIndex] : motorista.status;
@@ -161,7 +159,7 @@ function inicializarMotoristas() {
 
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        celula.setAttribute('data-dia', diaAtual); 
+        celula.setAttribute('data-dia', diaAtual);
 
         const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
         const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaAtual] : motorista.status;
