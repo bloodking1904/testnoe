@@ -9,8 +9,8 @@
 <body>
     <div class="header">
         <h1>Painel de Motoristas</h1>
-        <button onclick="logout()">Logout</button>
-        <button id="limpar-cache" onclick="limparCache()" style="display: none;">Limpar Cache</button> <!-- Botão Limpar Cache -->
+        <button class="btn-sair" onclick="logout()">Sair</button>
+        <button id="limpar-cache" onclick="limparCache()" style="display: none;">Limpar Cache</button>
     </div>
     <div class="tabela" id="tabela-motoristas">
         <div class="linha cabecalho">
@@ -25,9 +25,8 @@
     </div>
 
     <div id="overlay" class="overlay"></div>
-    <div id="selecao-status" class="selecao-status">
+    <div id="selecao-status" class="selecao-status" style="display: none;">
         <div id="status-selecao"></div>
-        <button onclick="fecharSelecaoStatus()">Fechar</button>
     </div>
 
     <script src="script.js"></script>
