@@ -28,8 +28,8 @@
     </div>
 
     <div id="overlay" class="overlay"></div>
-    <div id="selecao-status" class="selecao-status" style="display: none;">
-        <div id="status-selecao"></div>
+    <div id="status-selecao" class="selecao-status" style="display: none;">
+        <div id="status-selecao-content"></div>
     </div>
 
     <script src="script.js"></script>
@@ -40,16 +40,15 @@
                 document.getElementById('limpar-cache').style.display = 'inline-block';
             }
         });
-    </script>
-<script>
-    function checkOrientation() {
-        if (window.innerWidth < window.innerHeight) {
-            alert("Por favor, gire o dispositivo para o modo paisagem para melhor visualização.");
-        }
-    }
 
-    window.addEventListener("resize", checkOrientation);
-    window.addEventListener("load", checkOrientation);
-</script>
+        function checkOrientation() {
+            if (window.innerWidth < window.innerHeight) {
+                alert("Por favor, gire o dispositivo para o modo paisagem para melhor visualização.");
+            }
+        }
+
+        window.addEventListener("resize", checkOrientation);
+        window.addEventListener("load", checkOrientation);
+    </script>
 </body>
 </html>
