@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -19,7 +19,6 @@ const db = getFirestore(app);
 
 // Função para inicializar motoristas
 async function inicializarMotoristas() {
-    const diaAtual = new Date().getDay(); // Obtém o dia atual
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
 
