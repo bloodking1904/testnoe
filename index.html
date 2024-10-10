@@ -3,52 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Motoristas</title>
+    <title>Agenda dos Motoristas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="header">
-        <h1>Painel de Motoristas</h1>
-        <button class="btn-sair" onclick="logout()">Sair</button>
-        <button id="limpar-cache" onclick="limparCache()" style="display: none;">Limpar Cache</button>
+        <h1>Agenda dos Motoristas</h1>
+        <button onclick="logout()" class="sair-button">Sair</button>
+        <button id="limpar-cache" onclick="limparCache()" style="display: none;" class="limpar-cache-button">Limpar Cache</button>
     </div>
-    <div class="tabela" id="tabela-motoristas">
-        <div class="linha cabecalho">
-            <div class="celula">DOMINGO</div>
-            <div class="celula">SEGUNDA</div>
-            <div class="celula">TERÇA</div>
-            <div class="celula">QUARTA</div>
-            <div class="celula">QUINTA</div>
-            <div class="celula">SEXTA</div>
-            <div class="celula">SÁBADO</div>
-        </div>
-        <div class="linha" id="motoristas-linha">
-            <!-- Os motoristas serão preenchidos aqui via JavaScript -->
-        </div>
+        <div class="tabela" id="tabela-motoristas">
+            <div class="linha cabecalho">
+                <div class="celula">DOMINGO</div>
+                <div class="celula">SEGUNDA</div>
+                <div class="celula">TERÇA</div>
+                <div class="celula">QUARTA</div>
+                <div class="celula">QUINTA</div>
+                <div class="celula">SEXTA</div>
+                <div class="celula">SÁBADO</div>
+            </div>
     </div>
-
     <div id="overlay" class="overlay"></div>
-    <div id="status-selecao" class="selecao-status" style="display: none;">
-        <div id="status-selecao-content"></div>
+    <div id="selecao-status" class="selecao-status">
+        <div id="status-selecao"></div>
+        <button onclick="fecharSelecaoStatus()" class="entrar-button">Fechar</button>
     </div>
-
     <script src="script.js"></script>
     <script>
+        // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
         document.addEventListener('DOMContentLoaded', function() {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser === 'admin') {
                 document.getElementById('limpar-cache').style.display = 'inline-block';
             }
         });
-
-        function checkOrientation() {
-            if (window.innerWidth < window.innerHeight) {
-                alert("Por favor, gire o dispositivo para o modo paisagem para melhor visualização.");
-            }
-        }
-
-        window.addEventListener("resize", checkOrientation);
-        window.addEventListener("load", checkOrientation);
     </script>
 </body>
 </html>
