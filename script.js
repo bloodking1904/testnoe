@@ -67,7 +67,7 @@ async function atualizarStatusFirestore(nome, dia, status, viagemData) {
     const motoristaRef = doc(db, 'motoristas', nome);
     await setDoc(motoristaRef, {
         [dia]: { status, viagemData }
-    }, { merge: true }); // Usar merge para não sobrescrever outros dados
+    }, { merge: true });
 }
 
 // Função para mostrar opções de status
@@ -107,3 +107,15 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
 
 // Chama a função após o carregamento do DOM
 document.addEventListener('DOMContentLoaded', inicializarMotoristas);
+
+// Função de logout
+function logout() {
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+}
+
+// Função para limpar cache (apenas uma simulação)
+function limparCache() {
+    localStorage.clear();
+    alert('Cache limpo!');
+}
