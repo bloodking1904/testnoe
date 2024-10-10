@@ -12,22 +12,47 @@
         <button onclick="logout()" class="sair-button">Sair</button>
         <button id="limpar-cache" onclick="limparCache()" style="display: none;" class="limpar-cache-button">Limpar Cache</button>
     </div>
-        <div class="tabela" id="tabela-motoristas">
-            <div class="linha cabecalho">
-                <div class="celula">DOMINGO</div>
-                <div class="celula">SEGUNDA</div>
-                <div class="celula">TERÇA</div>
-                <div class="celula">QUARTA</div>
-                <div class="celula">QUINTA</div>
-                <div class="celula">SEXTA</div>
-                <div class="celula">SÁBADO</div>
-            </div>
+    <div class="tabela" id="tabela-motoristas">
+        <div class="linha cabecalho">
+            <div class="celula">DOMINGO</div>
+            <div class="celula">SEGUNDA</div>
+            <div class="celula">TERÇA</div>
+            <div class="celula">QUARTA</div>
+            <div class="celula">QUINTA</div>
+            <div class="celula">SEXTA</div>
+            <div class="celula">SÁBADO</div>
+        </div>
     </div>
     <div id="overlay" class="overlay"></div>
     <div id="selecao-status" class="selecao-status">
         <div id="status-selecao"></div>
         <button onclick="fecharSelecaoStatus()" class="entrar-button">Fechar</button>
     </div>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUId3pGxpNtb_MK8zwZoxnAu-3RLhjwxk",
+            authDomain: "bd-painel-motoristas.firebaseapp.com",
+            projectId: "bd-painel-motoristas",
+            storageBucket: "bd-painel-motoristas.appspot.com",
+            messagingSenderId: "773975140156",
+            appId: "1:773975140156:web:85ffefe92d32ab79e76039",
+            measurementId: "G-G6LKNW06JL"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+    </script>
+    
     <script src="script.js"></script>
     <script>
         // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
