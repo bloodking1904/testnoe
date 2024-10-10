@@ -7,56 +7,50 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: flex-start; /* Alinhamento para o topo da página */
+    height: auto; /* Permite que a altura se ajuste conforme o conteúdo */
 }
 
+/* Estilos do Cabeçalho */
 .header {
     text-align: center;
     margin-bottom: 20px;
 }
 
-h1 {
+.header h1 {
     margin: 0;
     font-size: 24px;
     color: #333;
 }
 
-button {
+.header button {
     margin-top: 10px;
     padding: 10px 20px;
-    color: white; /* Cor da fonte */
-    border: none; /* Removendo a borda */
+    color: white;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
     transition: background 0.3s;
 }
 
-button.entrar-button {
-    background-color: blue; /* Mantendo azul para o botão Entrar */
+.header .sair-button {
+    background-color: red; /* Botão Sair */
 }
 
-button.limpar-cache-button {
-    background-color: blue; /* Mantendo azul para o botão Limpar Cache */
+.header .limpar-cache-button {
+    background-color: blue; /* Botão Limpar Cache */
 }
 
-button.sair-button {
-    background-color: red; /* Mudando para vermelho para o botão Sair */
+.header .limpar-cache-button:hover, .header .sair-button:hover {
+    background-color: darkred; /* Cor do hover para Sair */
+    background-color: darkblue; /* Cor do hover para Limpar Cache */
 }
 
-button:hover {
-    background-color: darkred; /* Alterando a cor do hover para um tom mais escuro de vermelho para o botão Sair */
-}
-
-button.entrar-button:hover, button.limpar-cache-button:hover {
-    background-color: darkblue; /* Alterando a cor do hover para um tom mais escuro de azul para Entrar e Limpar Cache */
-}
-
-/* Estilos para a Página Principal */
+/* Estilos para a Tabela */
 .tabela {
     display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
     gap: 10px;
     width: 100%;
     max-width: 1200px;
@@ -77,17 +71,18 @@ button.entrar-button:hover, button.limpar-cache-button:hover {
 }
 
 .celula:hover {
-    background: #ccc;
+    background: #ccc; /* Cor de fundo ao passar o mouse */
 }
 
 .linha {
-    display: contents;
+    display: contents; /* Permite que as linhas se comportem como um único elemento */
 }
 
 .cabecalho {
     font-weight: bold;
 }
 
+/* Estilos para Overlay e Seleção de Status */
 .overlay {
     display: none;
     position: fixed;
@@ -111,6 +106,7 @@ button.entrar-button:hover, button.limpar-cache-button:hover {
     z-index: 200;
 }
 
+/* Estilos para Motoristas */
 .motorista {
     display: flex;
     flex-direction: column;
@@ -141,7 +137,7 @@ button.entrar-button:hover, button.limpar-cache-button:hover {
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .tabela {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(4, 1fr); /* Menos colunas em telas menores */
     }
     .celula {
         padding: 15px;
@@ -150,7 +146,7 @@ button.entrar-button:hover, button.limpar-cache-button:hover {
 
 @media (max-width: 480px) {
     .tabela {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
     }
     .linha.cabecalho {
         display: grid;
