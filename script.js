@@ -64,16 +64,13 @@ async function inicializarMotoristas() {
 
 // Atualizações em tempo real
 onSnapshot(collection(db, 'motoristas'), (snapshot) => {
-    // Limpa a tabela antes de adicionar motoristas novamente
     const tabela = document.getElementById('tabela-motoristas');
-    tabela.innerHTML = '';
-    
+    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar novos motoristas
+
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-    
-    // Criação do cabeçalho
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
-    
+
     // Adiciona cabeçalho para os dias da semana
     dias.forEach(dia => {
         cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
@@ -96,7 +93,7 @@ function logout() {
     window.location.href = 'login.html';
 }
 
-// Função para limpar cache (apenas uma simulação)
+// Função para limpar cache
 function limparCache() {
     localStorage.clear();
     alert('Cache limpo!');
