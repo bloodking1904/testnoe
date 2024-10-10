@@ -7,45 +7,56 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Manter os itens no topo */
-    height: auto; /* Permitir que a altura se ajuste ao conteúdo */
-    min-height: 100vh; /* Garante que a altura mínima seja 100vh */
+    justify-content: center;
+    height: 100vh;
 }
 
 .header {
-    text-align: center; /* Centraliza o cabeçalho */
-    margin-bottom: 20px; /* Espaçamento inferior */
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 h1 {
     margin: 0;
     font-size: 24px;
     color: #333;
-    text-transform: uppercase; /* Título em maiúsculas */
 }
 
-.btn-sair,
-.btn-limpar-cache {
-    background-color: #dc3545; /* Cor do botão */
-    color: white;
-    border: none;
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    color: white; /* Cor da fonte */
+    border: none; /* Removendo a borda */
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    padding: 10px 20px;
-    margin: 10px; /* Margem entre os botões */
-    transition: background 0.3s; /* Efeito de clique */
+    transition: background 0.3s;
 }
 
-.btn-sair:hover,
-.btn-limpar-cache:hover {
-    background-color: #c82333; /* Cor ao passar o mouse */
+button.entrar-button {
+    background-color: blue; /* Mantendo azul para o botão Entrar */
+}
+
+button.limpar-cache-button {
+    background-color: blue; /* Mantendo azul para o botão Limpar Cache */
+}
+
+button.sair-button {
+    background-color: red; /* Mudando para vermelho para o botão Sair */
+}
+
+button:hover {
+    background-color: darkred; /* Alterando a cor do hover para um tom mais escuro de vermelho para o botão Sair */
+}
+
+button.entrar-button:hover, button.limpar-cache-button:hover {
+    background-color: darkblue; /* Alterando a cor do hover para um tom mais escuro de azul para Entrar e Limpar Cache */
 }
 
 /* Estilos para a Página Principal */
 .tabela {
     display: grid;
-    grid-template-columns: repeat(7, 1fr); /* 7 colunas fixas */
+    grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     width: 100%;
     max-width: 1200px;
@@ -53,28 +64,51 @@ h1 {
 }
 
 .celula {
-    background: #e0e0e0; /* Fundo da célula */
+    background: #e0e0e0;
     padding: 20px;
     text-align: center;
     cursor: pointer;
     transition: background 0.3s;
     border-radius: 5px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
 .celula:hover {
-    background: #ccc; /* Efeito ao passar o mouse */
+    background: #ccc;
 }
 
 .linha {
-    display: contents; /* Permite que os filhos sejam tratados como filhos da tabela */
+    display: contents;
 }
 
 .cabecalho {
     font-weight: bold;
-    text-transform: uppercase; /* Títulos dos dias em maiúsculas */
+}
+
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+}
+
+.selecao-status {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+    z-index: 200;
 }
 
 .motorista {
@@ -85,63 +119,48 @@ h1 {
     width: 100%;
 }
 
-/* Estilização dos botões "+" */
 .adicionar {
-    background: green; /* Cor do botão "+" */
+    background: green;
     color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     font-size: 0.8em;
     margin-bottom: 5px;
-    padding: 10px 15px; /* Aumenta o tamanho do botão "+" */
 }
 
-/* Estilo da seleção de status */
-#status-selecao {
-    display: none; /* Inicialmente escondido */
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Centraliza na tela */
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 1000; /* Acima do overlay */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* Estilo do botão Fechar */
-#status-selecao button {
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #dc3545; /* Cor do botão fechar */
-    color: white;
-    border: none;
-    border-radius: 5px;
+.status {
     cursor: pointer;
-}
-
-/* Estilo do overlay */
-.overlay {
-    display: none; /* Inicialmente escondido */
-    position: fixed;
-    top: 0;
-    left: 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    text-align: center;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999; /* Acima de outros elementos */
 }
 
 /* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .tabela {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    .celula {
+        padding: 15px;
+    }
+}
+
 @media (max-width: 480px) {
     .tabela {
-        grid-template-columns: repeat(7, 1fr); /* Mantém a estrutura em 7 colunas */
+        grid-template-columns: 1fr;
     }
-
     .linha.cabecalho {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
+    }
+    .linha:not(.cabecalho) {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+    .celula {
+        padding: 10px;
     }
 }
