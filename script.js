@@ -81,7 +81,7 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
 
     snapshot.forEach(change => {
         const doc = change.doc;
-        
+
         // Verifica se o documento existe e tem dados
         if (doc.exists()) {
             const motorista = doc.id; // Nome do motorista
