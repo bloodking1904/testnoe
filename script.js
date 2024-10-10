@@ -79,30 +79,37 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
     });
     tabela.appendChild(cabecalho);
 
-    // Renderiza motoristas apenas uma vez
     snapshot.forEach(change => {
         const doc = change.doc;
-        const motorista = doc.id;
-        const linha = document.createElement('div');
-        linha.classList.add('linha');
+        
+        // Verifica se o documento existe e tem dados
+        if (doc.exists()) {
+            const motorista = doc.id; // Nome do motorista
+            const linha = document.createElement('div');
+            linha.classList.add('linha');
 
-        dias.forEach((dia, diaIndex) => {
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            const motoristaData = doc.data();
-            const statusAtual = motoristaData[diaIndex] || { status: 'Disponível', viagemData: null };
+            dias.forEach((dia, diaIndex) => {
+                const celula = document.createElement('div');
+                celula.classList.add('celula');
+                const motoristaData = doc.data();
+                
+                // Verifica se há dados para o dia
+                const statusAtual = motoristaData[diaIndex] || { status: 'Disponível', viagemData: null };
 
-            celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex})">+</button>
-                    <span style="font-weight: bold;">${motorista}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
-                    ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
-                </div>
-            `;
-            linha.appendChild(celula);
-        });
-        tabela.appendChild(linha);
+                celula.innerHTML = `
+                    <div class="motorista">
+                        <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex})">+</button>
+                        <span style="font-weight: bold;">${motorista}</span>
+                        <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                        ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                    </div>
+                `;
+                linha.appendChild(celula);
+            });
+            tabela.appendChild(linha);
+        } else {
+            console.warn(`Documento ${doc.id} não existe.`);
+        }
     });
 });
 
