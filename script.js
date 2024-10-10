@@ -37,7 +37,16 @@ async function inicializarMotoristas() {
 
     // Lógica para adicionar motoristas
     const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+    
+    // Inicializando um array para armazenar motoristas
+    const motoristas = [];
+
     motoristasSnapshot.forEach(doc => {
+        motoristas.push(doc); // Adiciona cada motorista ao array
+    });
+
+    // Renderiza cada motorista uma única vez
+    motoristas.forEach(doc => {
         const motorista = doc.id; // Nome do motorista
         const linha = document.createElement('div');
         linha.classList.add('linha');
@@ -89,12 +98,12 @@ document.addEventListener('DOMContentLoaded', inicializarMotoristas);
 
 // Função de logout
 function logout() {
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
+    localStorage.removeItem('loggedInUser'); // Remove o usuário logado
+    window.location.href = 'login.html'; // Redireciona para a página de login
 }
 
 // Função para limpar cache
 function limparCache() {
-    localStorage.clear();
-    alert('Cache limpo!');
+    localStorage.clear(); // Limpa o cache do localStorage
+    alert('Cache limpo!'); // Mensagem de confirmação
 }
