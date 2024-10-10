@@ -1,20 +1,10 @@
-const users = {
-    admin: '1234',
-    reginaldo: '1234',
-    gevanildo: '1234',
-    jaderson: '1234',
-    leandro: '1234',
-    paulo: '1234',
-    ronaldo: '1234'
-};
-
 const motoristas = [
-    { nome: 'Gevanildo', status: 'Disponível' },
-    { nome: 'Jaderson', status: 'Disponível' },
-    { nome: 'Leandro', status: 'Disponível' },
-    { nome: 'Paulo', status: 'Disponível' },
-    { nome: 'Reginaldo', status: 'Disponível' },
-    { nome: 'Ronaldo', status: 'Disponível' }
+    { nome: 'gevanildo', status: 'Disponível' },
+    { nome: 'jaderson', status: 'Disponível' },
+    { nome: 'leandro', status: 'Disponível' },
+    { nome: 'paulo', status: 'Disponível' },
+    { nome: 'reginaldo', status: 'Disponível' },
+    { nome: 'ronaldo', status: 'Disponível' }
 ];
 
 const loggedInUser = localStorage.getItem('loggedInUser');
@@ -26,20 +16,22 @@ function logout() {
 }
 
 // Função para atualizar o status no localStorage
-function atualizarStatusLocalStorage(nome, dia, status) {
+function atualizarStatusLocalStorage(nome, dia, status, viagemData) {
     const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
     if (!motoristaStatus[nome]) {
         motoristaStatus[nome] = {
-            '0': 'Disponível',
-            '1': 'Disponível',
-            '2': 'Disponível',
-            '3': 'Disponível',
-            '4': 'Disponível',
-            '5': 'Disponível',
-            '6': 'Disponível'
+            '0': { status: 'Disponível', viagemData: null }, // Domingo
+            '1': { status: 'Disponível', viagemData: null }, // Segunda
+            '2': { status: 'Disponível', viagemData: null }, // Terça
+            '3': { status: 'Disponível', viagemData: null }, // Quarta
+            '4': { status: 'Disponível', viagemData: null }, // Quinta
+            '5': { status: 'Disponível', viagemData: null }, // Sexta
+            '6': { status: 'Disponível', viagemData: null }  // Sábado
         };
     }
-    motoristaStatus[nome][dia] = status;
+    
+    // Atualiza o status e a viagem apenas para o dia específico
+    motoristaStatus[nome][dia] = { status, viagemData };
     localStorage.setItem('motoristaStatus', JSON.stringify(motoristaStatus));
 }
 
@@ -52,52 +44,177 @@ function limparCache() {
 // Mostra a seleção de status
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
-    statusSelecao.innerHTML = '';
-
     let statusOptions = `
-        <div style="display: flex; flex-direction: column;">
-            <div class="status" style="background-color: lightgreen; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Disponível'); fecharSelecaoStatus();">Disponível</div>
-            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Atendimento'); fecharSelecaoStatus();">Em Atendimento</div>
+        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Disponível', 'green', ${dia}, ${linha})">Disponível</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
     `;
 
     if (loggedInUser === 'admin') {
         statusOptions += `
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Em Viagem'); fecharSelecaoStatus();">Em Viagem</div>
-            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold; margin: 5px; padding: 10px; cursor: pointer;" onclick="atualizarStatusLocalStorage('${nome}', ${dia}, 'Compensando'); fecharSelecaoStatus();">Compensando</div>
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarSelecaoViagem('${nome}', ${dia}, ${linha})">Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Compensando', 'red', ${dia}, ${linha})">Compensando</div>
         `;
     }
 
-    statusOptions += '</div>';  // Fechar div do flex container
-
     statusSelecao.innerHTML = statusOptions;
-    statusSelecao.style.display = 'flex';
+    document.getElementById('selecao-status').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
-    statusSelecao.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    adicionarBotaoFechar();
 }
 
-// Adiciona o botão Fechar
-function adicionarBotaoFechar() {
+// Mostra a seleção de atendimento
+function mostrarSelecaoAtendimento(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
-    const fecharBotao = document.createElement('button');
+    const atendimentoOptions = `
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, ${linha})">5º Andar</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, ${linha})">Eremita</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, ${linha})">Laisa</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, ${linha})">Czarina</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, ${linha})">Regis</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, ${linha})">Rodolpho</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, ${linha})">Robson</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, ${linha})">Crosara</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, ${linha})">Presidente</div>
+    `;
 
-    fecharBotao.innerText = 'Fechar';
-    fecharBotao.onclick = fecharSelecaoStatus;
-    fecharBotao.style.marginTop = '10px';
-    fecharBotao.style.padding = '10px 20px';
-    fecharBotao.style.backgroundColor = '#dc3545';
-    fecharBotao.style.color = 'white';
-    fecharBotao.style.border = 'none';
-    fecharBotao.style.borderRadius = '5px';
-    fecharBotao.style.cursor = 'pointer';
-
-    statusSelecao.appendChild(fecharBotao);
+    statusSelecao.innerHTML = atendimentoOptions;
+    document.getElementById('selecao-status').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
 }
 
-// Função para fechar a seleção de status
-function fecharSelecaoStatus() {
-    document.getElementById('status-selecao').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
+// Mostra a seleção de viagem
+function mostrarSelecaoViagem(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const viagemOptions = `
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, ${linha}, 'SENAI DR')">SENAI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, ${linha}, 'SESI DR')">SESI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, ${linha}, 'Regis')">Regis</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, ${linha}, 'Rodolpho')">Rodolpho</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, ${linha}, 'Anatole')">Anatole</div>
+    `;
+
+    statusSelecao.innerHTML = viagemOptions;
+}
+
+// Mostra a seleção de veículos
+function mostrarVeiculos(nome, dia, linha, cliente) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const veiculoOptions = `
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Hilux SW4')">Hilux SW4</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Hilux Carr. Mad.')">Hilux Carr. Mad.</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Corolla')">Corolla</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Ranger P')">Ranger P</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Ranger B')">Ranger B</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Frontier')">Frontier</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Compass')">Compass</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, ${linha}, '${cliente}', 'Yaris')">Yaris</div>
+    `;
+
+    statusSelecao.innerHTML = veiculoOptions;
+}
+
+// Adiciona o veículo e cidade
+function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const cidadeInput = `
+        <div class="cidade-input">
+            <label>Digite a cidade destino:</label>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino">
+            <button style="background-color: green; color: white;" onclick="finalizarViagem('${nome}', ${dia}, ${linha}, '${cliente}', '${veiculo}')">+</button>
+        </div>
+    `;
+
+    statusSelecao.innerHTML = cidadeInput;
+}
+
+// Finaliza a viagem
+function finalizarViagem(nome, dia, linha, cliente, veiculo) {
+    const cidadeDestino = document.getElementById('cidade-destino').value;
+    if (!cidadeDestino) {
+        alert("Por favor, digite a cidade destino.");
+        return;
+    }
+
+    // Atualiza o status do motorista
+    const viagemData = {
+        cidade: cidadeDestino,
+        veiculo: veiculo,
+        cliente: cliente
+    };
+    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
+    atualizarStatusLocalStorage(nome, dia, 'Em Viagem', viagemData); // Atualiza no localStorage
+
+    // Atualiza visualmente o motorista
+    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+
+    // Limpa as informações anteriores antes de adicionar novas
+    motoristaDiv.innerHTML = `
+        <button class="adicionar" onclick="mostrarSelecaoStatus('${nome}', ${dia}, ${linha})">+</button>
+        <span style="font-weight: bold;">${nome}</span>
+        <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
+        <div>Cidade: ${cidadeDestino}</div>
+        <div>Veículo: ${veiculo}</div>
+        <div>Cliente: ${cliente}</div>
+    `;
+
+    fecharSelecaoStatus(); // Fecha todas as seleções
+}
+
+// Adiciona o status selecionado à célula correspondente
+function adicionarStatus(nome, status, cor, dia, linha, viagemData) {
+    fecharSelecaoStatus();
+
+    // Acessa a célula correta do motorista usando data attributes
+    const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
+
+    if (!celula) {
+        console.error('Célula não encontrada para o motorista:', nome);
+        return;
+    }
+
+    const motoristaDiv = celula.querySelector('.motorista');
+
+    // Limpa o conteúdo anterior antes de adicionar novo status
+    motoristaDiv.innerHTML = `
+        <button class="adicionar" onclick="mostrarSelecaoStatus('${nome}', ${dia}, ${linha})">+</button>
+        <span style="font-weight: bold;">${nome}</span>
+        <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
+    `;
+
+    // Se houver dados de viagem, armazena as informações
+    if (viagemData) {
+        motoristaDiv.innerHTML += `
+            <div>Cidade: ${viagemData.cidade}</div>
+            <div>Veículo: ${viagemData.veiculo}</div>
+            <div>Cliente: ${viagemData.cliente}</div>
+        `;
+    }
+
+    // Atualiza o status do motorista apenas para o dia específico
+    atualizarStatusLocalStorage(nome, dia, status, viagemData); // Atualiza o status no localStorage
+}
+
+// Atualiza visualmente o status no painel
+function atualizarStatusVisual(nome) {
+    const motoristaDivs = document.querySelectorAll('.motorista');
+    motoristaDivs.forEach(motoristaDiv => {
+        const motoristaNome = motoristaDiv.querySelector('span').textContent.toLowerCase();
+        const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
+        const dias = ['0', '1', '2', '3', '4', '5', '6']; // Representa os dias da semana
+
+        if (motoristaNome === nome.toLowerCase()) {
+            dias.forEach(dia => {
+                const statusAtual = motoristaStatus[motoristaNome] ? motoristaStatus[motoristaNome][dia] : { status: 'Disponível', viagemData: null };
+                const celulaDia = motoristaDiv.closest('.celula').getAttribute('data-dia');
+                if (celulaDia == dia) {
+                    const statusDiv = motoristaDiv.querySelector('.status');
+                    if (statusDiv) {
+                        statusDiv.textContent = statusAtual.status;
+                        statusDiv.style.color = statusAtual.status === 'Disponível' ? 'green' : 'red'; // Altera a cor do status
+                    }
+                }
+            });
+        }
+    });
 }
 
 // Inicializa a lista de motoristas
@@ -106,40 +223,46 @@ function inicializarMotoristas() {
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
 
+    // Limpa a tabela antes de adicionar motoristas
     tabela.innerHTML = '';
 
+    // Criação do cabeçalho
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
+    // Se o usuário for admin, exibe todos os dias
     if (loggedInUser === 'admin') {
         dias.forEach(dia => {
             cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
         });
     } else {
+        // Se o usuário for um motorista, exibe apenas o dia atual
         cabecalho.innerHTML += `<div class="celula">${dias[diaAtual].toUpperCase()}</div>`;
     }
 
     tabela.appendChild(cabecalho);
 
+    // Lógica para adicionar motoristas
     if (loggedInUser === 'admin') {
         motoristas.forEach((motorista, linhaIndex) => {
             const linha = document.createElement('div');
             linha.classList.add('linha');
-            linha.setAttribute('data-linha', linhaIndex);
+            linha.setAttribute('data-linha', linhaIndex); 
 
             dias.forEach((dia, diaIndex) => {
                 const celula = document.createElement('div');
                 celula.classList.add('celula');
-                celula.setAttribute('data-dia', diaIndex);
+                celula.setAttribute('data-dia', diaIndex); 
 
                 const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
-                const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaIndex] : motorista.status;
+                const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaIndex] : { status: 'Disponível', viagemData: null };
 
                 celula.innerHTML = `
                     <div class="motorista">
                         <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista.nome}', ${diaIndex}, ${linhaIndex})">+</button>
-                        <span style="font-weight: bold;">${motorista.nome.charAt(0).toUpperCase() + motorista.nome.slice(1)}</span>
-                        <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
+                        <span style="font-weight: bold;">${motorista.nome}</span>
+                        <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                        ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
                     </div>
                 `;
                 linha.appendChild(celula);
@@ -147,23 +270,24 @@ function inicializarMotoristas() {
             tabela.appendChild(linha);
         });
     } else {
-        const motorista = motoristas.find(m => m.nome.toLowerCase() === loggedInUser.toLowerCase());
+        // Apenas o motorista logado é exibido
+        const motorista = motoristas.find(m => m.nome === loggedInUser);
         const linha = document.createElement('div');
         linha.classList.add('linha');
         linha.setAttribute('data-linha', '0');
 
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        celula.setAttribute('data-dia', diaAtual);
+        celula.setAttribute('data-dia', diaAtual); 
 
         const motoristaStatus = JSON.parse(localStorage.getItem('motoristaStatus')) || {};
-        const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaAtual] : motorista.status;
+        const statusAtual = motoristaStatus[motorista.nome] ? motoristaStatus[motorista.nome][diaAtual] : { status: 'Disponível', viagemData: null };
 
         celula.innerHTML = `
             <div class="motorista">
                 <button class="adicionar" onclick="mostrarSelecaoStatus('${loggedInUser}', ${diaAtual}, 0)">+</button>
-                <span style="font-weight: bold;">${motorista.nome.charAt(0).toUpperCase() + motorista.nome.slice(1)}</span>
-                <div class="status" style="color: ${statusAtual === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual}</div>
+                <span style="font-weight: bold;">${motorista.nome}</span>
+                <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
             </div>
         `;
         linha.appendChild(celula);
@@ -172,3 +296,9 @@ function inicializarMotoristas() {
 }
 
 document.addEventListener('DOMContentLoaded', inicializarMotoristas);
+
+// Função para fechar a seleção de status
+function fecharSelecaoStatus() {
+    document.getElementById('selecao-status').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+}
