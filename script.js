@@ -1,3 +1,12 @@
+const motoristas = [
+    { nome: 'gevanildo', status: 'Disponível' },
+    { nome: 'jaderson', status: 'Disponível' },
+    { nome: 'leandro', status: 'Disponível' },
+    { nome: 'paulo', status: 'Disponível' },
+    { nome: 'reginaldo', status: 'Disponível' },
+    { nome: 'ronaldo', status: 'Disponível' }
+];
+
 const loggedInUser = localStorage.getItem('loggedInUser');
 
 // Função de logout
@@ -221,7 +230,7 @@ async function inicializarMotoristas() {
 
     tabela.appendChild(cabecalho);
 
-    // Lógica para adicionar motoristas do Firestore
+    // Lógica para adicionar motoristas
     if (loggedInUser === 'admin') {
         const motoristasSnapshot = await db.collection('motoristas').get();
         motoristasSnapshot.forEach(doc => {
@@ -249,8 +258,7 @@ async function inicializarMotoristas() {
         });
     } else {
         // Apenas o motorista logado é exibido
-        const motoristaDataDoc = await db.collection('motoristas').doc(loggedInUser).get();
-        const motorista = motoristaDataDoc.data();
+        const motorista = motoristas.find(m => m.nome === loggedInUser);
         const linha = document.createElement('div');
         linha.classList.add('linha');
         linha.setAttribute('data-linha', '0');
@@ -259,12 +267,13 @@ async function inicializarMotoristas() {
         celula.classList.add('celula');
         celula.setAttribute('data-dia', diaAtual);
 
-        const statusAtual = motorista[diaAtual] || { status: 'Disponível', viagemData: null };
+        const motoristaData = await db.collection('motoristas').doc(loggedInUser).get();
+        const statusAtual = motoristaData.exists ? motoristaData.data()[diaAtual] || { status: 'Disponível', viagemData: null } : { status: 'Disponível', viagemData: null };
 
         celula.innerHTML = `
             <div class="motorista">
                 <button class="adicionar" onclick="mostrarSelecaoStatus('${loggedInUser}', ${diaAtual}, 0)">+</button>
-                <span style="font-weight: bold;">${loggedInUser}</span>
+                <span style="font-weight: bold;">${motorista.nome}</span>
                 <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
             </div>
         `;
