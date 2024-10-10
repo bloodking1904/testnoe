@@ -79,8 +79,8 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
     });
     tabela.appendChild(cabecalho);
 
+    // Renderiza motoristas apenas uma vez
     snapshot.forEach(doc => {
-        // Verifica se o documento existe
         if (doc.exists()) {
             const motorista = doc.id; // Nome do motorista
             const linha = document.createElement('div');
@@ -90,8 +90,6 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
                 const celula = document.createElement('div');
                 celula.classList.add('celula');
                 const motoristaData = doc.data();
-
-                // Verifica se há dados para o dia
                 const statusAtual = motoristaData[diaIndex] || { status: 'Disponível', viagemData: null };
 
                 celula.innerHTML = `
@@ -105,8 +103,6 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
                 linha.appendChild(celula);
             });
             tabela.appendChild(linha);
-        } else {
-            console.warn(`Documento ${doc.id} não existe.`); // Log se o documento não existe
         }
     });
 });
