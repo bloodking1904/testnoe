@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -275,8 +275,6 @@ onSnapshot(collection(db, 'motoristas'), (snapshot) => {
             const motoristaData = change.doc.data();
             const motoristaNome = change.doc.id; // Nome do motorista
 
-            // Aqui você pode implementar a lógica para atualizar a UI com os dados
-            console.log(`Motorista: ${motoristaNome}`, motoristaData);
             // Atualiza a renderização
             inicializarMotoristas(); // Re-renderiza a tabela
         }
