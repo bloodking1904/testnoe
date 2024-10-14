@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -20,8 +20,10 @@ const db = getFirestore(app);
 // Função para renderizar motoristas
 function renderizarMotoristas(motoristasSnapshot) {
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const isAdmin = loggedInUser === 'admin'; // Verifica se o usuário logado é admin
     const tabela = document.getElementById('tabela-motoristas');
-    
+
     // Limpa a tabela antes de adicionar novos motoristas
     tabela.innerHTML = '';
 
@@ -29,10 +31,16 @@ function renderizarMotoristas(motoristasSnapshot) {
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    // Adiciona cabeçalho para os dias da semana
-    dias.forEach(dia => {
-        cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
-    });
+    if (isAdmin) {
+        // Adiciona cabeçalho para todos os dias da semana se for admin
+        dias.forEach(dia => {
+            cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
+        });
+    } else {
+        // Adiciona cabeçalho apenas para o dia atual se não for admin
+        const diaAtual = new Date().getDay();
+        cabecalho.innerHTML = `<div class="celula">${dias[diaAtual].toUpperCase()}</div>`;
+    }
     tabela.appendChild(cabecalho);
 
     // Renderiza motoristas
@@ -42,22 +50,42 @@ function renderizarMotoristas(motoristasSnapshot) {
             const linha = document.createElement('div');
             linha.classList.add('linha');
 
-            dias.forEach((dia, diaIndex) => {
+            if (isAdmin) {
+                // Renderiza todos os dias para admin
+                dias.forEach((dia, diaIndex) => {
+                    const celula = document.createElement('div');
+                    celula.classList.add('celula');
+                    const motoristaData = doc.data();
+                    const statusAtual = motoristaData[diaIndex] || { status: 'Disponível', viagemData: null };
+
+                    celula.innerHTML = `
+                        <div class="motorista">
+                            <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex})">+</button>
+                            <span style="font-weight: bold;">${motorista}</span>
+                            <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                            ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                        </div>
+                    `;
+                    linha.appendChild(celula);
+                });
+            } else {
+                // Renderiza apenas o dia atual para motoristas
+                const diaAtual = new Date().getDay();
                 const celula = document.createElement('div');
                 celula.classList.add('celula');
                 const motoristaData = doc.data();
-                const statusAtual = motoristaData[diaIndex] || { status: 'Disponível', viagemData: null };
+                const statusAtual = motoristaData[diaAtual] || { status: 'Disponível', viagemData: null };
 
                 celula.innerHTML = `
                     <div class="motorista">
-                        <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex})">+</button>
+                        <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaAtual})">+</button>
                         <span style="font-weight: bold;">${motorista}</span>
                         <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
                         ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
                     </div>
                 `;
                 linha.appendChild(celula);
-            });
+            }
             tabela.appendChild(linha);
         }
     });
