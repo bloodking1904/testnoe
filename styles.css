@@ -7,8 +7,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Alinhamento para o topo da página */
-    height: auto; /* Permite que a altura se ajuste conforme o conteúdo */
+    justify-content: center; /* Alinhamento centralizado verticalmente */
+    height: 100vh; /* Altura da tela inteira */
 }
 
 /* Estilos do Cabeçalho */
