@@ -47,6 +47,12 @@ function renderizarMotoristas(motoristasSnapshot) {
     motoristasSnapshot.forEach(doc => {
         if (doc.exists()) {
             const motorista = doc.id; // Nome do motorista
+
+            // Se for motorista e o login foi feito, só renderiza os dados do motorista logado
+            if (!isAdmin && motorista !== loggedInUser) {
+                return; // Ignora motoristas que não são o logado
+            }
+
             const linha = document.createElement('div');
             linha.classList.add('linha');
 
