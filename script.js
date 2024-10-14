@@ -272,10 +272,8 @@ function fecharSelecaoStatus() {
 onSnapshot(collection(db, 'motoristas'), (snapshot) => {
     snapshot.docChanges().forEach(change => {
         if (change.type === "added" || change.type === "modified") {
-            const motoristaData = change.doc.data();
-            const motoristaNome = change.doc.id; // Nome do motorista
-
-            // Atualiza a renderização
+            // Aqui você pode implementar a lógica para atualizar a UI com os dados
+            console.log(`Motorista: ${change.doc.id}`, change.doc.data());
             inicializarMotoristas(); // Re-renderiza a tabela
         }
     });
