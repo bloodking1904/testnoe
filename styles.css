@@ -9,12 +9,15 @@ body {
     align-items: center;
     justify-content: center; /* Alinhamento centralizado verticalmente */
     height: 100vh; /* Altura da tela inteira */
+    overflow-x: hidden; /* Evita rolagem horizontal */
 }
 
 /* Estilos do Cabeçalho */
 .header {
     text-align: center;
     margin-bottom: 20px;
+    width: 100%; /* Garante que o cabeçalho ocupe toda a largura */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
 }
 
 .header h1 {
@@ -55,6 +58,7 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    box-sizing: border-box; /* Inclui padding e border na largura total */
 }
 
 .celula {
