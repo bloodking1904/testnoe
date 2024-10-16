@@ -19,11 +19,11 @@ const db = getFirestore(app);
 
 const loggedInUser = localStorage.getItem('loggedInUser');
 
-// Função de logout
-function logout() {
+// Adiciona a função de logout ao objeto global window
+window.logout = function() {
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
-}
+};
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(nome, dia, status, viagemData) {
