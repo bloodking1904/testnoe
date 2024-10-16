@@ -39,7 +39,7 @@ function limparCache() {
     alert('Cache e dados armazenados foram limpos.');
 }
 
-// Mostra a seleção de status (mantém a lógica original)
+// Mostra a seleção de status
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     let statusOptions = `
@@ -244,7 +244,7 @@ async function inicializarMotoristas() {
 
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        celula.setAttribute('data-dia', diaAtual);
+        celula.setAttribute('data-dia', diaAtual); 
 
         celula.innerHTML = `
             <div class="motorista">
@@ -259,21 +259,46 @@ async function inicializarMotoristas() {
 }
 
 // Chama a função após o carregamento do DOM
-document.addEventListener('DOMContentLoaded', inicializarMotoristas);
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarMotoristas();
+
+    // Escutando mudanças em tempo real
+    onSnapshot(collection(db, 'motoristas'), (snapshot) => {
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "modified") {
+                const motorista = change.doc.id;
+                const dados = change.doc.data();
+                atualizarLinhaMotorista(motorista, dados);
+            }
+        });
+    });
+});
+
+// Função para atualizar a linha de um motorista específico
+function atualizarLinhaMotorista(motorista, dados) {
+    const tabela = document.getElementById('tabela-motoristas');
+    const linha = Array.from(tabela.children).find(l => l.getAttribute('data-linha') === motorista);
+
+    if (linha) {
+        const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+        dias.forEach((dia, diaIndex) => {
+            const celula = linha.querySelector(`.celula[data-dia="${diaIndex}"]`);
+            const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
+
+            celula.innerHTML = `
+                <div class="motorista">
+                    <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex}, '${motorista}')">+</button>
+                    <span style="font-weight: bold;">${motorista}</span>
+                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                    ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                </div>
+            `;
+        });
+    }
+}
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
     document.getElementById('selecao-status').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
-
-// Escutando mudanças em tempo real
-onSnapshot(collection(db, 'motoristas'), (snapshot) => {
-    snapshot.docChanges().forEach(change => {
-        if (change.type === "added" || change.type === "modified") {
-            // Aqui você pode implementar a lógica para atualizar a UI com os dados
-            console.log(`Motorista: ${change.doc.id}`, change.doc.data());
-            inicializarMotoristas(); // Re-renderiza a tabela
-        }
-    });
-});
