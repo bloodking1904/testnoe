@@ -39,7 +39,7 @@ function limparCache() {
     alert('Cache e dados armazenados foram limpos.');
 }
 
-// Mostra a seleção de status
+// Mostra a seleção de status (mantém a lógica original)
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     let statusOptions = `
@@ -215,12 +215,12 @@ async function inicializarMotoristas() {
 
             const linha = document.createElement('div');
             linha.classList.add('linha');
-            linha.setAttribute('data-linha', motorista); 
+            linha.setAttribute('data-linha', motorista);
 
             dias.forEach((dia, diaIndex) => {
                 const celula = document.createElement('div');
                 celula.classList.add('celula');
-                celula.setAttribute('data-dia', diaIndex); 
+                celula.setAttribute('data-dia', diaIndex);
 
                 const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
 
@@ -238,19 +238,18 @@ async function inicializarMotoristas() {
         });
     } else {
         // Apenas o motorista logado é exibido
-        const motorista = motoristas.find(m => m.nome === loggedInUser);
         const linha = document.createElement('div');
         linha.classList.add('linha');
         linha.setAttribute('data-linha', '0');
 
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        celula.setAttribute('data-dia', diaAtual); 
+        celula.setAttribute('data-dia', diaAtual);
 
         celula.innerHTML = `
             <div class="motorista">
                 <button class="adicionar" onclick="mostrarSelecaoStatus('${loggedInUser}', ${diaAtual}, 0)">+</button>
-                <span style="font-weight: bold;">${motorista.nome}</span>
+                <span style="font-weight: bold;">${loggedInUser}</span>
                 <div class="status" style="color: green; font-weight: bold;">Disponível</div>
             </div>
         `;
