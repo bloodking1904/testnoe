@@ -109,6 +109,9 @@ function mostrarSelecaoViagem(idMotorista, dia, linha) {
     console.log("Opções de viagem exibidas.");
 }
 
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoViagem = mostrarSelecaoViagem;
+
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
