@@ -24,6 +24,7 @@ console.log("Usuário logado:", loggedInUser);
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function() {
+    console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
 };
@@ -42,6 +43,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
 
 // Função para limpar cache
 function limparCache() {
+    console.log("Limpando cache...");
     localStorage.clear();
     alert('Cache e dados armazenados foram limpos.');
 }
@@ -54,6 +56,8 @@ function mostrarSelecaoStatus(element) {
     const idMotorista = element.dataset.idMotorista;
     const dia = element.dataset.dia;
     const linha = element.dataset.linha;
+    console.log("Mostrando seleção de status para:", idMotorista, "Dia:", dia, "Linha:", linha);
+    
     const statusSelecao = document.getElementById('status-selecao');
     
     let statusOptions = `
@@ -75,6 +79,7 @@ function mostrarSelecaoStatus(element) {
     statusSelecao.innerHTML = statusOptions;
     document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
+    console.log("Opções de status exibidas.");
 }
 
 // Adiciona a função ao objeto global window
@@ -82,6 +87,7 @@ window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha) {
+    console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
     fecharSelecaoStatus();
 
     const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
@@ -101,12 +107,14 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha) {
     `;
 
     await atualizarStatusFirestore(idMotorista, dia, status, null);
+    console.log("Status adicionado com sucesso.");
 }
 
 window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
+    console.log("Inicializando motoristas...");
     const diaAtual = new Date().getDay();
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
@@ -125,12 +133,16 @@ async function inicializarMotoristas() {
     }
 
     tabela.appendChild(cabecalho);
+    console.log("Cabeçalho da tabela criado.");
 
     if (loggedInUser === 'admin') {
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        console.log("Motoristas obtidos do Firestore.");
+        
         motoristasSnapshot.forEach(doc => {
             const motorista = doc.id; 
             const dados = doc.data(); 
+            console.log("Motorista:", motorista, "Dados:", dados);
 
             const linha = document.createElement('div');
             linha.classList.add('linha');
@@ -176,16 +188,21 @@ async function inicializarMotoristas() {
         linha.appendChild(celula);
         tabela.appendChild(linha);
     }
+
+    console.log("Tabela de motoristas inicializada.");
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
     inicializarMotoristas();
 
     onSnapshot(collection(db, 'motoristas'), (snapshot) => {
+        console.log("Mudanças detectadas no Firestore.");
         snapshot.docChanges().forEach(change => {
             if (change.type === "modified") {
                 const motorista = change.doc.id;
                 const dados = change.doc.data();
+                console.log("Motorista modificado:", motorista, "Novos dados:", dados);
                 atualizarLinhaMotorista(motorista, dados);
             }
         });
@@ -194,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Função para atualizar a linha de um motorista específico
 function atualizarLinhaMotorista(motorista, dados) {
+    console.log("Atualizando linha para motorista:", motorista);
     const tabela = document.getElementById('tabela-motoristas');
     const linha = Array.from(tabela.children).find(l => l.getAttribute('data-linha') === motorista);
 
@@ -220,6 +238,7 @@ function atualizarLinhaMotorista(motorista, dados) {
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
+    console.log("Fechando seleção de status.");
     document.getElementById('status-selecao').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
