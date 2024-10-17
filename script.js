@@ -50,6 +50,7 @@ function mostrarSelecaoStatus(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
     `;
 
+    // Verifica se o usuário logado é admin
     if (loggedInUser === 'admin') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarSelecaoViagem('${nome}', ${dia}, ${linha})">Viagem</div>
@@ -57,6 +58,7 @@ function mostrarSelecaoStatus(nome, dia, linha) {
         `;
     }
 
+    // Atualiza o conteúdo do elemento de seleção de status
     statusSelecao.innerHTML = statusOptions;
     document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
@@ -171,7 +173,7 @@ async function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
 
-// Adiciona o status selecionado à célula correspondente
+// Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(nome, status, cor, dia, linha) {
     fecharSelecaoStatus();
 
@@ -195,6 +197,9 @@ async function adicionarStatus(nome, status, cor, dia, linha) {
     // Atualiza o status do motorista apenas para o dia específico
     await atualizarStatusFirestore(nome, dia, status, null); // Atualiza o status no Firestore
 }
+
+// Adiciona a função adicionarStatus ao objeto global window
+window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
