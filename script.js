@@ -269,3 +269,5 @@ function fecharSelecaoStatus() {
     document.getElementById('status-selecao').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
+
+window.fecharSelecaoStatus = fecharSelecaoStatus;
