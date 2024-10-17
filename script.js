@@ -226,37 +226,37 @@ async function inicializarMotoristas() {
 
     tabela.appendChild(cabecalho);
 
-// Lógica para adicionar motoristas
-if (loggedInUser === 'admin') {
-    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-    motoristasSnapshot.forEach(doc => {
-        const motorista = doc.id; // Nome do motorista
-        const dados = doc.data(); // Dados do motorista
+    // Lógica para adicionar motoristas
+    if (loggedInUser === 'admin') {
+        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        motoristasSnapshot.forEach(doc => {
+            const motorista = doc.id; // Nome do motorista
+            const dados = doc.data(); // Dados do motorista
 
-        const linha = document.createElement('div');
-        linha.classList.add('linha');
-        linha.setAttribute('data-linha', motorista);
+            const linha = document.createElement('div');
+            linha.classList.add('linha');
+            linha.setAttribute('data-linha', motorista);
 
-        dias.forEach((dia, diaIndex) => {
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            celula.setAttribute('data-dia', diaIndex);
+            dias.forEach((dia, diaIndex) => {
+                const celula = document.createElement('div');
+                celula.classList.add('celula');
+                celula.setAttribute('data-dia', diaIndex);
 
-            const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
+                const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
 
-            celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex}, '${motorista}')">+</button>
-                    <span style="font-weight: bold;">${motorista}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
-                    ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
-                </div>
-            `;
-            linha.appendChild(celula);
+                celula.innerHTML = `
+                    <div class="motorista">
+                        <button class="adicionar" onclick="mostrarSelecaoStatus('${motorista}', ${diaIndex}, '${motorista}')">+</button>
+                        <span style="font-weight: bold;">${motorista}</span>
+                        <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                        ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                    </div>
+                `;
+                linha.appendChild(celula);
+            });
+            tabela.appendChild(linha);
         });
-        tabela.appendChild(linha);
-    });
-} else {
+    } else {
         // Apenas o motorista logado é exibido
         const linha = document.createElement('div');
         linha.classList.add('linha');
