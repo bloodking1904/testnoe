@@ -39,12 +39,6 @@ function limparCache() {
     alert('Cache e dados armazenados foram limpos.');
 }
 
-// Adiciona a função de logout ao objeto global window
-window.logout = function() {
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-};
-
 // Adiciona a função de limpar cache ao objeto global window
 window.limparCache = limparCache;
 
@@ -56,7 +50,6 @@ function mostrarSelecaoStatus(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
     `;
 
-    const loggedInUser = localStorage.getItem('loggedInUser');
     if (loggedInUser === 'admin') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarSelecaoViagem('${nome}', ${dia}, ${linha})">Viagem</div>
@@ -88,9 +81,12 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     `;
 
     statusSelecao.innerHTML = atendimentoOptions;
-    document.getElementById('selecao-status').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
 }
+
+// Adiciona a função de mostrarSelecaoAtendimento ao objeto global window
+window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
 
 // Mostra a seleção de viagem
 function mostrarSelecaoViagem(nome, dia, linha) {
@@ -105,6 +101,9 @@ function mostrarSelecaoViagem(nome, dia, linha) {
 
     statusSelecao.innerHTML = viagemOptions;
 }
+
+// Adiciona a função de mostrarSelecaoViagem ao objeto global window
+window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 
 // Mostra a seleção de veículos
 function mostrarVeiculos(nome, dia, linha, cliente) {
@@ -122,6 +121,9 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
 
     statusSelecao.innerHTML = veiculoOptions;
 }
+
+// Adiciona a função de mostrarVeiculos ao objeto global window
+window.mostrarVeiculos = mostrarVeiculos;
 
 // Adiciona o veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
