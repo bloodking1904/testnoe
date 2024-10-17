@@ -22,15 +22,17 @@ console.log("Firebase e Firestore inicializados com sucesso.");
 const loggedInUser = localStorage.getItem('loggedInUser');
 console.log("Usuário logado:", loggedInUser);
 
-// Função de logout
-function logout() {
+// Adiciona a função de logout ao objeto global window
+window.logout = function() {
+    console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
-}
+};
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
     try {
+        console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
         await setDoc(motoristaRef, { [dia]: { status, viagemData } }, { merge: true });
         console.log("Status atualizado com sucesso.");
@@ -39,131 +41,84 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
     }
 }
 
+// Função para limpar cache
+function limparCache() {
+    console.log("Limpando cache...");
+    localStorage.clear();
+    alert('Cache e dados armazenados foram limpos.');
+}
+
+// Adiciona a função de limpar cache ao objeto global window
+window.limparCache = limparCache;
+
 // Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
     const idMotorista = element.dataset.idMotorista;
     const dia = element.dataset.dia;
-    const linha = String(element.dataset.linha);
+    const linha = String(element.dataset.linha); // Garantindo que linha seja uma string
+
+    console.log("Mostrando seleção de status para:", idMotorista, "Dia:", dia, "Linha:", linha);
 
     const statusSelecao = document.getElementById('status-selecao');
+
     let statusOptions = `
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
-        <div class="status" onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Atendimento</div>
-        <div class="status" onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
-        <div class="status" onclick="fecharSelecao()">Fechar</div>
+        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
+            onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+            onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'red', ${dia}, '${linha}')">Em Atendimento</div>
     `;
+
+    if (loggedInUser === 'admin') {
+        statusOptions += `
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+                onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
+        `;
+    }
 
     statusSelecao.innerHTML = statusOptions;
-    statusSelecao.style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
+
+    console.log("Opções de status exibidas.");
 }
 
-// Função para mostrar a seleção de atendimento
-function mostrarSelecaoAtendimento(idMotorista, dia, linha) {
-    const statusSelecao = document.getElementById('status-selecao');
-    const atendimentoOptions = `
-        <div class="status" onclick="adicionarStatus('${idMotorista}', '5º Andar', 'red', ${dia}, '${linha}')">5º Andar</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Eremita', 'red', ${dia}, '${linha}')">Eremita</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Laisa', 'red', ${dia}, '${linha}')">Laisa</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Czarina', 'red', ${dia}, '${linha}')">Czarina</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Regis', 'red', ${dia}, '${linha}')">Regis</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Rodolpho', 'red', ${dia}, '${linha}')">Rodolpho</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Robson', 'red', ${dia}, '${linha}')">Robson</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Crosara', 'red', ${dia}, '${linha}')">Crosara</div>
-        <div class="status" onclick="adicionarStatus('${idMotorista}', 'Presidente', 'red', ${dia}, '${linha}')">Presidente</div>
-        <div class="status" onclick="fecharSelecao()">Fechar</div>
-    `;
-
-    statusSelecao.innerHTML = atendimentoOptions;
-}
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
 // Função para mostrar a seleção de viagem
 function mostrarSelecaoViagem(idMotorista, dia, linha) {
+    console.log(`Mostrando seleção de viagem para: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
+    
     const statusSelecao = document.getElementById('status-selecao');
     const viagemOptions = `
-        <div class="status" onclick="mostrarVeiculos('${idMotorista}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
-        <div class="status" onclick="mostrarVeiculos('${idMotorista}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
-        <div class="status" onclick="mostrarVeiculos('${idMotorista}', ${dia}, '${linha}', 'Regis')">Regis</div>
-        <div class="status" onclick="mostrarVeiculos('${idMotorista}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
-        <div class="status" onclick="mostrarVeiculos('${idMotorista}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
-        <div class="status" onclick="fecharSelecao()">Fechar</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SENAI DR')">SENAI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SESI DR')">SESI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Regis')">Regis</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Rodolpho')">Rodolpho</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Anatole')">Anatole</div>
     `;
 
     statusSelecao.innerHTML = viagemOptions;
+    document.getElementById('status-selecao').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
+    console.log("Opções de viagem exibidas.");
 }
 
-// Função para mostrar a seleção de veículos
-function mostrarVeiculos(idMotorista, dia, linha, cliente) {
-    const statusSelecao = document.getElementById('status-selecao');
-    const veiculoOptions = `
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Hilux SW4')">Hilux SW4</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Hilux Carr. Mad.')">Hilux Carr. Mad.</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Corolla')">Corolla</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Ranger P')">Ranger P</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Ranger B')">Ranger B</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Frontier')">Frontier</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Compass')">Compass</div>
-        <div class="status" onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', '${cliente}', 'Yaris')">Yaris</div>
-        <div class="status" onclick="fecharSelecao()">Fechar</div>
-    `;
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 
-    statusSelecao.innerHTML = veiculoOptions;
-}
+// Função para adicionar o status selecionado à célula correspondente
+async function adicionarStatus(idMotorista, status, cor, dia, linha) {
+    console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
+    fecharSelecaoStatus();
 
-// Função para adicionar o veículo e cidade
-function adicionarVeiculo(idMotorista, dia, linha, cliente, veiculo) {
-    const statusSelecao = document.getElementById('status-selecao');
-    const cidadeInput = `
-        <div class="cidade-input">
-            <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino">
-            <button style="background-color: green; color: white;" onclick="finalizarViagem('${idMotorista}', ${dia}, ${linha}, '${cliente}', '${veiculo}')">+</button>
-            <button onclick="fecharSelecao()">Fechar</button>
-        </div>
-    `;
-
-    statusSelecao.innerHTML = cidadeInput;
-}
-
-// Finaliza a viagem
-async function finalizarViagem(idMotorista, dia, linha, cliente, veiculo) {
-    const cidadeDestino = document.getElementById('cidade-destino').value;
-    if (!cidadeDestino) {
-        alert("Por favor, digite a cidade destino.");
-        return;
-    }
-
-    // Atualiza o status do motorista
-    const viagemData = {
-        cidade: cidadeDestino,
-        veiculo: veiculo,
-        cliente: cliente
-    };
-    await adicionarStatus(idMotorista, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
-
-    // Atualiza visualmente o motorista
-    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
-
-    // Limpa as informações anteriores antes de adicionar novas
-    motoristaDiv.innerHTML = `
-        <button class="adicionar" onclick="mostrarSelecaoStatus(this)">+</button>
-        <span style="font-weight: bold;">${idMotorista}</span>
-        <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
-        <div>Cidade: ${cidadeDestino}</div>
-        <div>Veículo: ${veiculo}</div>
-        <div>Cliente: ${cliente}</div>
-        <button onclick="fecharSelecao()">Fechar</button>
-    `;
-
-    fecharSelecao(); // Fecha a tela de seleção
-}
-
-// Adiciona o status selecionado à célula correspondente
-async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
-    fecharSelecao();
-
-    // Acessa a célula correta do motorista usando data attributes
     const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
 
     if (!celula) {
@@ -173,7 +128,6 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData)
 
     const motoristaDiv = celula.querySelector('.motorista');
 
-    // Limpa o conteúdo anterior antes de adicionar novo status
     motoristaDiv.innerHTML = `
         <button class="adicionar" data-id-motorista="${idMotorista}" data-dia="${dia}" data-linha="${linha}" 
             onclick="mostrarSelecaoStatus(this)">+</button>
@@ -181,18 +135,11 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData)
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
     `;
 
-    // Se houver dados de viagem, armazena as informações
-    if (viagemData) {
-        motoristaDiv.innerHTML += `
-            <div>Cidade: ${viagemData.cidade}</div>
-            <div>Veículo: ${viagemData.veiculo}</div>
-            <div>Cliente: ${viagemData.cliente}</div>
-        `;
-    }
-
-    // Atualiza o status do motorista apenas para o dia específico
-    await atualizarStatusFirestore(idMotorista, dia, status, viagemData); // Atualiza o status no Firestore
+    await atualizarStatusFirestore(idMotorista, dia, status, null);
+    console.log("Status adicionado com sucesso.");
 }
+
+window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
@@ -319,9 +266,10 @@ function atualizarLinhaMotorista(motorista, dados) {
 }
 
 // Função para fechar a seleção de status
-function fecharSelecao() {
+function fecharSelecaoStatus() {
+    console.log("Fechando seleção de status.");
     document.getElementById('status-selecao').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
 
-window.fecharSelecao = fecharSelecao;
+window.fecharSelecaoStatus = fecharSelecaoStatus;
