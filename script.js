@@ -48,7 +48,7 @@ window.logout = function() {
 // Adiciona a função de limpar cache ao objeto global window
 window.limparCache = limparCache;
 
-// Mostra a seleção de status
+// Função para mostrar a seleção de status
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     let statusOptions = `
@@ -56,6 +56,7 @@ function mostrarSelecaoStatus(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${nome}', ${dia}, ${linha})">Em Atendimento</div>
     `;
 
+    const loggedInUser = localStorage.getItem('loggedInUser');
     if (loggedInUser === 'admin') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarSelecaoViagem('${nome}', ${dia}, ${linha})">Viagem</div>
@@ -64,9 +65,12 @@ function mostrarSelecaoStatus(nome, dia, linha) {
     }
 
     statusSelecao.innerHTML = statusOptions;
-    document.getElementById('selecao-status').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
 }
+
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
 // Mostra a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
