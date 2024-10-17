@@ -319,6 +319,6 @@ function atualizarLinhaMotorista(motorista, dados) {
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
-    document.getElementById('selecao-status').style.display = 'none';
+    document.getElementById('status-selecao').style.display = 'none';
     document.getElementById('overlay').style.display = 'none';
 }
