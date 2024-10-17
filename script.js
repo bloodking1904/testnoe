@@ -55,30 +55,32 @@ window.limparCache = limparCache;
 function mostrarSelecaoStatus(element) {
     const idMotorista = element.dataset.idMotorista;
     const dia = element.dataset.dia;
-    const linha = element.dataset.linha;
+    const linha = String(element.dataset.linha); // Garantindo que linha seja uma string
+
     console.log("Mostrando seleção de status para:", idMotorista, "Dia:", dia, "Linha:", linha);
-    
+
     const statusSelecao = document.getElementById('status-selecao');
-    
+
     let statusOptions = `
         <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
-            onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, ${linha})">Disponível</div>
+            onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-            onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'red', ${dia}, ${linha})">Em Atendimento</div>
+            onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'red', ${dia}, '${linha}')">Em Atendimento</div>
     `;
 
     if (loggedInUser === 'admin') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, ${linha})">Viagem</div>
+                onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
             <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-                onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, ${linha})">Compensando</div>
+                onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
         `;
     }
 
     statusSelecao.innerHTML = statusOptions;
     document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
+
     console.log("Opções de status exibidas.");
 }
 
