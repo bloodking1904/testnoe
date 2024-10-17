@@ -175,6 +175,7 @@ async function finalizarViagem(idMotorista, dia, linha, cliente, veiculo) {
 async function adicionarStatus(idMotorista, status, cor, dia, linha) {
     fecharSelecaoStatus();
 
+    // Acessa a célula correta do motorista usando data attributes
     const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
 
     if (!celula) {
@@ -184,13 +185,15 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha) {
 
     const motoristaDiv = celula.querySelector('.motorista');
 
+    // Limpa o conteúdo anterior antes de adicionar novo status
     motoristaDiv.innerHTML = `
         <button class="adicionar" onclick="mostrarSelecaoStatus('${idMotorista}', ${dia}, ${linha})">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
     `;
 
-    await atualizarStatusFirestore(idMotorista, dia, status, null);
+    // Atualiza o status do motorista apenas para o dia específico
+    await atualizarStatusFirestore(idMotorista, dia, status, null); // Atualiza o status no Firestore
 }
 
 window.adicionarStatus = adicionarStatus;
