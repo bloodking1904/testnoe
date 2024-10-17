@@ -17,7 +17,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+console.log("Firebase e Firestore inicializados com sucesso.");
+
 const loggedInUser = localStorage.getItem('loggedInUser');
+console.log("Usuário logado:", loggedInUser);
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function() {
@@ -27,10 +30,16 @@ window.logout = function() {
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
-    const motoristaRef = doc(db, 'motoristas', idMotorista);
-    await setDoc(motoristaRef, {
-        [dia]: { status, viagemData }
-    }, { merge: true });
+    try {
+        console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
+        const motoristaRef = doc(db, 'motoristas', idMotorista);
+        await setDoc(motoristaRef, {
+            [dia]: { status, viagemData }
+        }, { merge: true });
+        console.log("Status atualizado com sucesso.");
+    } catch (error) {
+        console.error("Erro ao atualizar status:", error);
+    }
 }
 
 // Função para limpar cache
@@ -314,6 +323,8 @@ function atualizarLinhaMotorista(motorista, dados) {
                 </div>
             `;
         });
+    } else {
+        console.error(`Linha para o motorista ${motorista} não encontrada.`);
     }
 }
 
