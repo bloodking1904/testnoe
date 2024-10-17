@@ -39,6 +39,15 @@ function limparCache() {
     alert('Cache e dados armazenados foram limpos.');
 }
 
+// Adiciona a função de logout ao objeto global window
+window.logout = function() {
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+};
+
+// Adiciona a função de limpar cache ao objeto global window
+window.limparCache = limparCache;
+
 // Mostra a seleção de status
 function mostrarSelecaoStatus(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
