@@ -85,6 +85,30 @@ function mostrarSelecaoStatus(element) {
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
+// Função para mostrar a seleção de viagem
+function mostrarSelecaoViagem(idMotorista, dia, linha) {
+    console.log(`Mostrando seleção de viagem para: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
+    
+    const statusSelecao = document.getElementById('status-selecao');
+    const viagemOptions = `
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SENAI DR')">SENAI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SESI DR')">SESI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Regis')">Regis</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Rodolpho')">Rodolpho</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Anatole')">Anatole</div>
+    `;
+
+    statusSelecao.innerHTML = viagemOptions;
+    document.getElementById('status-selecao').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
+    console.log("Opções de viagem exibidas.");
+}
+
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
