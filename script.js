@@ -33,9 +33,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
     try {
         console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
-        await setDoc(motoristaRef, {
-            [dia]: { status, viagemData }
-        }, { merge: true });
+        await setDoc(motoristaRef, { [dia]: { status, viagemData } }, { merge: true });
         console.log("Status atualizado com sucesso.");
     } catch (error) {
         console.error("Erro ao atualizar status:", error);
@@ -56,10 +54,9 @@ function mostrarSelecaoStatus(idMotorista, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     let statusOptions = `
         <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, ${linha})">Disponível</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, ${linha})">Em Atendimento</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'red', ${dia}, ${linha})">Em Atendimento</div>
     `;
 
-    // Verifica se o usuário logado é admin
     if (loggedInUser === 'admin') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, ${linha})">Viagem</div>
@@ -67,16 +64,14 @@ function mostrarSelecaoStatus(idMotorista, dia, linha) {
         `;
     }
 
-    // Atualiza o conteúdo do elemento de seleção de status
     statusSelecao.innerHTML = statusOptions;
     document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
 }
 
-// Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
-// Mostra a seleção de atendimento
+// Funções para mostrar seleções específicas
 function mostrarSelecaoAtendimento(idMotorista, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     const atendimentoOptions = `
@@ -96,7 +91,6 @@ function mostrarSelecaoAtendimento(idMotorista, dia, linha) {
     document.getElementById('overlay').style.display = 'block';
 }
 
-// Adiciona a função de mostrarSelecaoAtendimento ao objeto global window
 window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
 
 // Mostra a seleção de viagem
@@ -113,7 +107,6 @@ function mostrarSelecaoViagem(idMotorista, dia, linha) {
     statusSelecao.innerHTML = viagemOptions;
 }
 
-// Adiciona a função de mostrarSelecaoViagem ao objeto global window
 window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 
 // Mostra a seleção de veículos
@@ -133,7 +126,6 @@ function mostrarVeiculos(idMotorista, dia, linha, cliente) {
     statusSelecao.innerHTML = veiculoOptions;
 }
 
-// Adiciona a função de mostrarVeiculos ao objeto global window
 window.mostrarVeiculos = mostrarVeiculos;
 
 // Adiciona o veículo e cidade
@@ -158,7 +150,6 @@ async function finalizarViagem(idMotorista, dia, linha, cliente, veiculo) {
         return;
     }
 
-    // Atualiza o status do motorista
     const viagemData = {
         cidade: cidadeDestino,
         veiculo: veiculo,
@@ -166,10 +157,8 @@ async function finalizarViagem(idMotorista, dia, linha, cliente, veiculo) {
     };
     await atualizarStatusFirestore(idMotorista, dia, 'Em Viagem', viagemData); // Atualiza o status no Firestore
 
-    // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
 
-    // Limpa as informações anteriores antes de adicionar novas
     motoristaDiv.innerHTML = `
         <button class="adicionar" onclick="mostrarSelecaoStatus('${idMotorista}', ${dia}, ${linha})">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
@@ -179,14 +168,13 @@ async function finalizarViagem(idMotorista, dia, linha, cliente, veiculo) {
         <div>Cliente: ${cliente}</div>
     `;
 
-    fecharSelecaoStatus(); // Fecha todas as seleções
+    fecharSelecaoStatus();
 }
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha) {
     fecharSelecaoStatus();
 
-    // Acessa a célula correta do motorista usando data attributes
     const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
 
     if (!celula) {
@@ -196,18 +184,15 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha) {
 
     const motoristaDiv = celula.querySelector('.motorista');
 
-    // Limpa o conteúdo anterior antes de adicionar novo status
     motoristaDiv.innerHTML = `
         <button class="adicionar" onclick="mostrarSelecaoStatus('${idMotorista}', ${dia}, ${linha})">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
     `;
 
-    // Atualiza o status do motorista apenas para o dia específico
-    await atualizarStatusFirestore(idMotorista, dia, status, null); // Atualiza o status no Firestore
+    await atualizarStatusFirestore(idMotorista, dia, status, null);
 }
 
-// Adiciona a função adicionarStatus ao objeto global window
 window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
@@ -216,31 +201,26 @@ async function inicializarMotoristas() {
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
 
-    // Limpa a tabela antes de adicionar motoristas
     tabela.innerHTML = '';
 
-    // Criação do cabeçalho
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    // Se o usuário for admin, exibe todos os dias
     if (loggedInUser === 'admin') {
         dias.forEach(dia => {
             cabecalho.innerHTML += `<div class="celula">${dia.toUpperCase()}</div>`;
         });
     } else {
-        // Se o usuário for um motorista, exibe apenas o dia atual
         cabecalho.innerHTML += `<div class="celula">${dias[diaAtual].toUpperCase()}</div>`;
     }
 
     tabela.appendChild(cabecalho);
 
-    // Lógica para adicionar motoristas
     if (loggedInUser === 'admin') {
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         motoristasSnapshot.forEach(doc => {
-            const motorista = doc.id; // ID do motorista
-            const dados = doc.data(); // Dados do motorista
+            const motorista = doc.id; 
+            const dados = doc.data(); 
 
             const linha = document.createElement('div');
             linha.classList.add('linha');
@@ -266,7 +246,6 @@ async function inicializarMotoristas() {
             tabela.appendChild(linha);
         });
     } else {
-        // Apenas o motorista logado é exibido
         const linha = document.createElement('div');
         linha.classList.add('linha');
         linha.setAttribute('data-linha', '0');
@@ -287,11 +266,9 @@ async function inicializarMotoristas() {
     }
 }
 
-// Chama a função após o carregamento do DOM
 document.addEventListener('DOMContentLoaded', () => {
     inicializarMotoristas();
 
-    // Escutando mudanças em tempo real
     onSnapshot(collection(db, 'motoristas'), (snapshot) => {
         snapshot.docChanges().forEach(change => {
             if (change.type === "modified") {
