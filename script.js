@@ -39,7 +39,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
         await setDoc(motoristaRef, { 
             [dia]: { 
                 status: status, 
-                viagemData: viagemData ? viagemData : null // Garante que viagemData não seja undefined
+                viagemData: viagemData || null // Garante que viagemData não seja undefined
             }
         }, { merge: true });
         
