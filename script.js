@@ -164,6 +164,10 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     statusSelecao.innerHTML = cidadeInput;
 }
 
+// Adiciona a função ao objeto global window
+window.adicionarVeiculo = adicionarVeiculo;
+
+
 // Finaliza a viagem
 function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     const cidadeDestino = document.getElementById('cidade-destino').value;
@@ -197,6 +201,8 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
+// Adiciona a função ao objeto global window
+window.finalizarViagem = finalizarViagem;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
