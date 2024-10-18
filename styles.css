@@ -50,7 +50,8 @@ body {
     background-color: blue; /* Botão Limpar Cache */
 }
 
-.header .limpar-cache-button:hover, .header .sair-button:hover {
+.header .limpar-cache-button:hover,
+.header .sair-button:hover {
     background-color: darkred; /* Cor do hover para Sair */
     background-color: darkblue; /* Cor do hover para Limpar Cache */
 }
