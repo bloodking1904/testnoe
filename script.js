@@ -23,7 +23,7 @@ const loggedInUser = localStorage.getItem('loggedInUser');
 console.log("Usuário logado:", loggedInUser);
 
 // Adiciona a função de logout ao objeto global window
-window.logout = function() {
+window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
@@ -34,7 +34,12 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
     try {
         console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
-        await setDoc(motoristaRef, { [dia]: { status, viagemData } }, { merge: true });
+        
+        // Atualizar o status e a viagemData no campo apropriado
+        await setDoc(motoristaRef, { 
+            [dia]: { status, viagemData }
+        }, { merge: true });
+        
         console.log("Status atualizado com sucesso.");
     } catch (error) {
         console.error("Erro ao atualizar status:", error);
@@ -159,9 +164,6 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     statusSelecao.innerHTML = cidadeInput;
 }
 
-// Adiciona a função ao objeto global window -------------------------
-window.adicionarVeiculo = adicionarVeiculo;
-
 // Finaliza a viagem
 function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     const cidadeDestino = document.getElementById('cidade-destino').value;
@@ -176,8 +178,9 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         veiculo: veiculo,
         cliente: cliente
     };
+
+    // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
-    atualizarStatusLocalStorage(nome, dia, 'Em Viagem', viagemData); // Atualiza no localStorage
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
@@ -194,9 +197,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
-
-// Adiciona a função ao objeto global window -------------------------
-window.finalizarViagem = finalizarViagem;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
