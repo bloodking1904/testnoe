@@ -309,6 +309,9 @@ async function inicializarMotoristas() {
     }
 
     console.log("Tabela de motoristas inicializada.");
+    
+    // Adicionando log para verificar os IDs que foram gerados
+    console.log("IDs das linhas na tabela:", Array.from(tabela.children).map(l => l.getAttribute('data-linha')));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
