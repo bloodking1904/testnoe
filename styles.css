@@ -7,17 +7,22 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Centraliza verticalmente o conteúdo */
+    justify-content: flex-start; /* Mudado para flex-start para garantir que o cabeçalho fique visível no topo */
     height: 100vh; /* Altura da tela inteira */
     overflow-x: hidden; /* Evita rolagem horizontal */
 }
 
 /* Estilos do Cabeçalho */
 .header {
+    position: fixed; /* Fixa o cabeçalho na parte superior */
+    top: 0;
+    left: 0;
+    width: 100%; /* Garante que o cabeçalho ocupe toda a largura */
     text-align: center;
     margin-bottom: 20px;
-    width: 100%; /* Garante que o cabeçalho ocupe toda a largura */
     box-sizing: border-box; /* Inclui padding e border na largura total */
+    background-color: white; /* Fundo branco para o cabeçalho */
+    z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
 }
 
 .header h1 {
@@ -57,9 +62,17 @@ body {
     gap: 10px;
     width: 100%; /* Garante que a tabela ocupe toda a largura */
     max-width: 1200px; /* Limita a largura máxima */
-    margin: 0 auto;
+    margin-top: 80px; /* Espaço para o cabeçalho fixo */
     box-sizing: border-box; /* Inclui padding e border na largura total */
     overflow-x: auto; /* Permite rolagem horizontal se necessário */
+}
+
+.cabecalho {
+    position: sticky; /* Torna os dias da semana fixos na parte superior */
+    top: 0; /* Fixa no topo */
+    background: white; /* Fundo branco para melhor legibilidade */
+    z-index: 500; /* Fica acima das células da tabela */
+    display: contents; /* Permite que a linha se comporte como um único elemento */
 }
 
 .celula {
@@ -81,34 +94,6 @@ body {
 
 .linha {
     display: contents; /* Permite que as linhas se comportem como um único elemento */
-}
-
-.cabecalho {
-    font-weight: bold;
-}
-
-/* Estilos para Overlay e Seleção de Status */
-.overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 100;
-}
-
-.selecao-status {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 5px;
-    z-index: 200;
 }
 
 /* Estilos para Motoristas */
@@ -139,50 +124,10 @@ body {
     width: 100%;
 }
 
-/* Estilos do Container de Login */
-.login-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centraliza os elementos no eixo horizontal */
-    justify-content: center; /* Centraliza os elementos no eixo vertical */
-    width: 100%; /* Garante que o contêiner ocupe toda a largura */
-    max-width: 400px; /* Limita a largura máxima do contêiner */
-    margin: 0 auto; /* Centraliza o contêiner horizontalmente */
-    padding: 20px; /* Adiciona um padding interno ao contêiner */
-    background-color: white; /* Fundo branco para o contêiner */
-    border-radius: 5px; /* Bordas arredondadas */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para dar destaque ao contêiner */
-}
-
-/* Estilos para os Campos de Entrada e Botão */
-input[type="text"],
-input[type="password"] {
-    width: 100%; /* Ocupa toda a largura do contêiner */
-    padding: 10px;
-    margin: 10px 0; /* Margem entre os campos */
-    border: 1px solid #ccc; /* Borda leve */
-    border-radius: 5px; /* Bordas arredondadas */
-}
-
-button.entrar-button {
-    background-color: blue; /* Cor do botão */
-    color: white; /* Cor do texto do botão */
-    border: none; /* Remove a borda padrão */
-    border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Cursor de pointer para indicar interatividade */
-    padding: 10px 20px; /* Padding interno do botão */
-    font-size: 16px; /* Tamanho do texto */
-    transition: background 0.3s; /* Transição suave para mudança de cor */
-}
-
-button.entrar-button:hover {
-    background-color: darkblue; /* Cor do botão ao passar o mouse */
-}
-
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .tabela {
-        grid-template-columns: repeat(4, 1fr); /* Menos colunas em telas menores */
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
     }
     .celula {
         padding: 15px;
@@ -191,7 +136,7 @@ button.entrar-button:hover {
 
 @media (max-width: 480px) {
     .tabela {
-        grid-template-columns: 1fr; /* Uma coluna em telas pequenas */
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
     }
     .linha.cabecalho {
         display: grid;
@@ -199,7 +144,7 @@ button.entrar-button:hover {
     }
     .linha:not(.cabecalho) {
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas também */
     }
     .celula {
         padding: 10px;
