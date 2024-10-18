@@ -340,7 +340,7 @@ function atualizarLinhaMotorista(motorista, dados) {
             const celula = linha.querySelector(`.celula[data-dia="${diaIndex}"]`);
             const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
 
-            console.log(`Atualizando status para o dia ${dia}:`, statusAtual); // Adicionado log
+            console.log(`Atualizando status para ${motorista} no dia ${dia}:`, statusAtual); // Adicionado log
 
             celula.innerHTML = `
                 <div class="motorista">
