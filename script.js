@@ -288,9 +288,10 @@ async function inicializarMotoristas() {
             tabela.appendChild(linha);
         });
     } else {
+        // Renderiza apenas a linha do motorista logado
         const linha = document.createElement('div');
         linha.classList.add('linha');
-        linha.setAttribute('data-linha', '0');
+        linha.setAttribute('data-linha', loggedInUser);
 
         const celula = document.createElement('div');
         celula.classList.add('celula');
@@ -298,7 +299,7 @@ async function inicializarMotoristas() {
 
         celula.innerHTML = `
             <div class="motorista">
-                <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="0" 
+                <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}" 
                     onclick="mostrarSelecaoStatus(this)">+</button>
                 <span style="font-weight: bold;">${loggedInUser}</span>
                 <div class="status" style="color: green; font-weight: bold;">Disponível</div>
@@ -310,7 +311,7 @@ async function inicializarMotoristas() {
 
     console.log("Tabela de motoristas inicializada.");
     
-    // Adicionando log para verificar os IDs que foram gerados
+    // Log para verificar os IDs das linhas
     console.log("IDs das linhas na tabela:", Array.from(tabela.children).map(l => l.getAttribute('data-linha')));
 }
 
@@ -337,13 +338,16 @@ function atualizarLinhaMotorista(motorista, dados) {
     const tabela = document.getElementById('tabela-motoristas');
     const linha = Array.from(tabela.children).find(l => l.getAttribute('data-linha') === motorista);
 
+    // Log para verificar se a linha foi encontrada
+    console.log("Linha encontrada:", linha ? "Sim" : "Não", "para o motorista:", motorista);
+
     if (linha) {
         const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
         dias.forEach((dia, diaIndex) => {
             const celula = linha.querySelector(`.celula[data-dia="${diaIndex}"]`);
             const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
 
-            console.log(`Atualizando status para ${motorista} no dia ${dia}:`, statusAtual); // Adicionado log
+            console.log(`Atualizando status para ${motorista} no dia ${dia}:`, statusAtual); // Log dos dados que estão sendo atualizados
 
             celula.innerHTML = `
                 <div class="motorista">
