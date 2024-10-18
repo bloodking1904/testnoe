@@ -204,6 +204,9 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
 
+// Adiciona a função finalizar viagem ao objeto global window
+window.finalizarViagem = finalizarViagem;
+
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
