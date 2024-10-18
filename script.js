@@ -185,9 +185,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         cliente: cliente
     };
 
-// Adiciona a função de limpar cache ao objeto global window
-window.finalizarViagem = finalizarViagem;
-
     // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
 
@@ -206,6 +203,9 @@ window.finalizarViagem = finalizarViagem;
 
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
+
+// Adiciona a função de finaliza viagem ao objeto global window
+window.finalizarViagem = finalizarViagem;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
