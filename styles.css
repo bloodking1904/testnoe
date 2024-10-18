@@ -175,6 +175,29 @@ button.entrar-button:hover {
     width: 100%;
 }
 
+
+/* Media Queries para Responsividade */
+@media (max-width: 768px) {
+    .tabela {
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
+    }
+    .motoristas-container {
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas em telas menores */
+    }
+}
+
+@media (max-width: 480px) {
+    .tabela {
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
+    }
+    .motoristas-container {
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas também */
+    }
+}
+
+
+
+
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .tabela {
