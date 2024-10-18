@@ -108,35 +108,98 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
 
-// Função para mostrar a seleção de viagem
-function mostrarSelecaoViagem(idMotorista, dia, linha) {
-    console.log(`Mostrando seleção de viagem para: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
-    
+// Mostra a seleção de viagem
+function mostrarSelecaoViagem(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     const viagemOptions = `
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Regis')">Regis</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, '${linha}', 'Regis')">Regis</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculos('${nome}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
     `;
 
     statusSelecao.innerHTML = viagemOptions;
-    document.getElementById('status-selecao').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
-    console.log("Opções de viagem exibidas.");
 }
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 
+// Mostra a seleção de veículos
+function mostrarVeiculos(nome, dia, linha, cliente) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const veiculoOptions = `
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Hilux SW4')">Hilux SW4</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Hilux Carr. Mad.')">Hilux Carr. Mad.</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Corolla')">Corolla</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Ranger P')">Ranger P</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Ranger B')">Ranger B</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Frontier')">Frontier</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Compass')">Compass</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Yaris')">Yaris</div>
+    `;
+
+    statusSelecao.innerHTML = veiculoOptions;
+}
+
+// Adiciona a função ao objeto global window
+window.mostrarVeiculos = mostrarVeiculos;
+
+// Adiciona o veículo e cidade
+function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const cidadeInput = `
+        <div class="cidade-input">
+            <label>Digite a cidade destino:</label>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino">
+            <button style="background-color: green; color: white;" onclick="finalizarViagem('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">+</button>
+        </div>
+    `;
+
+    statusSelecao.innerHTML = cidadeInput;
+}
+
+// Adiciona a função ao objeto global window -------------------------
+window.adicionarVeiculo = adicionarVeiculo;
+
+// Finaliza a viagem
+function finalizarViagem(nome, dia, linha, cliente, veiculo) {
+    const cidadeDestino = document.getElementById('cidade-destino').value;
+    if (!cidadeDestino) {
+        alert("Por favor, digite a cidade destino.");
+        return;
+    }
+
+    // Atualiza o status do motorista
+    const viagemData = {
+        cidade: cidadeDestino,
+        veiculo: veiculo,
+        cliente: cliente
+    };
+    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
+    atualizarStatusLocalStorage(nome, dia, 'Em Viagem', viagemData); // Atualiza no localStorage
+
+    // Atualiza visualmente o motorista
+    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+
+    // Limpa as informações anteriores antes de adicionar novas
+    motoristaDiv.innerHTML = `
+        <button class="adicionar" onclick="mostrarSelecaoStatus('${nome}', ${dia}, '${linha}')">+</button>
+        <span style="font-weight: bold;">${nome}</span>
+        <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
+        <div>Cidade: ${cidadeDestino}</div>
+        <div>Veículo: ${veiculo}</div>
+        <div>Cliente: ${cliente}</div>
+    `;
+
+    fecharSelecaoStatus(); // Fecha todas as seleções
+}
+
+// Adiciona a função ao objeto global window -------------------------
+window.finalizarViagem = finalizarViagem;
+
 // Função para adicionar o status selecionado à célula correspondente
-async function adicionarStatus(idMotorista, status, cor, dia, linha) {
+async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
     fecharSelecaoStatus();
 
@@ -156,7 +219,7 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha) {
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
     `;
 
-    await atualizarStatusFirestore(idMotorista, dia, status, null);
+    await atualizarStatusFirestore(idMotorista, dia, status, viagemData);
     console.log("Status adicionado com sucesso.");
 }
 
