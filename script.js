@@ -204,9 +204,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
 
-// Adiciona a função de finaliza viagem ao objeto global window
-window.finalizarViagem = finalizarViagem;
-
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
@@ -342,6 +339,8 @@ function atualizarLinhaMotorista(motorista, dados) {
         dias.forEach((dia, diaIndex) => {
             const celula = linha.querySelector(`.celula[data-dia="${diaIndex}"]`);
             const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
+
+            console.log(`Atualizando status para o dia ${dia}:`, statusAtual); // Adicionado log
 
             celula.innerHTML = `
                 <div class="motorista">
