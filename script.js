@@ -184,7 +184,9 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         veiculo: veiculo,
         cliente: cliente
     };
-    
+
+// Adiciona a função de limpar cache ao objeto global window
+window.finalizarViagem = finalizarViagem;
 
     // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
@@ -204,9 +206,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
-
-// Adiciona a função ao objeto global window
-window.finalizarViagem = finalizarViagem;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
@@ -358,6 +357,9 @@ function atualizarLinhaMotorista(motorista, dados) {
         console.error(`Linha para o motorista ${motorista} não encontrada.`);
     }
 }
+
+// Adiciona a função de limpar cache ao objeto global window
+window.atualizarLinhaMotorista = atualizarLinhaMotorista;
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
