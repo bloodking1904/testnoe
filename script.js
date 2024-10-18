@@ -184,6 +184,7 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         veiculo: veiculo,
         cliente: cliente
     };
+    
 
     // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
@@ -203,6 +204,9 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções
 }
+
+// Adiciona a função ao objeto global window
+window.finalizarViagem = finalizarViagem;
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData) {
