@@ -56,6 +56,47 @@ body {
     background-color: darkblue; /* Cor do hover para Limpar Cache */
 }
 
+/* Estilos do Container de Login */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os elementos no eixo horizontal */
+    justify-content: center; /* Centraliza os elementos no eixo vertical */
+    width: 100%; /* Garante que o contêiner ocupe toda a largura */
+    max-width: 400px; /* Limita a largura máxima do contêiner */
+    margin: 0 auto; /* Centraliza o contêiner horizontalmente */
+    padding: 20px; /* Adiciona um padding interno ao contêiner */
+    background-color: white; /* Fundo branco para o contêiner */
+    border-radius: 5px; /* Bordas arredondadas */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para dar destaque ao contêiner */
+}
+
+/* Estilos para os Campos de Entrada e Botão */
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Ocupa toda a largura do contêiner */
+    padding: 10px;
+    margin: 10px 0; /* Margem entre os campos */
+    border: 1px solid #ccc; /* Borda leve */
+    border-radius: 5px; /* Bordas arredondadas */
+}
+
+button.entrar-button {
+    background-color: blue; /* Cor do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de pointer para indicar interatividade */
+    padding: 10px 20px; /* Padding interno do botão */
+    font-size: 16px; /* Tamanho do texto */
+    transition: background 0.3s; /* Transição suave para mudança de cor */
+}
+
+button.entrar-button:hover {
+    background-color: darkblue; /* Cor do botão ao passar o mouse */
+}
+
+
 /* Estilos para a Tabela */
 .tabela {
     display: grid;
