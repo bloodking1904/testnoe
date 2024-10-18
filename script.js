@@ -358,27 +358,28 @@ function atualizarLinhaMotorista(motorista, dados) {
 
     if (linha) {
         const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-        dias.forEach((dia, diaIndex) => {
-            const celula = linha.querySelector(`.celula[data-dia="${diaIndex}"]`);
-            const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
+        const diaAtual = new Date().getDay(); // Obtém o dia atual
 
-            console.log(`Atualizando status para ${motorista} no dia ${dia}:`, statusAtual); // Log dos dados que estão sendo atualizados
+        // Atualiza apenas para o dia atual
+        const celula = linha.querySelector(`.celula[data-dia="${diaAtual}"]`);
+        const statusAtual = dados[diaAtual] || { status: 'Disponível', viagemData: null };
 
-            // Verifica se a célula existe antes de tentar alterar o innerHTML
-            if (celula) {
-                celula.innerHTML = `
-                    <div class="motorista">
-                        <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}" 
-                            onclick="mostrarSelecaoStatus(this)">+</button>
-                        <span style="font-weight: bold;">${motorista}</span>
-                        <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
-                        ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
-                    </div>
-                `;
-            } else {
-                console.error(`Célula não encontrada para o motorista ${motorista} no dia ${dia}`);
-            }
-        });
+        console.log(`Atualizando status para ${motorista} no dia ${dias[diaAtual]}:`, statusAtual); // Log do status a ser atualizado
+
+        // Verifica se a célula existe antes de tentar alterar o innerHTML
+        if (celula) {
+            celula.innerHTML = `
+                <div class="motorista">
+                    <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaAtual}" data-linha="${motorista}" 
+                        onclick="mostrarSelecaoStatus(this)">+</button>
+                    <span style="font-weight: bold;">${motorista}</span>
+                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                    ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                </div>
+            `;
+        } else {
+            console.error(`Célula não encontrada para o motorista ${motorista} no dia ${dias[diaAtual]}`);
+        }
     } else {
         console.error(`Linha para o motorista ${motorista} não encontrada.`);
     }
