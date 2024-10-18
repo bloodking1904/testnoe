@@ -57,15 +57,13 @@ function mostrarSelecaoStatus(element) {
     const dia = element.dataset.dia;
     const linha = String(element.dataset.linha); // Garantindo que linha seja uma string
 
-    console.log("Mostrando seleção de status para:", idMotorista, "Dia:", dia, "Linha:", linha);
-
     const statusSelecao = document.getElementById('status-selecao');
 
     let statusOptions = `
         <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
             onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-            onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'red', ${dia}, '${linha}')">Em Atendimento</div>
+            onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
     `;
 
     if (loggedInUser === 'admin') {
@@ -80,12 +78,35 @@ function mostrarSelecaoStatus(element) {
     statusSelecao.innerHTML = statusOptions;
     document.getElementById('status-selecao').style.display = 'flex';
     document.getElementById('overlay').style.display = 'block';
-
     console.log("Opções de status exibidas.");
 }
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
+
+// Mostra a seleção de atendimento
+function mostrarSelecaoAtendimento(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+
+    const atendimentoOptions = `
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, ${linha})">5º Andar</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, ${linha})">Eremita</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, ${linha})">Laisa</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, ${linha})">Czarina</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, ${linha})">Regis</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, ${linha})">Rodolpho</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, ${linha})">Robson</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, ${linha})">Crosara</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, ${linha})">Presidente</div>
+    `;
+
+    statusSelecao.innerHTML = atendimentoOptions;
+    document.getElementById('status-selecao').style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
+}
+
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
 
 // Função para mostrar a seleção de viagem
 function mostrarSelecaoViagem(idMotorista, dia, linha) {
