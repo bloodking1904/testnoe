@@ -139,6 +139,15 @@ button.entrar-button:hover {
 }
 
 /* Estilos para Motoristas */
+.motoristas-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 colunas para motoristas */
+    width: 100%; /* Ocupa toda a largura */
+    max-width: 1200px; /* Limita a largura máxima */
+    margin-top: 10px; /* Espaço entre a tabela e a seção de motoristas */
+}
+
+/* Estilos para Motoristas */
 .motorista {
     display: flex;
     flex-direction: column;
