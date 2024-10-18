@@ -89,15 +89,15 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
 
     const atendimentoOptions = `
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, ${linha})">5º Andar</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, ${linha})">Eremita</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, ${linha})">Laisa</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, ${linha})">Czarina</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, ${linha})">Regis</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, ${linha})">Rodolpho</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, ${linha})">Robson</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, ${linha})">Crosara</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, ${linha})">Presidente</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', '5º Andar', 'red', ${dia}, '${linha}')">5º Andar</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, '${linha}')">Eremita</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Laisa', 'red', ${dia}, '${linha}')">Laisa</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, '${linha}')">Czarina</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, '${linha}')">Regis</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, '${linha}')">Rodolpho</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Robson', 'red', ${dia}, '${linha}')">Robson</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Crosara', 'red', ${dia}, '${linha}')">Crosara</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Presidente', 'red', ${dia}, '${linha}')">Presidente</div>
     `;
 
     statusSelecao.innerHTML = atendimentoOptions;
@@ -115,15 +115,15 @@ function mostrarSelecaoViagem(idMotorista, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     const viagemOptions = `
         <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SENAI DR')">SENAI DR</div>
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
         <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'SESI DR')">SESI DR</div>
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
         <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Regis')">Regis</div>
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Regis')">Regis</div>
         <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Rodolpho')">Rodolpho</div>
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
         <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-            onclick="adicionarVeiculo('${idMotorista}', ${dia}, ${linha}, 'Anatole')">Anatole</div>
+            onclick="adicionarVeiculo('${idMotorista}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
     `;
 
     statusSelecao.innerHTML = viagemOptions;
