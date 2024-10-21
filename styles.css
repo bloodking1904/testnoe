@@ -208,34 +208,18 @@ button.entrar-button:hover {
   z-index: 1000; /* Aumentado para garantir que fique acima do overlay */
 }
 /* Media Queries para Responsividade */
+
 @media (max-width: 768px) {
     .tabela {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
     }
+
     .motoristas-container {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas em telas menores */
     }
-}
 
-@media (max-width: 480px) {
-    .tabela {
-        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
-    }
-    .motoristas-container {
-        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas também */
-    }
-}
-
-
-
-
-/* Media Queries para Responsividade */
-@media (max-width: 768px) {
-    .tabela {
-        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
-    }
     .celula {
-        padding: 15px;
+        padding: 15px; /* Ajusta padding em telas menores */
     }
 }
 
@@ -243,15 +227,18 @@ button.entrar-button:hover {
     .tabela {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
     }
+
     .linha.cabecalho {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(7, 1fr); /* Garante que o cabeçalho seja exibido corretamente */
     }
+
     .linha:not(.cabecalho) {
         display: grid;
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas também */
     }
+
     .celula {
-        padding: 10px;
+        padding: 10px; /* Ajusta padding em telas muito pequenas */
     }
 }
