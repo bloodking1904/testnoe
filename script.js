@@ -73,7 +73,7 @@ function mostrarSelecaoStatus(element) {
     }
 
     const dia = element.dataset.dia;
-    const linha = String(element.dataset.linha); // Garantindo que linha seja uma string
+    const linha = String(element.dataset.linha);
 
     const statusSelecao = document.getElementById('status-selecao');
 
@@ -375,20 +375,13 @@ function atualizarLinhaMotorista(motorista, dados) {
     const tabela = document.getElementById('tabela-motoristas');
     const linha = Array.from(tabela.children).find(l => l.getAttribute('data-linha') === motorista);
 
-    // Log para verificar se a linha foi encontrada
-    console.log("Linha encontrada:", linha ? "Sim" : "Não", "para o motorista:", motorista);
-
     if (linha) {
         const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-        const diaAtual = new Date().getDay(); // Obtém o dia atual
+        const diaAtual = new Date().getDay(); 
 
-        // Atualiza apenas para o dia atual
         const celula = linha.querySelector(`.celula[data-dia="${diaAtual}"]`);
         const statusAtual = dados[diaAtual] || { status: 'Disponível', viagemData: null };
 
-        console.log(`Atualizando status para ${motorista} no dia ${dias[diaAtual]}:`, statusAtual); // Log do status a ser atualizado
-
-        // Verifica se a célula existe antes de tentar alterar o innerHTML
         if (celula) {
             celula.innerHTML = `
                 <div class="motorista">
