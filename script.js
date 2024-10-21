@@ -22,6 +22,49 @@ console.log("Firebase e Firestore inicializados com sucesso.");
 const loggedInUser = localStorage.getItem('loggedInUser');
 console.log("Usuário logado:", loggedInUser);
 
+// Redireciona acessos não autorizados
+const urlsProtegidas = [
+    'https://bloodking1904.github.io/testnoe/index.html',
+    'https://bloodking1904.github.io/testnoe/login.js',
+    'https://bloodking1904.github.io/testnoe/script.js',
+    'https://bloodking1904.github.io/testnoe/styles.css',
+];
+
+if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
+    window.location.href = 'login.html';
+}
+
+// Função para verificar se o usuário está autenticado
+function verificarAutenticacao() {
+    const loggedInUser = localStorage.getItem('loggedInUser');
+    const isAdmin = loggedInUser === 'admin';
+
+    // Se não houver usuário logado, redireciona para a página de login
+    if (!loggedInUser) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Configurações de tempo de sessão
+    if (isAdmin) {
+        // Atualiza a conexão do admin a cada 60 segundos
+        setInterval(() => {
+            console.log("Conexão do admin atualizada.");
+            // A conexão com o Firebase é mantida automaticamente através do onSnapshot
+        }, 60000); // 60 segundos
+    } else {
+        // Para motoristas, define um temporizador de 5 minutos
+        setTimeout(() => {
+            alert("Sua sessão expirou. Faça login novamente.");
+            localStorage.removeItem('loggedInUser'); // Remove o usuário logado
+            window.location.href = 'login.html'; // Redireciona para a página de login
+        }, 5 * 60 * 1000); // 5 minutos
+    }
+}
+
+// Executa a verificação ao carregar a página
+document.addEventListener('DOMContentLoaded', verificarAutenticacao);
+
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
