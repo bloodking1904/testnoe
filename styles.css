@@ -145,8 +145,7 @@ button.entrar-button:hover {
 }
 
 .linha {
-    display: grid; /* Mudado para grid para que cada linha tenha suas células em colunas */
-    grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para os dias da semana */
+    display: contents; /* Permite que as linhas sejam tratadas como um único elemento */
 }
 
 /* Estilos para Motoristas */
