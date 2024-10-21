@@ -190,22 +190,22 @@ button.entrar-button:hover {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Escurece o fundo */
-  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex; /* Alterado para flex para permitir centralização */
   justify-content: center;
   align-items: center;
-  z-index: 999; /* Garante que o overlay fique acima de outros elementos */
+  z-index: 999;
 }
 
-.status-selecao {
+.selecao-status {
   background-color: white;
   padding: 20px;
   border-radius: 5px;
   display: none;
   flex-direction: column;
   align-items: center;
+  z-index: 1000; /* Aumentado para garantir que fique acima do overlay */
 }
-
 /* Media Queries para Responsividade */
 @media (max-width: 768px) {
     .tabela {
