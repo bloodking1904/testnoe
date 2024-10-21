@@ -84,8 +84,10 @@ function mostrarSelecaoStatus(element) {
     }
 
     statusSelecao.innerHTML = statusOptions;
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
+
+    // Mostrando o overlay e a seleção de status
+    document.getElementById('overlay').style.display = 'flex'; // Alterado para flex para centralizar
+    statusSelecao.style.display = 'flex'; // Certifique-se de que a seleção de status esteja visível
     console.log("Opções de status exibidas.");
 }
 
