@@ -1,3 +1,4 @@
+
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -84,10 +85,8 @@ function mostrarSelecaoStatus(element) {
     }
 
     statusSelecao.innerHTML = statusOptions;
-
-    // Mostrando o overlay e a seleção de status
-    document.getElementById('overlay').style.display = 'flex'; // Alterado para flex para centralizar
-    statusSelecao.style.display = 'flex'; // Certifique-se de que a seleção de status esteja visível
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
     console.log("Opções de status exibidas.");
 }
 
@@ -209,10 +208,10 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         <div>Cliente: ${cliente}</div>
     `;
 
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
-
     fecharSelecaoStatus(); // Fecha todas as seleções
+
+   document.getElementById('overlay').style.display = 'flex';
+   document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função finalizar viagem ao objeto global window
@@ -395,11 +394,6 @@ function atualizarLinhaMotorista(motorista, dados) {
         console.error(`Linha para o motorista ${motorista} não encontrada.`);
     }
 }
-
-// Adiciona a função de limpar cache ao objeto global window
-window.atualizarLinhaMotorista = atualizarLinhaMotorista;
-
-
 
 // Adiciona a função de limpar cache ao objeto global window
 window.atualizarLinhaMotorista = atualizarLinhaMotorista;
