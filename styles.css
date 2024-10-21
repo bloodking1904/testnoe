@@ -70,11 +70,18 @@ body {
     border-radius: 5px; /* Bordas arredondadas */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para dar destaque ao contêiner */
     box-sizing: border-box; /* Inclui padding e border na largura total */
+    text-align: center; /* Centraliza o texto dentro do contêiner */
+}
+
+.login-container label {
+    width: 100%; /* Garante que os rótulos ocupem toda a largura */
+    text-align: left; /* Alinha o texto dos rótulos à esquerda */
+    margin-bottom: 10px; /* Espaço abaixo dos rótulos */
 }
 
 /* Estilos para os Campos de Entrada e Botão */
-input[type="text"],
-input[type="password"] {
+.login-container input[type="text"],
+.login-container input[type="password"] {
     width: 100%; /* Ocupa toda a largura do contêiner */
     padding: 10px;
     margin: 10px 0; /* Margem entre os campos */
@@ -82,7 +89,7 @@ input[type="password"] {
     border-radius: 5px; /* Bordas arredondadas */
 }
 
-button.entrar-button {
+.login-container button.entrar-button {
     background-color: blue; /* Cor do botão */
     color: white; /* Cor do texto do botão */
     border: none; /* Remove a borda padrão */
@@ -91,6 +98,7 @@ button.entrar-button {
     padding: 10px 20px; /* Padding interno do botão */
     font-size: 16px; /* Tamanho do texto */
     transition: background 0.3s; /* Transição suave para mudança de cor */
+    width: 100%; /* Ocupa toda a largura do contêiner */
 }
 
 button.entrar-button:hover {
