@@ -245,17 +245,14 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData)
 
 window.adicionarStatus = adicionarStatus;
 
-
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
     const diaAtual = new Date().getDay();
     const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
     const tabela = document.getElementById('tabela-motoristas');
-    const motoristasContainer = document.querySelector('.motoristas-container'); // Seleciona o contêiner de motoristas
 
-    tabela.innerHTML = ''; // Limpa a tabela
-    motoristasContainer.innerHTML = ''; // Limpa o contêiner de motoristas
+    tabela.innerHTML = '';
 
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
@@ -303,7 +300,7 @@ async function inicializarMotoristas() {
                 `;
                 linha.appendChild(celula);
             });
-            motoristasContainer.appendChild(linha); // Adiciona a linha ao contêiner de motoristas
+            tabela.appendChild(linha);
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
@@ -332,7 +329,7 @@ async function inicializarMotoristas() {
                 </div>
             `;
             linha.appendChild(celula);
-            motoristasContainer.appendChild(linha); // Adiciona a linha ao contêiner de motoristas
+            tabela.appendChild(linha);
         } else {
             console.error("Motorista não encontrado no Firestore.");
         }
@@ -398,6 +395,11 @@ function atualizarLinhaMotorista(motorista, dados) {
         console.error(`Linha para o motorista ${motorista} não encontrada.`);
     }
 }
+
+// Adiciona a função de limpar cache ao objeto global window
+window.atualizarLinhaMotorista = atualizarLinhaMotorista;
+
+
 
 // Adiciona a função de limpar cache ao objeto global window
 window.atualizarLinhaMotorista = atualizarLinhaMotorista;
