@@ -209,10 +209,10 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         <div>Cliente: ${cliente}</div>
     `;
 
-    fecharSelecaoStatus(); // Fecha todas as seleções
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 
-   document.getElementById('overlay').style.display = 'flex';
-   document.getElementById('status-selecao').style.display = 'flex';
+    fecharSelecaoStatus(); // Fecha todas as seleções
 }
 
 // Adiciona a função finalizar viagem ao objeto global window
