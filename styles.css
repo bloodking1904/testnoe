@@ -69,6 +69,7 @@ body {
     background-color: white; /* Fundo branco para o contêiner */
     border-radius: 5px; /* Bordas arredondadas */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra para dar destaque ao contêiner */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
 }
 
 /* Estilos para os Campos de Entrada e Botão */
