@@ -82,11 +82,12 @@ body {
 /* Estilos para os Campos de Entrada e Botão */
 .login-container input[type="text"],
 .login-container input[type="password"] {
-    width: 100%; /* Ocupa toda a largura do contêiner */
+    width: calc(100% - 20px); /* Reduz a largura em 20px para adicionar padding */
     padding: 10px;
     margin: 10px 0; /* Margem entre os campos */
     border: 1px solid #ccc; /* Borda leve */
     border-radius: 5px; /* Bordas arredondadas */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
 }
 
 .login-container button.entrar-button {
