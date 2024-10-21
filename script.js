@@ -1,4 +1,3 @@
-
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs, getDoc } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -62,7 +61,17 @@ window.limparCache = limparCache;
 
 // Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
+    if (!element) {
+        console.error("Elemento não está definido.");
+        return;
+    }
+
     const idMotorista = element.dataset.idMotorista;
+    if (!idMotorista) {
+        console.error("ID do motorista não encontrado.");
+        return;
+    }
+
     const dia = element.dataset.dia;
     const linha = String(element.dataset.linha); // Garantindo que linha seja uma string
 
@@ -185,7 +194,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
         return;
     }
 
-    // Atualiza o status do motorista
     const viagemData = {
         cidade: cidadeDestino,
         veiculo: veiculo,
@@ -198,22 +206,24 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
 
-    // Limpa as informações anteriores antes de adicionar novas
-    motoristaDiv.innerHTML = `
-        <button class="adicionar" onclick="mostrarSelecaoStatus('${nome}', ${dia}, '${linha}')">+</button>
-        <span style="font-weight: bold;">${nome}</span>
-        <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
-        <div>Cidade: ${cidadeDestino}</div>
-        <div>Veículo: ${veiculo}</div>
-        <div>Cliente: ${cliente}</div>
-    `;
+    if (motoristaDiv) {
+        motoristaDiv.innerHTML = `
+            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+                onclick="mostrarSelecaoStatus(this)">+</button>
+            <span style="font-weight: bold;">${nome}</span>
+            <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
+            <div>Cidade: ${cidadeDestino}</div>
+            <div>Veículo: ${veiculo}</div>
+            <div>Cliente: ${cliente}</div>
+        `;
+    } else {
+        console.error("Div do motorista não encontrada ao atualizar visualmente.");
+    }
 
-    
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 
-   document.getElementById('overlay').style.display = 'flex';
-   document.getElementById('status-selecao').style.display = 'flex';
-
-   fecharSelecaoStatus(); // Fecha todas as seleções 
+    fecharSelecaoStatus(); // Fecha todas as seleções 
 }
 
 // Adiciona a função finalizar viagem ao objeto global window
