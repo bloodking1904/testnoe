@@ -84,8 +84,8 @@ function mostrarSelecaoStatus(element) {
     }
 
     statusSelecao.innerHTML = statusOptions;
+    document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
     console.log("Opções de status exibidas.");
 }
 
@@ -109,8 +109,8 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     `;
 
     statusSelecao.innerHTML = atendimentoOptions;
+    document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
-    document.getElementById('overlay').style.display = 'block';
 }
 
 // Adiciona a função ao objeto global window
@@ -128,6 +128,8 @@ function mostrarSelecaoViagem(nome, dia, linha) {
     `;
 
     statusSelecao.innerHTML = viagemOptions;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função ao objeto global window
@@ -148,6 +150,8 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
     `;
 
     statusSelecao.innerHTML = veiculoOptions;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função ao objeto global window
@@ -165,6 +169,8 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     `;
 
     statusSelecao.innerHTML = cidadeInput;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função ao objeto global window
@@ -202,6 +208,9 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     `;
 
     fecharSelecaoStatus(); // Fecha todas as seleções
+
+   document.getElementById('overlay').style.display = 'flex';
+   document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função finalizar viagem ao objeto global window
