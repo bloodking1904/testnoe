@@ -20,7 +20,7 @@ body {
     width: 100%; /* Garante que o cabeçalho ocupe toda a largura */
     text-align: center;
     margin-bottom: 20px;
-    box-sizing: border-box; /* Inclui padding e border na largura total */
+   /* box-sizing: border-box; /* Inclui padding e border na largura total */
     background-color: white; /* Fundo branco para o cabeçalho */
     z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
 }
@@ -124,7 +124,7 @@ button.entrar-button:hover {
     top: 0; /* Fixa no topo */
     background: white; /* Fundo branco para melhor legibilidade */
     z-index: 500; /* Fica acima das células da tabela */
-    display: contents; /* Permite que a linha se comporte como um único elemento */
+   /* display: contents; /* Permite que a linha se comporte como um único elemento */
 }
 
 .celula {
