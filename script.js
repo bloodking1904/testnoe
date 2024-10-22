@@ -344,7 +344,7 @@ async function inicializarMotoristas() {
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    if (loggedInUser === 'ADMIN') { // Verifica se o loggedInUser é 'ADMIN' em maiúsculas
+    if (loggedInUser === 'ADMIN') {
         dias.forEach(dia => {
             const celula = document.createElement('div');
             celula.classList.add('celula');
@@ -388,8 +388,10 @@ async function inicializarMotoristas() {
                         <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}"
                             onclick="mostrarSelecaoStatus(this)">+</button>
                         <span style="font-weight: bold;">${motorista}</span>
-                        <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
-                        ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                        <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                            ${statusAtual.status}
+                        </div>
+                        ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
                     </div>
                 `;
 
@@ -421,7 +423,9 @@ async function inicializarMotoristas() {
                     <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
                         onclick="mostrarSelecaoStatus(this)">+</button>
                     <span style="font-weight: bold;">${loggedInUser}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
+                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
+                        ${statusAtual.status}
+                    </div>
                 </div>
             `;
 
@@ -433,9 +437,9 @@ async function inicializarMotoristas() {
     }
 
     console.log("Tabela de motoristas inicializada.");
-
-  // Log para verificar os IDs das linhas
-  console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
+  
+    // Log para verificar os IDs das linhas
+    console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
 }
     
  
