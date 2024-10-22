@@ -125,6 +125,8 @@ button.entrar-button:hover {
     background: white; /* Fundo branco para melhor legibilidade */
     z-index: 500; /* Fica acima das células da tabela */
    /* display: contents; /* Permite que a linha se comporte como um único elemento */
+    font-size: 1.5em; /* Aumenta o tamanho da fonte */
+    font-weight: bold; /* Aplica negrito */
 }
 
 .celula {
