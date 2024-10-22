@@ -20,7 +20,7 @@ const db = getFirestore(app);
 console.log("Firebase e Firestore inicializados com sucesso.");
 
 // Converte o nome do usuário para maiúsculas
-const loggedInUser = localStorage.getItem('loggedInUser').toUpperCase(); 
+const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
 console.log("Usuário logado:", loggedInUser);
 
 // Redireciona acessos não autorizados
@@ -31,6 +31,7 @@ const urlsProtegidas = [
     'https://bloodking1904.github.io/testnoe/styles.css',
 ];
 
+// Verifica se a URL atual está nas URLs protegidas e se o usuário não está logado
 if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
     window.location.href = 'login.html';
 }
@@ -50,7 +51,6 @@ function verificarAutenticacao() {
         // Atualiza a conexão do admin a cada 60 segundos
         setInterval(() => {
             console.log("Conexão do admin atualizada.");
-            // A conexão com o Firebase é mantida automaticamente através do onSnapshot
         }, 60000); // 60 segundos
     } else {
         // Para motoristas, define um temporizador de 5 minutos
@@ -63,7 +63,10 @@ function verificarAutenticacao() {
 }
 
 // Executa a verificação ao carregar a página
-document.addEventListener('DOMContentLoaded', verificarAutenticacao);
+document.addEventListener('DOMContentLoaded', () => {
+    verificarAutenticacao();
+    // Outras inicializações podem ser colocadas aqui
+});
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
@@ -279,22 +282,22 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
 
-// Atualiza visualmente o motorista
-const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+    // Atualiza visualmente o motorista
+    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
 
-if (motoristaDiv) {
-    motoristaDiv.innerHTML = `
-        <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-            onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
-        <span style="font-weight: bold;">${nome}</span>
-        <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
-        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${cidadeDestino}</div>
-        <div style="white-space: nowrap;"><strong>Veículo:</strong> ${veiculo}</div>
-        <div><strong>Cliente:</strong> ${cliente}</div>
-    `;
-} else {
-    console.error("Div do motorista não encontrada ao atualizar visualmente.");
-}
+    if (motoristaDiv) {
+        motoristaDiv.innerHTML = `
+            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
+            <span style="font-weight: bold;">${nome}</span>
+            <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
+            <div style="white-space: nowrap;"><strong>Cidade:</strong> ${cidadeDestino}</div>
+            <div style="white-space: nowrap;"><strong>Veículo:</strong> ${veiculo}</div>
+            <div><strong>Cliente:</strong> ${cliente}</div>
+        `;
+    } else {
+        console.error("Div do motorista não encontrada ao atualizar visualmente.");
+    }
 
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
