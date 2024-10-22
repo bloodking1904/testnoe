@@ -477,8 +477,10 @@ function atualizarLinhaMotorista(motorista, dados) {
                     <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaAtual}" data-linha="${motorista}" 
                         onclick="mostrarSelecaoStatus(this)">+</button>
                     <span style="font-weight: bold;">${motorista}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
-                    ${statusAtual.viagemData ? `<div>Cidade: ${statusAtual.viagemData.cidade}</div><div>Veículo: ${statusAtual.viagemData.veiculo}</div><div>Cliente: ${statusAtual.viagemData.cliente}</div>` : ''}
+                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                        ${statusAtual.status}
+                    </div>
+                    ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
                 </div>
             `;
         } else {
