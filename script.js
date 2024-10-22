@@ -285,7 +285,7 @@ const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celu
 if (motoristaDiv) {
     motoristaDiv.innerHTML = `
         <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-            onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 3px;">+</button>
+            onclick="mostrarSelecaoStatus(this)" style="font-size: 1.0em; padding: 5px; background-color: green; color: white; border: none; border-radius: 2px;">+</button>
         <span style="font-weight: bold;">${nome}</span>
         <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
         <div style="white-space: nowrap;"><strong>Cidade:</strong> ${cidadeDestino}</div>
