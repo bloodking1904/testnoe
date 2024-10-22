@@ -107,10 +107,16 @@ async function resetarStatusTodosMotoristas() {
 
         motoristasSnapshot.docs.forEach(doc => {
             const motoristaRef = doc.ref;
-            // Atualiza o status para 'Disponível'
-            batch.set(motoristaRef, {
-                status: 'Disponível', // Define o status para 'Disponível'
-            }, { merge: true });
+
+            // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
+            for (let dia = 0; dia <= 6; dia++) {
+                batch.set(motoristaRef, {
+                    [dia]: {
+                        status: 'Disponível', // Define o status para 'Disponível'
+                        viagemData: null // Define viagemData como null
+                    }
+                }, { merge: true });
+            }
         });
 
         await batch.commit(); // Executa todas as operações em um único lote
@@ -121,6 +127,7 @@ async function resetarStatusTodosMotoristas() {
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
     }
 }
+
 // Adiciona a função ao objeto global window
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 
