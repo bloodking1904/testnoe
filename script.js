@@ -122,6 +122,9 @@ async function resetarStatusTodosMotoristas() {
         await batch.commit(); // Executa todas as operações em um único lote
         alert("Status de todos os motoristas foi resetado para 'Disponível'.");
         console.log("Status de todos os motoristas resetados com sucesso.");
+
+        // Chama a função para atualizar visualmente os motoristas
+        await inicializarMotoristas(); // Atualiza a tabela de motoristas
     } catch (error) {
         console.error("Erro ao resetar status:", error);
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
