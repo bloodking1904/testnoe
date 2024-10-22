@@ -390,6 +390,7 @@ async function inicializarMotoristas() {
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
+        console.log(`Buscando motorista com ID: ${loggedInUser}`); // Adicionando log para verificar o ID
         const motoristaRef = doc(db, 'motoristas', loggedInUser); // Usar o nome do motorista que está em maiúsculas
         const motoristaSnapshot = await getDoc(motoristaRef);
 
