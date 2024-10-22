@@ -92,15 +92,38 @@ async function atualizarStatusFirestore(idMotorista, dia, status, viagemData) {
     }
 }
 
-// Função para limpar cache
-function limparCache() {
-    console.log("Limpando cache...");
-    localStorage.clear();
-    alert('Cache e dados armazenados foram limpos.');
-}
+// Adiciona a função para confirmar o reset de status
+window.confirmarResetarStatus = function () {
+    if (confirm("Tem certeza que deseja resetar o status de todos os motoristas?")) {
+        resetarStatusTodosMotoristas();
+    }
+};
 
-// Adiciona a função de limpar cache ao objeto global window
-window.limparCache = limparCache;
+// Função para resetar o status de todos os motoristas
+async function resetarStatusTodosMotoristas() {
+    try {
+        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        const batch = writeBatch(db); // Usar batch para atualizar vários documentos de forma eficiente
+
+        motoristasSnapshot.docs.forEach(doc => {
+            const motoristaRef = doc.ref;
+            // Atualiza o status para 'Disponível'
+            batch.set(motoristaRef, {
+                status: 'Disponível', // Define o status para 'Disponível'
+            }, { merge: true });
+        });
+
+        await batch.commit(); // Executa todas as operações em um único lote
+        alert("Status de todos os motoristas foi resetado para 'Disponível'.");
+        console.log("Status de todos os motoristas resetados com sucesso.");
+    } catch (error) {
+        console.error("Erro ao resetar status:", error);
+        alert("Ocorreu um erro ao resetar o status dos motoristas.");
+    }
+}
+// Adiciona a função ao objeto global window
+window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
+
 
 // Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
