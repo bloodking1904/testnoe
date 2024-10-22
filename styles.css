@@ -3,7 +3,10 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
+    background-image: url('https://raw.githubusercontent.com/bloodking1904/testnoe/master/fundo_login.png');
+    background-size: cover; /* Cobre toda a tela */
+    background-position: center; /* Centraliza a imagem */
+    background-repeat: no-repeat; /* Não repete a imagem */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -21,7 +24,7 @@ body {
     text-align: center;
     margin-bottom: 20px;
    /* box-sizing: border-box; /* Inclui padding e border na largura total */
-    background-color: white; /* Fundo branco para o cabeçalho */
+    background-color: rgba(255, 255, 255, 0.8); /* Fundo levemente transparente para o cabeçalho */
     z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
 }
 
