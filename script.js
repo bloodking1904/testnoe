@@ -352,11 +352,12 @@ async function inicializarMotoristas() {
     console.log("Cabeçalho da tabela criado.");
 
     if (loggedInUser === 'admin') {
+        // Admin pode ver todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         console.log("Motoristas obtidos do Firestore.");
 
         motoristasSnapshot.docs.forEach(doc => {
-            const motorista = doc.id.toUpperCase(); // Converte o nome do motorista para maiúsculas
+            const motorista = doc.id; // Usa o nome do motorista como está no Firestore (em maiúsculas)
             const dados = doc.data();
 
             console.log("Motorista:", motorista, "Dados:", dados);
@@ -389,15 +390,15 @@ async function inicializarMotoristas() {
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
-        const linha = document.createElement('div');
-        linha.classList.add('linha');
-        linha.dataset.linha = loggedInUser.toUpperCase(); // Converte o nome do motorista para maiúsculas
-
-        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Não converter para minúsculas
         const motoristaSnapshot = await getDoc(motoristaRef);
 
         if (motoristaSnapshot.exists()) {
             const dados = motoristaSnapshot.data();
+            const linha = document.createElement('div');
+            linha.classList.add('linha');
+            linha.dataset.linha = loggedInUser; // Mantém o nome do motorista em maiúsculas
+
             const celula = document.createElement('div');
             celula.classList.add('celula');
             celula.dataset.dia = diaAtual;
@@ -406,9 +407,9 @@ async function inicializarMotoristas() {
 
             celula.innerHTML = `
                 <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${loggedInUser.toUpperCase()}" data-dia="${diaAtual}" data-linha="${loggedInUser.toUpperCase()}"
+                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
                         onclick="mostrarSelecaoStatus(this)">+</button>
-                    <span style="font-weight: bold;">${loggedInUser.toUpperCase()}</span>
+                    <span style="font-weight: bold;">${loggedInUser}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Disponível' ? 'green' : 'red'}; font-weight: bold;">${statusAtual.status}</div>
                 </div>
             `;
@@ -416,7 +417,7 @@ async function inicializarMotoristas() {
             linha.appendChild(celula);
             tabela.appendChild(linha);
         } else {
-            console.log("Motorista não encontrado no Firestore.");
+            console.log("Motorista não encontrado no Firestore. Verifique se o ID está correto e se o motorista existe.");
         }
     }
 
