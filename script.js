@@ -323,6 +323,10 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData)
 window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
+// Converte o nome do usuário para maiúsculas
+const loggedInUser = localStorage.getItem('loggedInUser').toUpperCase(); 
+console.log("Usuário logado:", loggedInUser);
+
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
     const diaAtual = new Date().getDay();
@@ -334,7 +338,7 @@ async function inicializarMotoristas() {
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    if (loggedInUser === 'admin') {
+    if (loggedInUser === 'ADMIN') { // Verifica se o loggedInUser é 'ADMIN' em maiúsculas
         dias.forEach(dia => {
             const celula = document.createElement('div');
             celula.classList.add('celula');
@@ -351,7 +355,7 @@ async function inicializarMotoristas() {
     tabela.appendChild(cabecalho);
     console.log("Cabeçalho da tabela criado.");
 
-    if (loggedInUser === 'admin') {
+    if (loggedInUser === 'ADMIN') {
         // Admin pode ver todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         console.log("Motoristas obtidos do Firestore.");
@@ -390,7 +394,7 @@ async function inicializarMotoristas() {
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
-        console.log(`Buscando motorista com ID: ${loggedInUser}`); // Adicionando log para verificar o ID
+        console.log(`Buscando motorista com ID: ${loggedInUser}`); // Log para verificar o ID
         const motoristaRef = doc(db, 'motoristas', loggedInUser); // Usar o nome do motorista que está em maiúsculas
         const motoristaSnapshot = await getDoc(motoristaRef);
 
