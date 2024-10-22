@@ -19,7 +19,8 @@ const db = getFirestore(app);
 
 console.log("Firebase e Firestore inicializados com sucesso.");
 
-const loggedInUser = localStorage.getItem('loggedInUser');
+// Converte o nome do usuário para maiúsculas
+const loggedInUser = localStorage.getItem('loggedInUser').toUpperCase(); 
 console.log("Usuário logado:", loggedInUser);
 
 // Redireciona acessos não autorizados
@@ -36,8 +37,7 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
 
 // Função para verificar se o usuário está autenticado
 function verificarAutenticacao() {
-    const loggedInUser = localStorage.getItem('loggedInUser');
-    const isAdmin = loggedInUser === 'admin';
+    const isAdmin = loggedInUser === 'ADMIN';
 
     // Se não houver usuário logado, redireciona para a página de login
     if (!loggedInUser) {
@@ -124,7 +124,6 @@ async function resetarStatusTodosMotoristas() {
 // Adiciona a função ao objeto global window
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 
-
 // Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
     if (!element) {
@@ -150,7 +149,7 @@ function mostrarSelecaoStatus(element) {
             onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
     `;
 
-    if (loggedInUser === 'admin') {
+    if (loggedInUser === 'ADMIN') {
         statusOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
                 onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
@@ -323,10 +322,6 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, viagemData)
 window.adicionarStatus = adicionarStatus;
 
 // Inicializa a lista de motoristas
-// Converte o nome do usuário para maiúsculas
-const loggedInUser = localStorage.getItem('loggedInUser').toUpperCase(); 
-console.log("Usuário logado:", loggedInUser);
-
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
     const diaAtual = new Date().getDay();
