@@ -208,6 +208,22 @@ button.entrar-button:hover {
   align-items: center;
   z-index: 1000; /* Aumentado para garantir que fique acima do overlay */
 }
+
+
+.resetar-status-button {
+    background-color: orange; /* Cor do botão */
+    color: white; /* Cor do texto */
+    border: none; /* Sem borda */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de pointer */
+    padding: 10px 20px; /* Padding interno */
+    font-size: 16px; /* Tamanho da fonte */
+    transition: background 0.3s; /* Transição suave */
+}
+
+.resetar-status-button:hover {
+    background-color: darkorange; /* Cor do botão ao passar o mouse */
+}
 /* Media Queries para Responsividade */
 
 @media (max-width: 768px) {
