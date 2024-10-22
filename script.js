@@ -279,22 +279,22 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     // Atualiza o status no Firestore
     adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, viagemData); // Atualiza o status
 
-    // Atualiza visualmente o motorista
-    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+// Atualiza visualmente o motorista
+const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
 
-    if (motoristaDiv) {
-        motoristaDiv.innerHTML = `
-            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-                onclick="mostrarSelecaoStatus(this)">+</button>
-            <span style="font-weight: bold;">${nome}</span>
-            <div class="status" style="color: yellow; font-weight: bold;">Em Viagem</div>
-            <div>Cidade: ${cidadeDestino}</div>
-            <div>Veículo: ${veiculo}</div>
-            <div>Cliente: ${cliente}</div>
-        `;
-    } else {
-        console.error("Div do motorista não encontrada ao atualizar visualmente.");
-    }
+if (motoristaDiv) {
+    motoristaDiv.innerHTML = `
+        <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+            onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 3px;">+</button>
+        <span style="font-weight: bold;">${nome}</span>
+        <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
+        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${cidadeDestino}</div>
+        <div style="white-space: nowrap;"><strong>Veículo:</strong> ${veiculo}</div>
+        <div><strong>Cliente:</strong> ${cliente}</div>
+    `;
+} else {
+    console.error("Div do motorista não encontrada ao atualizar visualmente.");
+}
 
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
