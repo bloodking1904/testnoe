@@ -390,7 +390,7 @@ async function inicializarMotoristas() {
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
-        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Não converter para minúsculas
+        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Usar o nome do motorista que está em maiúsculas
         const motoristaSnapshot = await getDoc(motoristaRef);
 
         if (motoristaSnapshot.exists()) {
