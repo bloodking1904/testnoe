@@ -1,11 +1,11 @@
 const users = {
-    admin: '1234',
-    reginaldo: '1234',
-    gevanildo: '1234',
-    jaderson: '1234',
-    leandro: '1234',
-    paulo: '1234',
-    ronaldo: '1234'
+    admin: 'saulo',
+    reginaldo: '1010',
+    gevanildo: '1010',
+    jaderson: '1010',
+    leandro: '1010',
+    paulo: '1010',
+    ronaldo: '1010'
 };
 
 document.getElementById('login-form').addEventListener('submit', function(event) {
