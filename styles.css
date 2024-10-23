@@ -116,7 +116,7 @@ button.entrar-button:hover {
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
     gap: 10px;
     width: 100%; /* Garante que a tabela ocupe toda a largura */
-    max-width: 1200px; /* Limita a largura máxima */
+    max-width: 1332px; /* Limita a largura máxima */
     margin-top: 80px; /* Espaço para o cabeçalho fixo */
     box-sizing: border-box; /* Inclui padding e border na largura total */
     overflow-x: auto; /* Permite rolagem horizontal se necessário */
@@ -229,7 +229,7 @@ button.entrar-button:hover {
 }
 /* Media Queries para Responsividade */
 
-@media (max-width: 768px) {
+@media (max-width: 1332px) {
     .tabela {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
     }
@@ -239,11 +239,11 @@ button.entrar-button:hover {
     }
 
     .celula {
-        padding: 15px; /* Ajusta padding em telas menores */
+        padding: 5px; /* Ajusta padding em telas menores */
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1332px) {
     .tabela {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
     }
@@ -259,6 +259,6 @@ button.entrar-button:hover {
     }
 
     .celula {
-        padding: 10px; /* Ajusta padding em telas muito pequenas */
+        padding: 5px; /* Ajusta padding em telas muito pequenas */
     }
 }
