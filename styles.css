@@ -236,12 +236,25 @@ button.entrar-button:hover {
 
     .motoristas-container {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas em telas menores */
+        font-size: 1.2em; /* Aumenta o tamanho da fonte dos motoristas ************************/
     }
 
     .celula {
         padding: 15px; /* Ajusta padding em telas menores */
     }
+    .header button {
+        font-size: 18px; /* Aumenta o tamanho da fonte dos botões no cabeçalho */
+    }
+    body {
+        transform: scale(1.2); /* Aumenta o tamanho da tela em dispositivos móveis */
+        transform-origin: top left; /* Define a origem do aumento */
+    }
+    .header h1 {
+        font-size: 28px; /* Aumenta o tamanho da fonte do cabeçalho */
+    }
+    
 }
+
 
 @media (max-width: 480px) {
     .tabela {
