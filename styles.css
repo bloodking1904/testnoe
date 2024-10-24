@@ -1,4 +1,4 @@
-
+    
 
 /* Estilos Gerais */
 body {
@@ -8,12 +8,13 @@ body {
     background-image: url('https://raw.githubusercontent.com/bloodking1904/testnoe/master/fundo_login.png');
     background-size: cover; /* Cobre toda a tela */
     background-position: center; /* Centraliza a imagem */
+    background-attachment: fixed; /* Se você quiser que a imagem fique fixa ao rolar */
     background-repeat: no-repeat; /* Não repete a imagem */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start; /* Mudado para flex-start para garantir que o cabeçalho fique visível no topo */
-    height: 100vh; /* Altura da tela inteira */
+    height: 100%; /* Altura da tela inteira */
     overflow-x: hidden; /* Evita rolagem horizontal */
 }
 
@@ -248,6 +249,7 @@ button.entrar-button:hover {
         font-size: 18px; /* Aumenta o tamanho da fonte dos botões no cabeçalho */
     }
     body {
+        background-size: cover; /* Garante que a imagem cubra a tela em dispositivos menores */
         transform: scale(1.2); /* Aumenta o tamanho da tela em dispositivos móveis */
         transform-origin: top left; /* Define a origem do aumento */
     }
