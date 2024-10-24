@@ -1,4 +1,3 @@
-
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
 import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
@@ -183,7 +182,6 @@ function mostrarSelecaoStatus(element) {
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
-
 // Mostra a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -200,9 +198,30 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'CPL', 'red', ${dia}, '${linha}')">CPL</div>
     `;
 
-    statusSelecao.innerHTML = atendimentoOptions;
+    // Adicionando a nova caixa de seleção para a opção "SEC."
+    const statusOptionsSec = `
+        <div id="status-sec" style="display: none;">
+            <label>Selecione um status:</label>
+            <select id="status-selecao-opcao">
+                <option value="Alice">Alice</option>
+                <option value="Czarina">Czarina</option>
+                <option value="Daiana">Daiana</option>
+                <option value="Erika">Erika</option>
+                <option value="Julia">Julia</option>
+            </select>
+            <button onclick="adicionarStatus('${nome}', document.getElementById('status-selecao-opcao').value, 'red', ${dia}, '${linha}')">Confirmar</button>
+        </div>
+    `;
+
+    statusSelecao.innerHTML = atendimentoOptions + statusOptionsSec;
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+
+    // Mostrar a nova caixa de seleção se "SEC." for escolhido
+    const secButton = statusSelecao.querySelector('.status:nth-child(1)');
+    secButton.addEventListener('click', function() {
+        document.getElementById('status-sec').style.display = 'block';
+    });
 }
 
 // Adiciona a função ao objeto global window
@@ -454,10 +473,9 @@ async function inicializarMotoristas() {
     console.log("Tabela de motoristas inicializada.");
   
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-}   
- 
+}
 
-
+// Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     inicializarMotoristas();
