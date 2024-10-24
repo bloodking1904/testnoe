@@ -153,7 +153,6 @@ function mostrarSelecaoStatus(element) {
 
     const dia = element.dataset.dia;
     const linha = String(element.dataset.linha);
-
     const statusSelecao = document.getElementById('status-selecao');
 
     let statusOptions = `
@@ -173,13 +172,17 @@ function mostrarSelecaoStatus(element) {
     }
 
     statusSelecao.innerHTML = statusOptions;
+
+    // Exibir o overlay e a caixa de seleção
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+
     console.log("Opções de status exibidas.");
 }
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
+
 
 // Mostra a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
@@ -507,6 +510,11 @@ function atualizarLinhaMotorista(motorista, dados) {
 
 // Adiciona a função de limpar cache ao objeto global window
 window.atualizarLinhaMotorista = atualizarLinhaMotorista;
+
+// Fechar a seleção de status ao clicar fora da caixa
+document.getElementById('overlay').addEventListener('click', function() {
+    fecharSelecaoStatus();
+});
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
