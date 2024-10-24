@@ -365,12 +365,11 @@ async function inicializarMotoristas() {
     console.log("Cabeçalho da tabela criado.");
 
     if (loggedInUser === 'ADMIN') {
-        // Admin pode ver todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         console.log("Motoristas obtidos do Firestore.");
 
         motoristasSnapshot.docs.forEach(doc => {
-            const motorista = doc.id; // Usa o nome do motorista como está no Firestore (em maiúsculas)
+            const motorista = doc.id; 
             const dados = doc.data();
 
             console.log("Motorista:", motorista, "Dados:", dados);
@@ -394,7 +393,11 @@ async function inicializarMotoristas() {
                         <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                             ${statusAtual.status}
                         </div>
-                        ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
+                        ${statusAtual.viagemData ? `
+                            <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div>
+                            <div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
+                            <div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>
+                        ` : ''}
                     </div>
                 `;
 
@@ -405,15 +408,15 @@ async function inicializarMotoristas() {
         });
     } else {
         // Se o motorista não for admin, apenas inicializa sua linha
-        console.log(`Buscando motorista com ID: ${loggedInUser}`); // Log para verificar o ID
-        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Usar o nome do motorista que está em maiúsculas
+        console.log(`Buscando motorista com ID: ${loggedInUser}`);
+        const motoristaRef = doc(db, 'motoristas', loggedInUser); 
         const motoristaSnapshot = await getDoc(motoristaRef);
 
         if (motoristaSnapshot.exists()) {
             const dados = motoristaSnapshot.data();
             const linha = document.createElement('div');
             linha.classList.add('linha');
-            linha.dataset.linha = loggedInUser; // Mantém o nome do motorista em maiúsculas
+            linha.dataset.linha = loggedInUser;
 
             const celula = document.createElement('div');
             celula.classList.add('celula');
@@ -429,6 +432,11 @@ async function inicializarMotoristas() {
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
                         ${statusAtual.status}
                     </div>
+                    ${statusAtual.viagemData ? `
+                        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div>
+                        <div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
+                        <div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>
+                    ` : ''}
                 </div>
             `;
 
@@ -441,10 +449,8 @@ async function inicializarMotoristas() {
 
     console.log("Tabela de motoristas inicializada.");
   
-    // Log para verificar os IDs das linhas
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-}
-    
+}   
  
 
 
