@@ -203,6 +203,9 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
+
 // Nova função para mostrar as secretarias
 function mostrarSelecaoSecretarias(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
