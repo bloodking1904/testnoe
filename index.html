@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Agenda dos Motoristas</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="header">
@@ -18,27 +18,24 @@
         <div class="linha cabecalho">
             <div class="celula">DOMINGO</div>
             <div class="celula">SEGUNDA</div>
-            <div class="celula">TER&Ccedil;A</div>
+            <div class="celula">TERÇA</div>
             <div class="celula">QUARTA</div>
             <div class="celula">QUINTA</div>
             <div class="celula">SEXTA</div>
-            <div class="celula">S&Aacute;BADO</div>
+            <div class="celula">SÁBADO</div>
         </div>
     </div>
 
-    <!-- Contêiner para os motoristas -->
     <div class="motoristas-container">
         <!-- Os motoristas serão preenchidos aqui dinamicamente através do JavaScript -->
     </div>
 
-    <!-- Overlay para seleção de status -->
     <div id="overlay" class="overlay" style="display:none;"></div>
     <div id="status-selecao" class="selecao-status" style="display:none;">
         <div id="status-selecao-opcoes"></div>
         <button onclick="fecharSelecaoStatus()" class="entrar-button">Fechar</button>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
