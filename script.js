@@ -187,7 +187,7 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
 
     const atendimentoOptions = `
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'SEC.', 'red', ${dia}, '${linha}')">SEC.</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoSecretarias('${nome}', ${dia}, '${linha}')">SEC.</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, '${linha}')">Eremita</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, '${linha}')">Regis</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, '${linha}')">Rodolpho</div>
@@ -198,36 +198,32 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'CPL', 'red', ${dia}, '${linha}')">CPL</div>
     `;
 
-    // Adicionando a nova caixa de seleção para a opção "SEC."
-    const statusOptionsSec = `
-        <div id="status-sec" style="display: none;">
-            <label>Selecione um status:</label>
-            <select id="status-selecao-opcao">
-                <option value="Alice">Alice</option>
-                <option value="Czarina">Czarina</option>
-                <option value="Daiana">Daiana</option>
-                <option value="Erika">Erika</option>
-                <option value="Julia">Julia</option>
-            </select>
-            <button onclick="adicionarStatus('${nome}', document.getElementById('status-selecao-opcao').value, 'red', ${dia}, '${linha}')">Confirmar</button>
-        </div>
-    `;
-
-    statusSelecao.innerHTML = atendimentoOptions + statusOptionsSec;
+    statusSelecao.innerHTML = atendimentoOptions;
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+}
 
-    // Mostrar a nova caixa de seleção se "SEC." for escolhido
-    const secButton = statusSelecao.querySelector('.status:nth-child(1)');
-    secButton.addEventListener('click', function() {
-        document.getElementById('status-sec').style.display = 'block';
-    });
+// Nova função para mostrar as secretarias
+function mostrarSelecaoSecretarias(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+
+    const secretariasOptions = `
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Alice', 'red', ${dia}, '${linha}')">Alice</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Czarina', 'red', ${dia}, '${linha}')">Czarina</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Daiana', 'red', ${dia}, '${linha}')">Daiana</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Erika', 'red', ${dia}, '${linha}')">Erika</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Julia', 'red', ${dia}, '${linha}')">Julia</div>
+    `;
+
+    statusSelecao.innerHTML = secretariasOptions;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
 }
 
 // Adiciona a função ao objeto global window
-window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
+window.mostrarSelecaoSecretarias = mostrarSelecaoSecretarias;
 
-// Mostra a seleção de viagem
+// Adiciona a função de mostrar seleção de viagem
 function mostrarSelecaoViagem(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
     const viagemOptions = `
