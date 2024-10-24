@@ -152,7 +152,6 @@ function mostrarSelecaoStatus(element) {
 
     const dia = element.dataset.dia;
     const linha = String(element.dataset.linha);
-
     const statusSelecao = document.getElementById('status-selecao');
 
     let statusOptions = `
@@ -172,11 +171,13 @@ function mostrarSelecaoStatus(element) {
     }
 
     statusSelecao.innerHTML = statusOptions;
+
+    // Exibir o overlay e a caixa de seleção
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+
     console.log("Opções de status exibidas.");
 }
-
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
