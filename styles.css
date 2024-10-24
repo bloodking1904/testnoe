@@ -17,9 +17,14 @@ body {
 
 /* Estilos do Cabeçalho */
 .header {
+    position: fixed; /* Fixa o cabeçalho na parte superior */
+    top: 0;
+    left: 0;
     display: flex;
     justify-content: space-between;
+    text-align: center;
     align-items: center;
+    margin-bottom: 20px;
     width: 100%;
     padding: 20px;
     background-color: rgba(255, 255, 255, 0.9);
