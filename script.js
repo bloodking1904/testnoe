@@ -364,82 +364,43 @@ async function inicializarMotoristas() {
     tabela.appendChild(cabecalho);
     console.log("Cabeçalho da tabela criado.");
 
-    if (loggedInUser === 'ADMIN') {
-        // Admin pode ver todos os motoristas
-        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-        console.log("Motoristas obtidos do Firestore.");
+    const motoristaRef = doc(db, 'motoristas', loggedInUser);
+    const motoristaSnapshot = await getDoc(motoristaRef);
 
-        motoristasSnapshot.docs.forEach(doc => {
-            const motorista = doc.id; // Usa o nome do motorista como está no Firestore (em maiúsculas)
-            const dados = doc.data();
+    if (motoristaSnapshot.exists()) {
+        const dados = motoristaSnapshot.data();
+        const linha = document.createElement('div');
+        linha.classList.add('linha');
+        linha.dataset.linha = loggedInUser; 
 
-            console.log("Motorista:", motorista, "Dados:", dados);
+        const celula = document.createElement('div');
+        celula.classList.add('celula');
+        celula.dataset.dia = diaAtual;
 
-            const linha = document.createElement('div');
-            linha.classList.add('linha');
-            linha.dataset.linha = motorista;
+        const statusAtual = dados[diaAtual] || { status: 'Disponível', viagemData: null };
 
-            dias.forEach((dia, diaIndex) => {
-                const celula = document.createElement('div');
-                celula.classList.add('celula');
-                celula.dataset.dia = diaIndex;
-
-                const statusAtual = dados[diaIndex] || { status: 'Disponível', viagemData: null };
-
-                celula.innerHTML = `
-                    <div class="motorista">
-                        <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}"
-                            onclick="mostrarSelecaoStatus(this)">+</button>
-                        <span style="font-weight: bold;">${motorista}</span>
-                        <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
-                            ${statusAtual.status}
-                        </div>
-                        ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
-                    </div>
-                `;
-
-                linha.appendChild(celula);
-            });
-
-            tabela.appendChild(linha);
-        });
-    } else {
-        // Se o motorista não for admin, apenas inicializa sua linha
-        console.log(`Buscando motorista com ID: ${loggedInUser}`); // Log para verificar o ID
-        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Usar o nome do motorista que está em maiúsculas
-        const motoristaSnapshot = await getDoc(motoristaRef);
-
-        if (motoristaSnapshot.exists()) {
-            const dados = motoristaSnapshot.data();
-            const linha = document.createElement('div');
-            linha.classList.add('linha');
-            linha.dataset.linha = loggedInUser; // Mantém o nome do motorista em maiúsculas
-
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            celula.dataset.dia = diaAtual;
-
-            const statusAtual = dados[diaAtual] || { status: 'Disponível', viagemData: null };
-
-            celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
-                        onclick="mostrarSelecaoStatus(this)">+</button>
-                    <span style="font-weight: bold;">${loggedInUser}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
-                        ${statusAtual.status}
-                    </div>
+        celula.innerHTML = `
+            <div class="motorista">
+                <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
+                    onclick="mostrarSelecaoStatus(this)">+</button>
+                <span style="font-weight: bold;">${loggedInUser}</span>
+                <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
+                    ${statusAtual.status}
                 </div>
-            `;
+                ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div>
+                <div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
+                <div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
+            </div>
+        `;
 
-            linha.appendChild(celula);
-            tabela.appendChild(linha);
-        } else {
-            console.log("Motorista não encontrado no Firestore. Verifique se o ID está correto e se o motorista existe.");
-        }
+        linha.appendChild(celula);
+        tabela.appendChild(linha);
+    } else {
+        console.log("Motorista não encontrado no Firestore. Verifique se o ID está correto e se o motorista existe.");
     }
 
     console.log("Tabela de motoristas inicializada.");
+
   
     // Log para verificar os IDs das linhas
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
