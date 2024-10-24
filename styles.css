@@ -231,25 +231,6 @@ button.entrar-button:hover {
 }
 
 
-.close-button {
-    position: absolute; /* Fixa o botão na parte superior direita */
-    top: 10px; /* Distância do topo */
-    right: 10px; /* Distância da direita */
-    width: 30px; /* Largura do botão */
-    height: 30px; /* Altura do botão */
-    background-color: black; /* Fundo preto */
-    color: white; /* Fonte branca */
-    border: none; /* Sem borda */
-    border-radius: 50%; /* Forma circular */
-    cursor: pointer; /* Cursor de pointer ao passar o mouse */
-    font-size: 16px; /* Tamanho da fonte */
-    transition: background-color 0.3s; /* Transição suave para a cor de fundo */
-}
-
-.close-button:hover {
-    background-color: red; /* Cor vermelha ao passar o mouse */
-}
-
 /* Media Queries para Responsividade */
 
 @media (max-width: 768px) {
