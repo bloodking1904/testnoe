@@ -183,25 +183,13 @@ button.entrar-button:hover {
 }
 
 .status {
-    background-color: lightblue; /* Cor de fundo padrão */
-    color: black; /* Cor do texto */
-    font-weight: bold; /* Negrito */
-    padding: 10px 20px; /* Padding interno */
-    border: none; /* Remove bordas */
-    border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Muda o cursor para pointer */
-    transition: background-color 0.3s, transform 0.1s; /* Transições suaves */
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin: 5px;
+    text-align: center;
+    width: 100%;
 }
-
-.status:hover {
-    background-color: deepskyblue; /* Cor ao passar o mouse */
-}
-
-.status:active {
-    transform: scale(0.95); /* Efeito de clique */
-    background-color: dodgerblue; /* Cor ao clicar */
-}
-
 .overlay {
   position: fixed;
   top: 0;
