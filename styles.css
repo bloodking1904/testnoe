@@ -201,11 +201,12 @@ button.entrar-button:hover {
   background-color: rgba(0, 0, 0, 0.5);
   display: flex; /* Alterado para flex para permitir centralização */
   justify-content: center;
-  align-items: center;
+  align-items: flex-start; /* Alinha os itens ao topo */
   z-index: 999;
 }
 
 .selecao-status {
+  position: relative; 
   background-color: white;
   padding: 20px;
   border-radius: 5px;
@@ -213,6 +214,7 @@ button.entrar-button:hover {
   flex-direction: column;
   align-items: center;
   z-index: 1000; /* Aumentado para garantir que fique acima do overlay */
+  margin-top: 20px; /* Adiciona um espaço do topo */
 }
 
 
