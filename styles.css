@@ -204,6 +204,7 @@ button.entrar-button:hover {
 }
 
 .selecao-status {
+  position: relative; /* Adicione esta linha */
   background-color: white;
   padding: 20px;
   border-radius: 5px;
