@@ -15,7 +15,7 @@ body {
     align-items: center;
     justify-content: flex-start; /* Mudado para flex-start para garantir que o cabeçalho fique visível no topo */
     height: 100vh; /* Altura da tela inteira */
-    overflow-x: hidden; /* Evita rolagem horizontal */
+    width: 100vw; /* Largura total da viewport */
 }
 
 /* Estilos do Cabeçalho */
@@ -119,10 +119,9 @@ button.entrar-button:hover {
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
     gap: 10px;
     width: 100%; /* Garante que a tabela ocupe toda a largura */
-    max-width: 1200px; /* Limita a largura máxima */
     margin-top: 80px; /* Espaço para o cabeçalho fixo */
     box-sizing: border-box; /* Inclui padding e border na largura total */
-    overflow-x: auto; /* Permite rolagem horizontal se necessário */
+    overflow-x: hidden; /* Permite rolagem horizontal se necessário */
 }
 
 .cabecalho {
@@ -161,7 +160,6 @@ button.entrar-button:hover {
     display: grid;
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para motoristas */
     width: 100%; /* Ocupa toda a largura */
-    max-width: 1200px; /* Limita a largura máxima */
     margin-top: 10px; /* Espaço entre a tabela e a seção de motoristas */
 }
 
