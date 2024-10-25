@@ -137,7 +137,7 @@ button.entrar-button:hover {
 
 .celula {
     background: #e0e0e0;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     cursor: pointer;
     transition: background 0.3s;
@@ -147,6 +147,9 @@ button.entrar-button:hover {
     align-items: center;
     justify-content: center;
     min-width: 80px; /* Define uma largura mínima para as células */
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Para compatibilidade com navegadores */
+    white-space: normal; /* Permite que o texto quebre em várias linhas */
 }
 
 .celula:hover {
@@ -191,6 +194,9 @@ button.entrar-button:hover {
     margin: 5px;
     text-align: center;
     width: 100%;
+    word-wrap: break-word; /* Quebra palavras longas */
+    overflow-wrap: break-word; /* Para compatibilidade com navegadores */
+    white-space: normal; /* Permite que o texto quebre em várias linhas */
 }
 .overlay {
   position: fixed;
