@@ -119,9 +119,10 @@ button.entrar-button:hover {
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para os dias da semana */
     gap: 10px;
     width: 100%; /* Garante que a tabela ocupe toda a largura */
+    max-width: 100vw; /* Limita a largura máxima para viewport */
     margin-top: 80px; /* Espaço para o cabeçalho fixo */
     box-sizing: border-box; /* Inclui padding e border na largura total */
-    overflow-x: hidden; /* Permite rolagem horizontal se necessário */
+    overflow-x: auto; /* Permite rolagem horizontal se necessário */
 }
 
 .cabecalho {
@@ -145,6 +146,7 @@ button.entrar-button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    min-width: 80px; /* Define uma largura mínima para as células */
 }
 
 .celula:hover {
@@ -241,35 +243,34 @@ button.entrar-button:hover {
 /* Media Queries para Responsividade */
 
 @media (max-width: 768px) {
-    .tabela {
-        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
-    }
-
+    .tabela,
     .motoristas-container {
-        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas para motoristas em telas menores */
-        font-size: 1.2em; /* Aumenta o tamanho da fonte dos motoristas ************************/
+        grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas menores */
+        overflow-x: auto; /* Permite rolagem horizontal se necessário */
+        /*  font-size: 1.2em; /* Aumenta o tamanho da fonte dos motoristas ************************/
     }
 
     .celula {
-        padding: 15px; /* Ajusta padding em telas menores */
+        padding: 10px; /* Ajusta padding em telas menores */
     }
     .header button {
         font-size: 18px; /* Aumenta o tamanho da fonte dos botões no cabeçalho */
     }
     body {
         background-size: cover; /* Garante que a imagem cubra a tela em dispositivos menores */
-        transform: scale(1.2); /* Aumenta o tamanho da tela em dispositivos móveis */
+        transform: scale(1.0); /* Aumenta o tamanho da tela em dispositivos móveis */
         transform-origin: top left; /* Define a origem do aumento */
     }
     .header h1 {
-        font-size: 28px; /* Aumenta o tamanho da fonte do cabeçalho */
+        font-size: 24px; /* Aumenta o tamanho da fonte do cabeçalho */
     }
     
 }
 
 
 @media (max-width: 480px) {
-    .tabela {
+    .tabela,
+    .motoristas-container {
         grid-template-columns: repeat(7, 1fr); /* Mantém 7 colunas em telas pequenas */
     }
 
@@ -284,6 +285,6 @@ button.entrar-button:hover {
     }
 
     .celula {
-        padding: 10px; /* Ajusta padding em telas muito pequenas */
+        padding: 5px; /* Ajusta padding em telas muito pequenas */
     }
 }
