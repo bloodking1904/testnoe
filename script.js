@@ -249,16 +249,44 @@ window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 // Mostra a seleção de veículos
 function mostrarVeiculos(nome, dia, linha, cliente) {
     const statusSelecao = document.getElementById('status-selecao');
-    const veiculoOptions = `
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Hilux SW4')">Hilux SW4</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Hilux Carr. Mad.')">Hilux Carr. Mad.</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Corolla')">Corolla</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Ranger P')">Ranger P</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Ranger B')">Ranger B</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Frontier')">Frontier</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Compass')">Compass</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', 'Yaris')">Yaris</div>
-    `;
+    const veiculos = [
+        'Weekend-QAE3607',
+        'Weekend-QAJ2497',
+        'Weekend-QAJ2503',
+        'Weekend-OON5864',
+        'Corolla-QAD9618',
+        'Corolla-RWC4D25',
+        'Corolla-REW2E59',
+        'Corolla-REW0H84',
+        'Corolla-OON5341',
+        'Etios-QAP2028',
+        'Hilux SW4-SMA7I11',
+        'Hilux C.Mad.-QAE9273',
+        'Ranger P-SLZ5G02',
+        'Ranger P-SLZ5F99',
+        'Ranger P-SLZ5G06',
+        'Ranger P-SLZ5G03',
+        'Ranger P-SLZ5G10',
+        'Strada-OON2958',
+        'Compass-RWE3G73',
+        'Ranger B-RWB2G50',
+        'Ranger B-RWB2G51',
+        'Yaris-REZ0D67',
+        'Yaris-RWB9D26'
+    ];
+
+    let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
+    veiculos.forEach((veiculo, index) => {
+        veiculoOptions += `
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
+        `;
+        // Adiciona uma quebra de linha após 5 botões
+        if ((index + 1) % 5 === 0) {
+            veiculoOptions += '<div style="flex-basis: 100%; height: 0;"></div>'; // Força uma nova linha
+        }
+    });
+    veiculoOptions += '</div>'; // Fecha a grid
 
     statusSelecao.innerHTML = veiculoOptions;
     document.getElementById('overlay').style.display = 'flex';
