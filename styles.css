@@ -232,6 +232,14 @@ button.entrar-button:hover {
 .resetar-status-button:hover {
     background-color: darkorange; /* Cor do botão ao passar o mouse */
 }
+
+.veiculo-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens se movam para uma nova linha */
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+
 /* Media Queries para Responsividade */
 
 @media (max-width: 768px) {
