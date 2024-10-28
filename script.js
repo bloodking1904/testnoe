@@ -250,10 +250,6 @@ window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 function mostrarVeiculos(nome, dia, linha, cliente) {
     const statusSelecao = document.getElementById('status-selecao');
     const veiculos = [
-        'Weekend-QAE3607',
-        'Weekend-QAJ2497',
-        'Weekend-QAJ2503',
-        'Weekend-OON5864',
         'Corolla-QAD9618',
         'Corolla-RWC4D25',
         'Corolla-REW2E59',
@@ -274,6 +270,16 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
         'Yaris-REZ0D67',
         'Yaris-RWB9D26'
     ];
+
+    veiculos.forEach(veiculo => {
+        const partes = veiculo.split('-');
+        const veiculoComQuebraDeLinha = partes.join('<br>');
+        const div = document.createElement('div');
+        div.innerHTML = veiculoComQuebraDeLinha;
+        statusSelecao.appendChild(div);
+    });
+}
+
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
     veiculos.forEach((veiculo, index) => {
