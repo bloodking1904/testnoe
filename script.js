@@ -250,25 +250,24 @@ window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 function mostrarVeiculos(nome, dia, linha, cliente) {
     const statusSelecao = document.getElementById('status-selecao');
     const veiculos = [
-        'Corolla-QAD9618',
-        'Corolla-RWC4D25',
-        'Corolla-REW2E59',
-        'Corolla-REW0H84',
-        'Corolla-OON5341',
-        'Etios-QAP2028',
-        'Hilux SW4-SMA7I11',
-        'Hilux C.Mad.-QAE9273',
-        'Ranger P-SLZ5G02',
-        'Ranger P-SLZ5F99',
-        'Ranger P-SLZ5G06',
-        'Ranger P-SLZ5G03',
-        'Ranger P-SLZ5G10',
-        'Strada-OON2958',
-        'Compass-RWE3G73',
-        'Ranger B-RWB2G50',
-        'Ranger B-RWB2G51',
-        'Yaris-REZ0D67',
-        'Yaris-RWB9D26'
+        'Corolla QAD9618',
+        'Corolla RWC4D25',
+        'Corolla REW2E59',
+        'Corolla REW0H84',
+        'Corolla OON5341',
+        'Etios QAP2028',
+        'Hilux SW4 SMA7I11',
+        'Hilux C.Mad. QAE9273',
+        'Ranger Preta SLZ5G02',
+        'Ranger Preta SLZ5F99',
+        'Ranger Preta SLZ5G06',
+        'Ranger Preta SLZ5G03',
+        'Ranger Preta SLZ5G10',
+        'Compass RWE3G73',
+        'Ranger Branca RWB2G50',
+        'Ranger Branca RWB2G51',
+        'Yaris REZ0D67',
+        'Yaris RWB9D26'
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
