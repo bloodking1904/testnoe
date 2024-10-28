@@ -250,6 +250,10 @@ window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 function mostrarVeiculos(nome, dia, linha, cliente) {
     const statusSelecao = document.getElementById('status-selecao');
     const veiculos = [
+        'Weekend-QAE3607',
+        'Weekend-QAJ2497',
+        'Weekend-QAJ2503',
+        'Weekend-OON5864',
         'Corolla-QAD9618',
         'Corolla-RWC4D25',
         'Corolla-REW2E59',
@@ -273,12 +277,9 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
     veiculos.forEach((veiculo, index) => {
-        const [modelo, placa] = veiculo.split('-');
         veiculoOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">
-                ${modelo}<br>${placa}
-            </div>
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
         `;
         // Adiciona uma quebra de linha após 5 botões
         if ((index + 1) % 5 === 0) {
@@ -291,7 +292,6 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
 }
-
 
 // Adiciona a função ao objeto global window
 window.mostrarVeiculos = mostrarVeiculos;
