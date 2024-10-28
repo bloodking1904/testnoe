@@ -298,7 +298,7 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
         <div class="cidade-input">
             <label>Digite a cidade destino:</label>
             <input type="text" id="cidade-destino" placeholder="Cidade destino">
-            <button style="background-color: green; color: white;" onclick="finalizarViagem('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">+</button>
+            <button style="background-color: green; color: white; white-space: break-word;" onclick="finalizarViagem('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
 
