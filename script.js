@@ -297,7 +297,7 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
     statusSelecao.innerHTML = veiculoOptions;
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
-}
+
 
 // Adiciona a função ao objeto global window
 window.mostrarVeiculos = mostrarVeiculos;
