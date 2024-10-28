@@ -146,7 +146,7 @@ button.entrar-button:hover {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-width: 80px; /* Define uma largura mínima para as células */
+    /* min-width: 80px; /* Define uma largura mínima para as células */
     word-wrap: break-word; /* Quebra palavras longas */
     overflow-wrap: break-word; /* Para compatibilidade com navegadores */
     white-space: normal; /* Permite que o texto quebre em várias linhas */
