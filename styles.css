@@ -147,9 +147,9 @@ button.entrar-button:hover {
     align-items: center;
     justify-content: center;
     /* min-width: 80px; /* Define uma largura mínima para as células */
-    word-wrap: break-word; /* Quebra palavras longas */
-    overflow-wrap: break-word; /* Para compatibilidade com navegadores */
-    /*white-space: break-word; /* Permite que o texto quebre em várias linhas */
+    /*word-wrap: break-word; /* Quebra palavras longas */
+    /*overflow-wrap: break-word; /* Para compatibilidade com navegadores */
+    white-space: break-word; /* Permite que o texto quebre em várias linhas */
 }
 
 .celula:hover {
