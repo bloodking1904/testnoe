@@ -329,7 +329,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
             <span style="font-weight: bold;">${nome}</span>
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div style="white-space: break-word;"><strong>Veículo:</strong> ${veiculo}</div>
-            <div><strong>Cliente:</strong> ${cliente}</div>
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
@@ -528,7 +527,7 @@ function atualizarLinhaMotorista(motorista, dados) {
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                         ${statusAtual.status}
                     </div>
-                    ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
+                    ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>` : ''}
                 </div>
             `;
         } else {
