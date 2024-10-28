@@ -271,21 +271,14 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
         'Yaris-RWB9D26'
     ];
 
-    veiculos.forEach(veiculo => {
-        const partes = veiculo.split('-');
-        const veiculoComQuebraDeLinha = partes.join('<br>');
-        const div = document.createElement('div');
-        div.innerHTML = veiculoComQuebraDeLinha;
-        statusSelecao.appendChild(div);
-    });
-}
-
-
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
-    veiculo.forEach((veiculo, index) => {
+    veiculos.forEach((veiculo, index) => {
+        const [modelo, placa] = veiculo.split('-');
         veiculoOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">
+                ${modelo}<br>${placa}
+            </div>
         `;
         // Adiciona uma quebra de linha após 5 botões
         if ((index + 1) % 5 === 0) {
@@ -297,6 +290,7 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
     statusSelecao.innerHTML = veiculoOptions;
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+}
 
 
 // Adiciona a função ao objeto global window
