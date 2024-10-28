@@ -250,10 +250,6 @@ window.mostrarSelecaoViagem = mostrarSelecaoViagem;
 function mostrarVeiculos(nome, dia, linha, cliente) {
     const statusSelecao = document.getElementById('status-selecao');
     const veiculos = [
-        'Weekend-QAE3607',
-        'Weekend-QAJ2497',
-        'Weekend-QAJ2503',
-        'Weekend-OON5864',
         'Corolla-QAD9618',
         'Corolla-RWC4D25',
         'Corolla-REW2E59',
@@ -445,7 +441,7 @@ async function inicializarMotoristas() {
                         </div>
                         ${statusAtual.viagemData ? `
                             <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div>
-                            <div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
+                            <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
                             <div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>
                         ` : ''}
                     </div>
@@ -484,7 +480,7 @@ async function inicializarMotoristas() {
                     </div>
                     ${statusAtual.viagemData ? `
                         <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div>
-                        <div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
+                        <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div>
                         <div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>
                     ` : ''}
                 </div>
@@ -542,7 +538,7 @@ function atualizarLinhaMotorista(motorista, dados) {
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                         ${statusAtual.status}
                     </div>
-                    ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: nowrap;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
+                    ${statusAtual.viagemData ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.viagemData.cidade}</div><div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.viagemData.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.viagemData.cliente}</div>` : ''}
                 </div>
             `;
         } else {
