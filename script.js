@@ -282,7 +282,7 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
 
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
-    veiculos.forEach((veiculo, index) => {
+    veiculo.forEach((veiculo, index) => {
         veiculoOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
                 onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
