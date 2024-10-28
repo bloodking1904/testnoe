@@ -214,6 +214,8 @@ window.mostrarSelecaoAtendimento = mostrarSelecaoAtendimento;
 function mostrarSelecaoVeiculo(nome, dia, linha, pessoa) {
     mostrarVeiculos(nome, dia, linha, pessoa); // Chama a função mostrarVeiculos e passa os parâmetros
 }
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoVeiculo = mostrarSelecaoVeiculo;
 
 // Mostra a seleção de veículos
 function mostrarVeiculos(nome, dia, linha, pessoa) {
