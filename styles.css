@@ -166,6 +166,7 @@ button.entrar-button:hover {
     grid-template-columns: repeat(7, 1fr); /* 7 colunas para motoristas */
     width: 100%; /* Ocupa toda a largura */
     margin-top: 10px; /* Espaço entre a tabela e a seção de motoristas */
+    white-space: break-word;
 }
 
 /* Estilos para Motoristas */
@@ -175,6 +176,7 @@ button.entrar-button:hover {
     align-items: center;
     justify-content: center;
     width: 100%;
+    white-space: break-word;
 }
 
 .adicionar {
