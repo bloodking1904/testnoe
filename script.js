@@ -337,7 +337,7 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
             <span style="font-weight: bold;">${nome}</span>
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div style="white-space: nowrap;"><strong>Cidade:</strong> ${cidadeDestino}</div>
-            <div style="white-space: nowrap;"><strong>Veículo:</strong> ${veiculo}</div>
+            <div style="white-space: break-word;"><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
         `;
     } else {
