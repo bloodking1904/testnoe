@@ -115,7 +115,7 @@ async function resetarStatusTodosMotoristas() {
                 batch.set(motoristaRef, {
                     [dia]: {
                         status: 'Disponível', // Define o status para 'Disponível'
-                        viagemData: null // Define viagemData como null
+                        data: null // Remove a cidade, veículo e cliente
                     }
                 }, { merge: true });
             }
@@ -135,7 +135,6 @@ async function resetarStatusTodosMotoristas() {
 
 // Adiciona a função ao objeto global window
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
-
 
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
