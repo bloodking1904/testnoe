@@ -65,7 +65,6 @@ function verificarAutenticacao() {
 // Executa a verificação ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     verificarAutenticacao();
-    // Outras inicializações podem ser colocadas aqui
 });
 
 // Adiciona a função de logout ao objeto global window
@@ -138,7 +137,6 @@ async function resetarStatusTodosMotoristas() {
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 
 // Função para mostrar a seleção de status
-// Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
     if (!element) {
         console.error("Elemento não está definido.");
@@ -188,7 +186,7 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
 
     const atendimentoOptions = `
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'SEC.', 'red', ${dia}, '${linha}')">SEC.</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarSelecaoSecretarias('${nome}', ${dia}, '${linha}')">SEC.</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Eremita', 'red', ${dia}, '${linha}')">Eremita</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Regis', 'red', ${dia}, '${linha}')">Regis</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="adicionarStatus('${nome}', 'Rodolpho', 'red', ${dia}, '${linha}')">Rodolpho</div>
@@ -275,7 +273,7 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
     veiculos.forEach(veiculo => {
         veiculoOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="atualizarStatusAtendimento('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">${veiculo}</div>
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
         `;
     });
     veiculoOptions += '</div>'; // Fecha a grid
@@ -287,36 +285,6 @@ function mostrarVeiculos(nome, dia, linha, cliente) {
 
 // Adiciona a função ao objeto global window
 window.mostrarVeiculos = mostrarVeiculos;
-
-// Função para atualizar o status do motorista para Em Atendimento
-async function atualizarStatusAtendimento(nome, cliente, veiculo, dia, linha) {
-    const statusData = {
-        cliente: cliente,
-        veiculo: veiculo
-    };
-
-    await adicionarStatus(nome, 'Em Atendimento', 'orange', dia, linha, statusData);
-
-    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
-
-    if (motoristaDiv) {
-        motoristaDiv.innerHTML = `
-            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
-            <span style="font-weight: bold;">${nome}</span>
-            <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
-            <div><strong>Cliente:</strong> ${cliente}</div>
-            <div><strong>Veículo:</strong> ${veiculo}</div>
-        `;
-    } else {
-        console.error("Div do motorista não encontrada ao atualizar visualmente.");
-    }
-
-    fecharSelecaoStatus(); // Fecha todas as seleções 
-}
-
-// Adiciona a função atualizarStatusAtendimento ao objeto global window
-window.atualizarStatusAtendimento = atualizarStatusAtendimento;
 
 // Adiciona o veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
@@ -370,9 +338,6 @@ function finalizarViagem(nome, dia, linha, cliente, veiculo) {
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
     }
-
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
 
     fecharSelecaoStatus(); // Fecha todas as seleções 
 }
