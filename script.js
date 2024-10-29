@@ -296,8 +296,14 @@ window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
 
 // Finaliza o atendimento
 function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
+    // Prepara o data para incluir todas as informações necessárias
+    const data = {
+        cliente: cliente,
+        veiculo: veiculo
+    };
+
     // Atualiza o status no Firestore
-    adicionarStatus(nome, 'Em Atendimento', 'orange', dia, linha, { cliente: cliente, veiculo: veiculo }); // Atualiza o status
+    adicionarStatus(nome, 'Em Atendimento', 'orange', dia, linha, data); // Passa o objeto data
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
