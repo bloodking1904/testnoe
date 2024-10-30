@@ -486,14 +486,14 @@ async function inicializarMotoristas() {
         });
     } else {
         // Motoristas agora visualizam todos os dias
+        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+        const motoristaSnapshot = await getDoc(motoristaRef);
+        const dados = motoristaSnapshot.data();
+
         dias.forEach((dia, diaIndex) => {
             const celula = document.createElement('div');
             celula.classList.add('celula');
             celula.dataset.dia = diaIndex;
-
-            const motoristaRef = doc(db, 'motoristas', loggedInUser);
-            const motoristaSnapshot = await getDoc(motoristaRef);
-            const dados = motoristaSnapshot.data();
 
             const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
 
@@ -513,7 +513,7 @@ async function inicializarMotoristas() {
                 </div>
             `;
 
-            linha.appendChild(celula);
+            cabecalho.appendChild(celula);
         });
     }
 
@@ -571,19 +571,7 @@ async function inicializarMotoristas() {
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
-    inicializarMotoristas();
-
-    onSnapshot(collection(db, 'motoristas'), (snapshot) => {
-        console.log("Mudanças detectadas no Firestore.");
-        snapshot.docChanges().forEach(change => {
-            if (change.type === "modified") {
-                const motorista = change.doc.id;
-                const dados = change.doc.data();
-                console.log("Motorista modificado:", motorista, "Novos dados:", dados);
-                atualizarLinhaMotorista(motorista, dados);
-            }
-        });
-    });
+    inicializarMotoristas().catch(console.error); // Chamada assíncrona
 });
 
 // Função para atualizar a linha de um motorista específico
