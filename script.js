@@ -457,6 +457,9 @@ function toggleConfirmButton() {
 // Adiciona a função ao objeto global window
 window.adicionarVeiculo = adicionarVeiculo;
 
+// Adiciona a função ao objeto global window
+window.toggleConfirmButton = toggleConfirmButton;
+
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
