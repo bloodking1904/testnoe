@@ -151,6 +151,8 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     const motoristaDiv = celula.querySelector('.motorista');
 
     motoristaDiv.innerHTML = `
+        <button class="adicionar" data-id-motorista="${idMotorista}" data-dia="${dia}" data-linha="${linha}"
+            onclick="mostrarSelecaoStatus(this)">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
         ${data && data.cliente && data.veiculo ? `
@@ -311,6 +313,8 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
 
     if (motoristaDiv) {
         motoristaDiv.innerHTML = `
+            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
             <span style="font-weight: bold;">${nome}</span>
             <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
@@ -384,40 +388,9 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
-
-// Função para adicionar veículo e cidade
-function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
-    const statusSelecao = document.getElementById('status-selecao');
-
-    const cidadeInput = `
-        <div class="cidade-input">
-            <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
-            <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
-        </div>
-    `;
-
-    statusSelecao.innerHTML = cidadeInput;
-
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
-}
-
-// Função para habilitar ou desabilitar o botão de confirmar
-function toggleConfirmButton() {
-    const cidadeInput = document.getElementById('cidade-destino');
-    const confirmarButton = document.getElementById('confirmar-viagem');
-    confirmarButton.disabled = cidadeInput.value.trim() === ''; // Habilita o botão se o campo não estiver vazio
-}
-
-// Adiciona a função ao objeto global window
-window.adicionarVeiculo = adicionarVeiculo;
-
-// Adiciona a função ao objeto global window
-window.toggleConfirmButton = toggleConfirmButton;
 
 // Função para finalizar a viagem
 function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
@@ -454,6 +427,38 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
 
+
+// Modificação na função para adicionar veículo e cidade
+function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
+    const statusSelecao = document.getElementById('status-selecao');
+
+    const cidadeInput = `
+        <div class="cidade-input">
+            <label>Digite a cidade destino:</label>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
+            <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
+        </div>
+    `;
+
+    statusSelecao.innerHTML = cidadeInput;
+
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Função para habilitar ou desabilitar o botão de confirmar
+function toggleConfirmButton() {
+    const cidadeInput = document.getElementById('cidade-destino');
+    const confirmarButton = document.getElementById('confirmar-viagem');
+    confirmarButton.disabled = cidadeInput.value.trim() === ''; // Habilita o botão se o campo não estiver vazio
+}
+
+// Adiciona a função ao objeto global window
+window.adicionarVeiculo = adicionarVeiculo;
+
+// Adiciona a função ao objeto global window
+window.toggleConfirmButton = toggleConfirmButton;
 
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
@@ -506,7 +511,9 @@ async function inicializarMotoristas() {
                 const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
 
                 celula.innerHTML = `
-                    <div class="motorista" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}" onclick="mostrarSelecaoStatus(this)">
+                    <div class="motorista">
+                        <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}"
+                            onclick="mostrarSelecaoStatus(this)">+</button>
                         <span style="font-weight: bold;">${motorista}</span>
                         <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                             ${statusAtual.status}
@@ -543,7 +550,9 @@ async function inicializarMotoristas() {
             const statusAtual = dados[diaAtual] || { status: 'Disponível', data: null };
 
             celula.innerHTML = `
-                <div class="motorista" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}" onclick="mostrarSelecaoStatus(this)">
+                <div class="motorista">
+                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
+                        onclick="mostrarSelecaoStatus(this)">+</button>
                     <span style="font-weight: bold;">${loggedInUser}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
                         ${statusAtual.status}
@@ -601,7 +610,9 @@ function atualizarLinhaMotorista(motorista, dados) {
 
         if (celula) {
             celula.innerHTML = `
-                <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
+                <div class="motorista">
+                    <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaAtual}" data-linha="${motorista}" 
+                        onclick="mostrarSelecaoStatus(this)">+</button>
                     <span style="font-weight: bold;">${motorista}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                         ${statusAtual.status}
@@ -633,4 +644,3 @@ function fecharSelecaoStatus() {
 }
 
 window.fecharSelecaoStatus = fecharSelecaoStatus;
-
