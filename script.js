@@ -279,6 +279,9 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'Ranger Branca RWB2G51',
         'Yaris REZ0D67',
         'Yaris RWB9D26'
+        'Agrale QAH8438'
+        'Munk Iveco RWI5B17'
+        'AXOR QAO4215'
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -374,6 +377,9 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
         'Ranger Branca RWB2G51',
         'Yaris REZ0D67',
         'Yaris RWB9D26'
+        'Agrale QAH8438'
+        'Munk Iveco RWI5B17'
+        'AXOR QAO4215'
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
