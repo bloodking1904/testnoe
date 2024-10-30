@@ -303,6 +303,7 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
     const data = {
         cliente: cliente,
         veiculo: veiculo
+        // Remova a propriedade cidade, pois não está sendo utilizada
     };
 
     // Atualiza o status no Firestore
@@ -319,6 +320,7 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
+            ${data.cidade ? `<div><strong>Cidade:</strong> ${data.cidade}</div>` : ''} <!-- Exibe cidade apenas se existir -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
@@ -393,8 +395,14 @@ window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
 // Finaliza a viagem
 function finalizarViagem(nome, cliente, veiculo, dia, linha) {
+    // Prepara o data para incluir todas as informações necessárias
+    const data = {
+        cliente: cliente,
+        veiculo: veiculo
+    };
+
     // Atualiza o status no Firestore
-    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, { cliente: cliente, veiculo: veiculo }); // Atualiza o status
+    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
@@ -407,6 +415,7 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
+            ${data.cidade ? `<div><strong>Cidade:</strong> ${data.cidade}</div>` : ''} <!-- Exibe cidade apenas se existir -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
@@ -414,7 +423,6 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções 
 }
-
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
 
