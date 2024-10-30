@@ -151,8 +151,6 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     const motoristaDiv = celula.querySelector('.motorista');
 
     motoristaDiv.innerHTML = `
-        <button class="adicionar" data-id-motorista="${idMotorista}" data-dia="${dia}" data-linha="${linha}"
-            onclick="mostrarSelecaoStatus(this)">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
         ${data && data.cliente && data.veiculo ? `
@@ -313,8 +311,6 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
 
     if (motoristaDiv) {
         motoristaDiv.innerHTML = `
-            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
             <span style="font-weight: bold;">${nome}</span>
             <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
@@ -388,47 +384,10 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
-
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
-// Função para finalizar a viagem
-function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
-    // Prepara o data para incluir todas as informações necessárias
-    const data = {
-        cliente: cliente,
-        veiculo: veiculo,
-        cidade: cidade // Agora inclui a cidade
-    };
-
-    // Atualiza o status no Firestore
-    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
-
-    // Atualiza visualmente o motorista
-    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
-
-    if (motoristaDiv) {
-        motoristaDiv.innerHTML = `
-            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
-            <span style="font-weight: bold;">${nome}</span>
-            <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
-            <div><strong>Veículo:</strong> ${veiculo}</div>
-            <div><strong>Cliente:</strong> ${cliente}</div>
-            <div><strong>Cidade:</strong> ${cidade}</div> <!-- Exibe cidade -->
-        `;
-    } else {
-        console.error("Div do motorista não encontrada ao atualizar visualmente.");
-    }
-
-    fecharSelecaoStatus(); // Fecha todas as seleções 
-}
-
-// Adiciona a função finalizar viagem ao objeto global window
-window.finalizarViagem = finalizarViagem;
-
-
-// Modificação na função para adicionar veículo e cidade
+// Função para adicionar veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
 
@@ -511,9 +470,7 @@ async function inicializarMotoristas() {
                 const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
 
                 celula.innerHTML = `
-                    <div class="motorista">
-                        <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}"
-                            onclick="mostrarSelecaoStatus(this)">+</button>
+                    <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
                         <span style="font-weight: bold;">${motorista}</span>
                         <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                             ${statusAtual.status}
@@ -550,9 +507,7 @@ async function inicializarMotoristas() {
             const statusAtual = dados[diaAtual] || { status: 'Disponível', data: null };
 
             celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}"
-                        onclick="mostrarSelecaoStatus(this)">+</button>
+                <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
                     <span style="font-weight: bold;">${loggedInUser}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
                         ${statusAtual.status}
@@ -610,9 +565,7 @@ function atualizarLinhaMotorista(motorista, dados) {
 
         if (celula) {
             celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaAtual}" data-linha="${motorista}" 
-                        onclick="mostrarSelecaoStatus(this)">+</button>
+                <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
                     <span style="font-weight: bold;">${motorista}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                         ${statusAtual.status}
@@ -644,3 +597,45 @@ function fecharSelecaoStatus() {
 }
 
 window.fecharSelecaoStatus = fecharSelecaoStatus;
+
+// Função para mostrar a seleção de status
+function mostrarSelecaoStatus(element) {
+    if (!element) {
+        console.error("Elemento não está definido.");
+        return;
+    }
+
+    const idMotorista = element.dataset.idMotorista;
+    if (!idMotorista) {
+        console.error("ID do motorista não encontrado.");
+        return;
+    }
+
+    const dia = element.dataset.dia;
+    const linha = String(element.dataset.linha);
+    const statusSelecao = document.getElementById('status-selecao');
+
+    let statusOptions = `
+        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
+            onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+            onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
+    `;
+
+    if (loggedInUser === 'ADMIN') {
+        statusOptions += `
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
+            <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+                onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
+        `;
+    }
+
+    statusSelecao.innerHTML = statusOptions;
+
+    // Exibir o overlay e a caixa de seleção
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+
+    console.log("Opções de status exibidas.");
+}
