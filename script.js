@@ -469,7 +469,7 @@ window.toggleConfirmButton = toggleConfirmButton;
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
-    const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']; // Ordem dos dias alterada
+    const dias = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO']; // Dias da semana em letras maiúsculas
     const tabela = document.getElementById('tabela-motoristas');
 
     tabela.innerHTML = '';
@@ -477,49 +477,18 @@ async function inicializarMotoristas() {
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    if (loggedInUser === 'ADMIN') {
-        dias.forEach(dia => {
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            celula.textContent = dia.toUpperCase();
-            cabecalho.appendChild(celula);
-        });
-    } else {
-        // Motoristas agora visualizam todos os dias
-        const motoristaRef = doc(db, 'motoristas', loggedInUser);
-        const motoristaSnapshot = await getDoc(motoristaRef);
-        const dados = motoristaSnapshot.data();
-
-        dias.forEach((dia, diaIndex) => {
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            celula.dataset.dia = diaIndex;
-
-            const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
-
-            celula.innerHTML = `
-                <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaIndex}" data-linha="${loggedInUser}"
-                        onclick="mostrarSelecaoStatus(this)">+</button>
-                    <span style="font-weight: bold;">${loggedInUser}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
-                        ${statusAtual.status}
-                    </div>
-                    ${statusAtual.data ? `
-                        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
-                        <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
-                        <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
-                    ` : ''}
-                </div>
-            `;
-
-            cabecalho.appendChild(celula);
-        });
-    }
+    // Adiciona cabeçalho para todos os dias da semana
+    dias.forEach(dia => {
+        const celula = document.createElement('div');
+        celula.classList.add('celula');
+        celula.textContent = dia; // Adiciona o nome do dia
+        cabecalho.appendChild(celula);
+    });
 
     tabela.appendChild(cabecalho);
     console.log("Cabeçalho da tabela criado.");
 
+    // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         console.log("Motoristas obtidos do Firestore.");
@@ -562,6 +531,43 @@ async function inicializarMotoristas() {
 
             tabela.appendChild(linha);
         });
+    } else {
+        // Para motoristas, exibe os dias da semana
+        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+        const motoristaSnapshot = await getDoc(motoristaRef);
+        const dados = motoristaSnapshot.data();
+
+        const linha = document.createElement('div');
+        linha.classList.add('linha');
+        linha.dataset.linha = loggedInUser;
+
+        dias.forEach((dia, diaIndex) => {
+            const celula = document.createElement('div');
+            celula.classList.add('celula');
+            celula.dataset.dia = diaIndex;
+
+            const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
+
+            celula.innerHTML = `
+                <div class="motorista">
+                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaIndex}" data-linha="${loggedInUser}"
+                        onclick="mostrarSelecaoStatus(this)">+</button>
+                    <span style="font-weight: bold;">${loggedInUser}</span>
+                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                        ${statusAtual.status}
+                    </div>
+                    ${statusAtual.data ? `
+                        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
+                        <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
+                        <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
+                    ` : ''}
+                </div>
+            `;
+
+            linha.appendChild(celula);
+        });
+
+        tabela.appendChild(linha);
     }
 
     console.log("Tabela de motoristas inicializada.");
