@@ -139,6 +139,19 @@ window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
+    
+    // Verifica se o status atual do motorista é "Em Viagem"
+    const motoristaRef = doc(db, 'motoristas', idMotorista);
+    const motoristaSnapshot = await getDoc(motoristaRef);
+    const dados = motoristaSnapshot.data();
+
+    const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; // Obtém o status atual para o dia específico
+
+    if (statusAtual === 'Em Viagem') {
+        alert("Agenda Bloqueada pelo Administrador."); // Exibe mensagem de alerta
+        return; // Interrompe a execução da função
+    }
+
     fecharSelecaoStatus();
 
     const celula = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"]`);
