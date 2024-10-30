@@ -139,19 +139,6 @@ window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
-    
-    // Verifica se o status atual do motorista é "Em Viagem"
-    const motoristaRef = doc(db, 'motoristas', idMotorista);
-    const motoristaSnapshot = await getDoc(motoristaRef);
-    const dados = motoristaSnapshot.data();
-
-    // Verifica o status atual para o dia específico
-    const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; 
-
-    if (statusAtual === 'Em Viagem') {
-        alert("Agenda Bloqueada pelo Administrador."); // Exibe mensagem de alerta
-        return; // Interrompe a execução da função
-    }
 
     fecharSelecaoStatus();
 
@@ -196,31 +183,45 @@ function mostrarSelecaoStatus(element) {
 
     const dia = element.dataset.dia;
     const linha = String(element.dataset.linha);
-    const statusSelecao = document.getElementById('status-selecao');
 
-    let statusOptions = `
-        <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
-            onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
-        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-            onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
-    `;
+    // Verifica o status do motorista antes de abrir a seleção
+    const motoristaRef = doc(db, 'motoristas', idMotorista);
+    getDoc(motoristaRef).then((motoristaSnapshot) => {
+        const dados = motoristaSnapshot.data();
+        const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; // Obtém o status atual para o dia específico
 
-    if (loggedInUser === 'ADMIN') {
-        statusOptions += `
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
+        // Se o status atual for "Em Viagem", exibe mensagem e não abre a seleção
+        if (statusAtual === 'Em Viagem') {
+            alert("Agenda Bloqueada pelo Administrador."); // Mensagem de alerta
+            return; // Interrompe a execução da função
+        }
+
+        const statusSelecao = document.getElementById('status-selecao');
+        let statusOptions = `
+            <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
+                onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
             <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-                onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
+                onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'orange', ${dia}, '${linha}')">Em Atendimento</div>
         `;
-    }
 
-    statusSelecao.innerHTML = statusOptions;
+        // Apenas admins podem ver a opção de viagem
+        if (loggedInUser === 'ADMIN') {
+            statusOptions += `
+                <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                    onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
+            `;
+        }
 
-    // Exibir o overlay e a caixa de seleção
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
+        statusSelecao.innerHTML = statusOptions;
 
-    console.log("Opções de status exibidas.");
+        // Exibir o overlay e a caixa de seleção
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('status-selecao').style.display = 'flex';
+
+        console.log("Opções de status exibidas.");
+    }).catch(error => {
+        console.error("Erro ao obter o status do motorista:", error);
+    });
 }
 
 // Adiciona a função ao objeto global window
