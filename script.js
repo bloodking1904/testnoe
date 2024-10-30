@@ -111,7 +111,7 @@ async function resetarStatusTodosMotoristas() {
             const motoristaRef = doc.ref;
 
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
-            for (let dia = 0; dia <= 6; dia++) {
+            for (let dia = 0; dia < 7; dia++) { // Alterado para < 7
                 batch.set(motoristaRef, {
                     [dia]: {
                         status: 'Disponível', // Define o status para 'Disponível'
@@ -388,7 +388,6 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
-
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
@@ -427,7 +426,6 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
 
-
 // Modificação na função para adicionar veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -463,8 +461,8 @@ window.toggleConfirmButton = toggleConfirmButton;
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
     console.log("Inicializando motoristas...");
-    const diaAtual = new Date().getDay();
-    const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
+    const diaAtual = (new Date().getDay() + 6) % 7; // Ajusta o dia atual para começar na segunda-feira
+    const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']; // Ordem dos dias alterada
     const tabela = document.getElementById('tabela-motoristas');
 
     tabela.innerHTML = '';
@@ -602,8 +600,8 @@ function atualizarLinhaMotorista(motorista, dados) {
     const linha = Array.from(tabela.children).find(l => l.getAttribute('data-linha') === motorista);
 
     if (linha) {
-        const dias = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
-        const diaAtual = new Date().getDay(); 
+        const dias = ['segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo']; // Ordem dos dias alterada
+        const diaAtual = (new Date().getDay() + 6) % 7; // Ajusta o dia atual para começar na segunda-feira
 
         const celula = linha.querySelector(`.celula[data-dia="${diaAtual}"]`);
         const statusAtual = dados[diaAtual] || { status: 'Disponível', data: null };
