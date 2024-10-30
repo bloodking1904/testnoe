@@ -204,11 +204,13 @@ function mostrarSelecaoStatus(element) {
                 onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'orange', ${dia}, '${linha}')">Em Atendimento</div>
         `;
 
-        // Apenas admins podem ver a opção de viagem
+        // Apenas admins podem ver as opções de viagem e compensando
         if (loggedInUser === 'ADMIN') {
             statusOptions += `
                 <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
                     onclick="mostrarSelecaoViagem('${idMotorista}', ${dia}, '${linha}')">Viagem</div>
+                <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+                    onclick="adicionarStatus('${idMotorista}', 'Compensando', 'red', ${dia}, '${linha}')">Compensando</div>
             `;
         }
 
@@ -223,7 +225,6 @@ function mostrarSelecaoStatus(element) {
         console.error("Erro ao obter o status do motorista:", error);
     });
 }
-
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
