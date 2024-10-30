@@ -297,13 +297,12 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
 
-// Finaliza o atendimento
+// Função para finalizar o atendimento
 function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
-    // Prepara o data para incluir todas as informações necessárias
+    // Prepara o data para incluir apenas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo
-        // Remova a propriedade cidade, pois não está sendo utilizada
     };
 
     // Atualiza o status no Firestore
@@ -320,7 +319,6 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
-            ${data.cidade ? `<div><strong>Cidade:</strong> ${data.cidade}</div>` : ''} <!-- Exibe cidade apenas se existir -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
@@ -380,7 +378,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
     veiculos.forEach(veiculo => {
         veiculoOptions += `
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">${veiculo}</div>
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
         `;
     });
     veiculoOptions += '</div>'; // Fecha a grid
@@ -390,15 +388,17 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
-// Finaliza a viagem
-function finalizarViagem(nome, cliente, veiculo, dia, linha) {
+// Função para finalizar a viagem
+function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
     // Prepara o data para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
-        veiculo: veiculo
+        veiculo: veiculo,
+        cidade: cidade // Agora inclui a cidade
     };
 
     // Atualiza o status no Firestore
@@ -415,7 +415,7 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
-            ${data.cidade ? `<div><strong>Cidade:</strong> ${data.cidade}</div>` : ''} <!-- Exibe cidade apenas se existir -->
+            <div><strong>Cidade:</strong> ${cidade}</div> <!-- Exibe cidade -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
@@ -423,8 +423,32 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha) {
 
     fecharSelecaoStatus(); // Fecha todas as seleções 
 }
+
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
+
+
+// Modificação na função para adicionar veículo e cidade
+function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
+    const statusSelecao = document.getElementById('status-selecao');
+
+    const cidadeInput = `
+        <div class="cidade-input">
+            <label>Digite a cidade destino:</label>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino">
+            <button style="background-color: green; color: white; white-space: break-word;" 
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)">CONFIRMAR<br>VIAGEM</button>
+        </div>
+    `;
+
+    statusSelecao.innerHTML = cidadeInput;
+
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Adiciona a função ao objeto global window
+window.adicionarVeiculo = adicionarVeiculo;
 
 // Inicializa a lista de motoristas
 async function inicializarMotoristas() {
