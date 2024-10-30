@@ -470,7 +470,7 @@ async function inicializarMotoristas() {
                 const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
 
                 celula.innerHTML = `
-                    <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
+                    <div class="motorista" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}" onclick="mostrarSelecaoStatus(this)">
                         <span style="font-weight: bold;">${motorista}</span>
                         <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                             ${statusAtual.status}
@@ -507,7 +507,7 @@ async function inicializarMotoristas() {
             const statusAtual = dados[diaAtual] || { status: 'Disponível', data: null };
 
             celula.innerHTML = `
-                <div class="motorista" onclick="mostrarSelecaoStatus(event.currentTarget)">
+                <div class="motorista" data-id-motorista="${loggedInUser}" data-dia="${diaAtual}" data-linha="${loggedInUser}" onclick="mostrarSelecaoStatus(this)">
                     <span style="font-weight: bold;">${loggedInUser}</span>
                     <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; font-weight: bold;">
                         ${statusAtual.status}
