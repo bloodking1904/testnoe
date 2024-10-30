@@ -155,7 +155,10 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
             onclick="mostrarSelecaoStatus(this)">+</button>
         <span style="font-weight: bold;">${idMotorista}</span>
         <div class="status" style="color: ${cor}; font-weight: bold;">${status}</div>
-        ${data ? `<div><strong>Cliente:</strong> ${data.cliente}</div><div><strong>Veículo:</strong> ${data.veiculo}</div>` : ''}
+        ${data && data.cliente && data.veiculo ? `
+            <div><strong>Cliente:</strong> ${data.cliente}</div>
+            <div><strong>Veículo:</strong> ${data.veiculo}</div>
+        ` : ''}
     `;
 
     await atualizarStatusFirestore(idMotorista, dia, status, data);
