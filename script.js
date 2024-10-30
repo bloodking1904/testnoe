@@ -145,7 +145,8 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     const motoristaSnapshot = await getDoc(motoristaRef);
     const dados = motoristaSnapshot.data();
 
-    const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; // Obtém o status atual para o dia específico
+    // Verifica o status atual para o dia específico
+    const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; 
 
     if (statusAtual === 'Em Viagem') {
         alert("Agenda Bloqueada pelo Administrador."); // Exibe mensagem de alerta
