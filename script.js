@@ -435,9 +435,9 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const cidadeInput = `
         <div class="cidade-input">
             <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino">
-            <button style="background-color: green; color: white; white-space: break-word;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)">CONFIRMAR<br>VIAGEM</button>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
+            <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
 
@@ -445,6 +445,13 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
 
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Função para habilitar ou desabilitar o botão de confirmar
+function toggleConfirmButton() {
+    const cidadeInput = document.getElementById('cidade-destino');
+    const confirmarButton = document.getElementById('confirmar-viagem');
+    confirmarButton.disabled = cidadeInput.value.trim() === ''; // Habilita o botão se o campo não estiver vazio
 }
 
 // Adiciona a função ao objeto global window
