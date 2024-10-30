@@ -201,7 +201,7 @@ function mostrarSelecaoStatus(element) {
             <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
                 onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
             <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
-                onclick="adicionarStatus('${idMotorista}', 'Em Atendimento', 'orange', ${dia}, '${linha}')">Em Atendimento</div>
+                onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
         `;
 
         // Apenas admins podem ver as opções de viagem e compensando
