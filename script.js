@@ -190,8 +190,8 @@ function mostrarSelecaoStatus(element) {
         const dados = motoristaSnapshot.data();
         const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; // Obtém o status atual para o dia específico
 
-        // Se o status atual for "Em Viagem", exibe mensagem e não abre a seleção
-        if (statusAtual === 'Em Viagem') {
+        // Verifica se o usuário logado é um motorista e se o status é "Em Viagem"
+        if (loggedInUser !== 'ADMIN' && statusAtual === 'Em Viagem') {
             alert("Agenda Bloqueada pelo Administrador."); // Mensagem de alerta
             return; // Interrompe a execução da função
         }
