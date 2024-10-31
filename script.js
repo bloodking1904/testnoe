@@ -225,6 +225,7 @@ function mostrarSelecaoStatus(element) {
         console.error("Erro ao obter o status do motorista:", error);
     });
 }
+
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
@@ -494,10 +495,13 @@ async function inicializarMotoristas() {
     cabecalho.classList.add('linha', 'cabecalho');
 
     // Adiciona cabeçalho para todos os dias da semana
-    dias.forEach(dia => {
+    dias.forEach((dia, index) => {
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        celula.textContent = dia; // Adiciona o nome do dia
+        const dataAtual = new Date();
+        dataAtual.setDate(dataAtual.getDate() + (index - dataAtual.getDay() + 1)); // Ajusta para o dia correto
+        const dataFormatada = (`0${dataAtual.getDate()}`).slice(-2) + '/' + (`0${dataAtual.getMonth() + 1}`).slice(-2) + '/' + dataAtual.getFullYear(); // Formato DD/MM/AAAA
+        celula.innerHTML = `${dia}<br>${dataFormatada}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
