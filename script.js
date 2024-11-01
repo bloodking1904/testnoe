@@ -92,8 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarMotoristas().catch(console.error);
 });
 
-
-
 // Converte o nome do usuário para maiúsculas
 const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
 console.log("Usuário logado:", loggedInUser);
@@ -201,7 +199,7 @@ async function resetarStatusTodosMotoristas() {
         console.log("Status de todos os motoristas resetados com sucesso.");
 
         // Chama a função para atualizar visualmente os motoristas
-        await inicializarMotoristas(); // Atualiza a tabela de motoristas
+        await carregarMotoristas(); // Atualiza a tabela de motoristas
     } catch (error) {
         console.error("Erro ao resetar status:", error);
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
@@ -392,104 +390,6 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
 
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
-
-// Função para finalizar o atendimento
-function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
-    // Prepara o data para incluir apenas as informações necessárias
-    const data = {
-        cliente: cliente,
-        veiculo: veiculo
-    };
-
-    // Atualiza o status no Firestore
-    adicionarStatus(nome, 'Em Atendimento', 'orange', dia, linha, data); // Passa o objeto data
-
-    // Atualiza visualmente o motorista
-    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
-
-    if (motoristaDiv) {
-        motoristaDiv.innerHTML = `
-            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
-                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
-            <span style="font-weight: bold;">${nome}</span>
-            <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
-            <div><strong>Veículo:</strong> ${veiculo}</div>
-            <div><strong>Cliente:</strong> ${cliente}</div>
-        `;
-    } else {
-        console.error("Div do motorista não encontrada ao atualizar visualmente.");
-    }
-
-    fecharSelecaoStatus(); // Fecha todas as seleções 
-}
-
-// Adiciona a função finalizar atendimento ao objeto global window
-window.finalizarAtendimento = finalizarAtendimento;
-
-// Função para mostrar a seleção de viagem
-function mostrarSelecaoViagem(nome, dia, linha) {
-    const statusSelecao = document.getElementById('status-selecao');
-    const viagemOptions = `
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Regis')">Regis</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
-        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'AREA MEIO')">AREA MEIO</div>
-    `;
-
-    statusSelecao.innerHTML = viagemOptions;
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
-}
-
-// Adiciona a função ao objeto global window
-window.mostrarSelecaoViagem = mostrarSelecaoViagem;
-
-// Função para mostrar a seleção de veículos para viagem
-function mostrarVeiculosViagem(nome, dia, linha, cliente) {
-    const statusSelecao = document.getElementById('status-selecao');
-    const veiculos = [
-        'Corolla QAD9618',
-        'Corolla RWC4D25',
-        'Corolla REW2E59',
-        'Corolla REW0H84',
-        'Corolla OON5341',
-        'Etios QAP2028',
-        'Hilux QAE8744',
-        'Hilux SW4 SMA7I11',
-        'Hilux C.Mad. QAE9273',
-        'Ranger Preta SLZ5G02',
-        'Ranger Preta SLZ5F99',
-        'Ranger Preta SLZ5G06',
-        'Ranger Preta SLZ5G03',
-        'Ranger Preta SLZ5G10',
-        'Compass RWE3G73',
-        'Ranger Branca RWB2G50',
-        'Ranger Branca RWB2G51',
-        'Yaris REZ0D67',
-        'Yaris RWB9D26',
-        'Agrale QAH8438',
-        'Munk Iveco RWI5B17',
-        'AXOR QAO4215',
-    ];
-
-    let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
-    veiculos.forEach(veiculo => {
-        veiculoOptions += `
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
-        `;
-    });
-    veiculoOptions += '</div>'; // Fecha a grid
-
-    statusSelecao.innerHTML = veiculoOptions;
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
-}
-
-// Adiciona a função ao objeto global window
-window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
 // Função para finalizar a viagem
 function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
