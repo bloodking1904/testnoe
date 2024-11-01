@@ -62,6 +62,18 @@ body {
     background-color: darkblue; /* Cor do hover para Limpar Cache */
 }
 
+
+.sair-button {
+    background-color: blue; /* Cor das setas */
+    color: white; /* Cor do texto das setas */
+    border: none; /* Remove a borda padrão */
+    border-radius: 5px; /* Bordas arredondadas */
+    cursor: pointer; /* Cursor de pointer */
+    padding: 10px; /* Padding interno */
+    font-size: 16px; /* Tamanho da fonte */
+    transition: background 0.3s; /* Transição suave para mudança de cor */
+}
+
 /* Estilos do Container de Login */
 .login-container {
     display: flex;
