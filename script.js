@@ -19,7 +19,9 @@ const db = getFirestore(app);
 
 console.log("Firebase e Firestore inicializados com sucesso.");
 
-
+// Definição das variáveis globais
+let currentWeekIndex = 1; // Índice da semana atual (0-5)
+const totalWeeks = 6; // Total de semanas
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
