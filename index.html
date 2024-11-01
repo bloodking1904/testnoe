@@ -10,10 +10,12 @@
 </head>
 <body>
     <div class="header">
-        <h1>Agenda dos Motoristas</h1>
-        <button onclick="logout()" class="sair-button">Sair</button>
-        <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
-    </div>
+    <h1>Agenda dos Motoristas</h1>
+    <button id="seta-esquerda" class="sair-button">←</button> <!-- Seta esquerda -->
+    <button id="seta-direita" class="sair-button">→</button> <!-- Seta direita -->
+    <button onclick="logout()" class="sair-button">Sair</button>
+    <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
+</div>
     
     <div class="tabela" id="tabela-motoristas">
         <div class="linha cabecalho">
