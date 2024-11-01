@@ -19,6 +19,79 @@ const db = getFirestore(app);
 
 console.log("Firebase e Firestore inicializados com sucesso.");
 
+
+
+// Função para carregar motoristas
+async function carregarMotoristas() {
+    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+    motoristasSnapshot.docs.forEach(doc => {
+        const motorista = doc.id;
+        const dados = doc.data();
+
+        // Aqui você pode atualizar a tabela de motoristas com as informações da semana atual
+        atualizarTabela(motorista, dados);
+    });
+}
+
+// Função para atualizar a tabela
+function atualizarTabela(motorista, dados) {
+    const tabela = document.getElementById('tabela-motoristas');
+    const linha = document.createElement('div');
+    linha.classList.add('linha');
+    linha.dataset.linha = motorista;
+
+    // Acessa a semana atual
+    const semanaAtual = dados[`semana${currentWeekIndex + 1}`];
+
+    for (let dia = 0; dia < 7; dia++) {
+        const celula = document.createElement('div');
+        celula.classList.add('celula');
+        celula.dataset.dia = dia;
+
+        const statusAtual = semanaAtual[dia] || { status: 'Disponível', data: null };
+
+        celula.innerHTML = `
+            <div class="motorista">
+                <span style="font-weight: bold;">${motorista}</span>
+                <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                    ${statusAtual.status}
+                </div>
+            </div>
+        `;
+
+        linha.appendChild(celula);
+    }
+
+    tabela.appendChild(linha);
+}
+
+// Função para navegar para a semana anterior
+async function semanaAnterior() {
+    if (currentWeekIndex > 0) {
+        currentWeekIndex--;
+    }
+    await carregarMotoristas();
+}
+
+// Função para navegar para a próxima semana
+async function proximaSemana() {
+    if (currentWeekIndex < totalWeeks - 1) {
+        currentWeekIndex++;
+    }
+    await carregarMotoristas();
+}
+
+// Eventos de clique nas setas
+document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
+document.getElementById('seta-direita').addEventListener('click', proximaSemana);
+
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    carregarMotoristas().catch(console.error);
+});
+
+
+
 // Converte o nome do usuário para maiúsculas
 const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
 console.log("Usuário logado:", loggedInUser);
