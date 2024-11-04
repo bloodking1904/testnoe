@@ -38,6 +38,13 @@ async function carregarMotoristas() {
     });
 }
 
+// Adiciona a função de logout ao objeto global window
+window.logout = function () {
+    console.log("Logout do usuário:", loggedInUser);
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+};
+
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
     const tabela = document.getElementById('tabela-motoristas');
