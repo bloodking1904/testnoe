@@ -158,7 +158,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
         console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
 
-        // Atualizar o status no campo apropriado
+        // Atualizar o status no campo apropriado, respeitando a estrutura existente
         await setDoc(motoristaRef, {
             [`semana${currentWeekIndex}.${dia}`]: {
                 status: status,
