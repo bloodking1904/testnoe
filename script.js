@@ -431,6 +431,74 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
 
+
+// Função para mostrar a seleção de viagem
+function mostrarSelecaoViagem(nome, dia, linha) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const viagemOptions = `
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'SENAI DR')">SENAI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'SESI DR')">SESI DR</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Regis')">Regis</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Rodolpho')">Rodolpho</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'Anatole')">Anatole</div>
+        <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" onclick="mostrarVeiculosViagem('${nome}', ${dia}, '${linha}', 'AREA MEIO')">AREA MEIO</div>
+    `;
+
+    statusSelecao.innerHTML = viagemOptions;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Adiciona a função ao objeto global window
+window.mostrarSelecaoViagem = mostrarSelecaoViagem;
+
+// Função para mostrar a seleção de veículos para viagem
+function mostrarVeiculosViagem(nome, dia, linha, cliente) {
+    const statusSelecao = document.getElementById('status-selecao');
+    const veiculos = [
+        'Corolla QAD9618',
+        'Corolla RWC4D25',
+        'Corolla REW2E59',
+        'Corolla REW0H84',
+        'Corolla OON5341',
+        'Etios QAP2028',
+        'Hilux QAE8744',
+        'Hilux SW4 SMA7I11',
+        'Hilux C.Mad. QAE9273',
+        'Ranger Preta SLZ5G02',
+        'Ranger Preta SLZ5F99',
+        'Ranger Preta SLZ5G06',
+        'Ranger Preta SLZ5G03',
+        'Ranger Preta SLZ5G10',
+        'Compass RWE3G73',
+        'Ranger Branca RWB2G50',
+        'Ranger Branca RWB2G51',
+        'Yaris REZ0D67',
+        'Yaris RWB9D26',
+        'Agrale QAH8438',
+        'Munk Iveco RWI5B17',
+        'AXOR QAO4215',
+    ];
+
+    let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
+    veiculos.forEach(veiculo => {
+        veiculoOptions += `
+            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
+        `;
+    });
+    veiculoOptions += '</div>'; // Fecha a grid
+
+    statusSelecao.innerHTML = veiculoOptions;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Adiciona a função ao objeto global window
+window.mostrarVeiculosViagem = mostrarVeiculosViagem;
+
+
+
 // Modificação na função para adicionar veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -620,6 +688,8 @@ window.atualizarLinhaMotorista = atualizarLinhaMotorista;
 document.getElementById('overlay').addEventListener('click', function() {
     fecharSelecaoStatus();
 });
+
+
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
