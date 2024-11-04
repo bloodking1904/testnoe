@@ -62,10 +62,6 @@ function verificarAutenticacao() {
     }
 }
 
-// Executa a verificação ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    verificarAutenticacao();
-});
 
 // Definição das variáveis globais
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
