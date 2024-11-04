@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -61,7 +61,6 @@ function verificarAutenticacao() {
         }, 5 * 60 * 1000); // 5 minutos
     }
 }
-
 
 // Definição das variáveis globais
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
@@ -671,7 +670,7 @@ async function inicializarMotoristas() {
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
-    inicializarMotoristas().catch(console.error); // Chamada assíncrona
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
 });
 
 // Função para atualizar a linha de um motorista específico
