@@ -431,6 +431,40 @@ function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
 // Adiciona a função finalizar viagem ao objeto global window
 window.finalizarViagem = finalizarViagem;
 
+// Função para finalizar o atendimento
+function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
+    // Prepara o data para incluir apenas as informações necessárias
+    const data = {
+        cliente: cliente,
+        veiculo: veiculo
+    };
+
+    // Atualiza o status no Firestore
+    adicionarStatus(nome, 'Em Atendimento', 'orange', dia, linha, data); // Passa o objeto data
+
+    // Atualiza visualmente o motorista
+    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+
+    if (motoristaDiv) {
+        motoristaDiv.innerHTML = `
+            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
+            <span style="font-weight: bold;">${nome}</span>
+            <div class="status" style="color: orange; border: 1px solid black; font-weight: bold;">Em Atendimento</div>
+            <div><strong>Veículo:</strong> ${veiculo}</div>
+            <div><strong>Cliente:</strong> ${cliente}</div>
+        `;
+    } else {
+        console.error("Div do motorista não encontrada ao atualizar visualmente.");
+    }
+
+    fecharSelecaoStatus(); // Fecha todas as seleções 
+}
+
+// Adiciona a função finalizar atendimento ao objeto global window
+window.finalizarAtendimento = finalizarAtendimento;
+
+
 
 // Função para mostrar a seleção de viagem
 function mostrarSelecaoViagem(nome, dia, linha) {
