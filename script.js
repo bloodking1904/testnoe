@@ -72,6 +72,33 @@ function atualizarTabela(motorista, dados) {
     tabela.appendChild(linha);
 }
 
+// Função para navegar para a semana anterior
+async function semanaAnterior() {
+    if (currentWeekIndex > 1) {
+        currentWeekIndex--;
+    }
+    await carregarMotoristas();
+}
+
+// Função para navegar para a próxima semana
+async function proximaSemana() {
+    if (currentWeekIndex < totalWeeks) {
+        currentWeekIndex++;
+    }
+    await carregarMotoristas();
+}
+
+// Eventos de clique nas setas
+document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
+document.getElementById('seta-direita').addEventListener('click', proximaSemana);
+
+
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    carregarMotoristas().catch(console.error);
+});
+
+
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
     try {
@@ -80,7 +107,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
 
         // Atualizar o status no campo apropriado, respeitando a estrutura existente
         await setDoc(motoristaRef, {
-            [`semana${currentWeekIndex}.${dia}`]: { // Atualiza o status na semana correta e no dia correto
+            [`semana${currentWeekIndex}.${dia}`]: {
                 status: status,
                 data: data || null // Garante que data não seja undefined
             }
@@ -226,34 +253,6 @@ function mostrarSelecaoStatus(element) {
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
-
-
-
-
-// Função para navegar para a semana anterior
-async function semanaAnterior() {
-    if (currentWeekIndex > 1) {
-        currentWeekIndex--;
-    }
-    await carregarMotoristas();
-}
-
-// Função para navegar para a próxima semana
-async function proximaSemana() {
-    if (currentWeekIndex < totalWeeks) {
-        currentWeekIndex++;
-    }
-    await carregarMotoristas();
-}
-
-// Eventos de clique nas setas
-document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
-document.getElementById('seta-direita').addEventListener('click', proximaSemana);
-
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMotoristas().catch(console.error);
-});
 
 // Converte o nome do usuário para maiúsculas
 const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
