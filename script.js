@@ -46,7 +46,7 @@ function atualizarTabela(motorista, dados) {
     linha.dataset.linha = motorista;
 
     // Acessa a semana atual
-    const semanaAtual = dados[`semana${currentWeekIndex + 1}`];
+    const semanaAtual = dados[`semana${currentWeekIndex}`]; // Acessa a semana corretamente
 
     for (let dia = 0; dia < 7; dia++) {
         const celula = document.createElement('div');
@@ -74,7 +74,7 @@ function atualizarTabela(motorista, dados) {
 
 // Função para navegar para a semana anterior
 async function semanaAnterior() {
-    if (currentWeekIndex > 0) {
+    if (currentWeekIndex > 1) {
         currentWeekIndex--;
     }
     await carregarMotoristas();
@@ -82,7 +82,7 @@ async function semanaAnterior() {
 
 // Função para navegar para a próxima semana
 async function proximaSemana() {
-    if (currentWeekIndex < totalWeeks - 1) {
+    if (currentWeekIndex < totalWeeks) {
         currentWeekIndex++;
     }
     await carregarMotoristas();
@@ -160,7 +160,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
 
         // Atualizar o status no campo apropriado
         await setDoc(motoristaRef, {
-            [`semana${currentWeekIndex + 1}.${dia}`]: {
+            [`semana${currentWeekIndex}.${dia}`]: {
                 status: status,
                 data: data || null // Garante que data não seja undefined
             }
@@ -191,7 +191,7 @@ async function resetarStatusTodosMotoristas() {
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
             for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [`semana${currentWeekIndex + 1}.${dia}`]: {
+                    [`semana${currentWeekIndex}.${dia}`]: { // Corrigido para usar a estrutura correta
                         status: 'Disponível', // Define o status para 'Disponível'
                         data: null // Remove a cidade, veículo e cliente
                     }
@@ -266,7 +266,7 @@ function mostrarSelecaoStatus(element) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     getDoc(motoristaRef).then((motoristaSnapshot) => {
         const dados = motoristaSnapshot.data();
-        const statusAtual = dados[dia] ? dados[dia].status : 'Disponível'; // Obtém o status atual para o dia específico
+        const statusAtual = dados[`semana${currentWeekIndex}`][dia] ? dados[`semana${currentWeekIndex}`][dia].status : 'Disponível'; // Obtém o status atual para o dia específico
 
         // Verifica se o usuário logado é um motorista e se o status é "Em Viagem"
         if (loggedInUser !== 'ADMIN' && statusAtual === 'Em Viagem') {
