@@ -25,12 +25,15 @@ const totalWeeks = 6; // Total de semanas
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
+    const tabela = document.getElementById('tabela-motoristas');
+    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
+
     const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
     motoristasSnapshot.docs.forEach(doc => {
         const motorista = doc.id;
         const dados = doc.data();
 
-        // Aqui você pode atualizar a tabela de motoristas com as informações da semana atual
+        // Atualiza a tabela de motoristas com as informações da semana atual
         atualizarTabela(motorista, dados);
     });
 }
@@ -54,6 +57,8 @@ function atualizarTabela(motorista, dados) {
 
         celula.innerHTML = `
             <div class="motorista">
+                <button class="adicionar" data-id-motorista="${motorista}" data-dia="${dia}" data-linha="${motorista}"
+                    onclick="mostrarSelecaoStatus(this)">+</button>
                 <span style="font-weight: bold;">${motorista}</span>
                 <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                     ${statusAtual.status}
@@ -155,7 +160,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
 
         // Atualizar o status no campo apropriado
         await setDoc(motoristaRef, {
-            [dia]: {
+            [`semana${currentWeekIndex + 1}.${dia}`]: {
                 status: status,
                 data: data || null // Garante que data não seja undefined
             }
@@ -184,9 +189,9 @@ async function resetarStatusTodosMotoristas() {
             const motoristaRef = doc.ref;
 
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
-            for (let dia = 0; dia < 7; dia++) { // Alterado para < 7
+            for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [dia]: {
+                    [`semana${currentWeekIndex + 1}.${dia}`]: {
                         status: 'Disponível', // Define o status para 'Disponível'
                         data: null // Remove a cidade, veículo e cliente
                     }
