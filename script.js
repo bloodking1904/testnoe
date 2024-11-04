@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, onSnapshot, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -92,12 +92,10 @@ async function proximaSemana() {
 document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
 document.getElementById('seta-direita').addEventListener('click', proximaSemana);
 
-
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     carregarMotoristas().catch(console.error);
 });
-
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
@@ -253,62 +251,6 @@ function mostrarSelecaoStatus(element) {
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
-
-// Converte o nome do usuário para maiúsculas
-const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
-console.log("Usuário logado:", loggedInUser);
-
-// Redireciona acessos não autorizados
-const urlsProtegidas = [
-    'https://bloodking1904.github.io/testnoe/index.html',
-    'https://bloodking1904.github.io/testnoe/login.js',
-    'https://bloodking1904.github.io/testnoe/script.js',
-    'https://bloodking1904.github.io/testnoe/styles.css',
-];
-
-// Verifica se a URL atual está nas URLs protegidas e se o usuário não está logado
-if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
-    window.location.href = 'login.html';
-}
-
-// Função para verificar se o usuário está autenticado
-function verificarAutenticacao() {
-    const isAdmin = loggedInUser === 'ADMIN';
-
-    // Se não houver usuário logado, redireciona para a página de login
-    if (!loggedInUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-
-    // Configurações de tempo de sessão
-    if (isAdmin) {
-        // Atualiza a conexão do admin a cada 60 segundos
-        setInterval(() => {
-            console.log("Conexão do admin atualizada.");
-        }, 60000); // 60 segundos
-    } else {
-        // Para motoristas, define um temporizador de 5 minutos
-        setTimeout(() => {
-            alert("Sua sessão expirou. Faça login novamente.");
-            localStorage.removeItem('loggedInUser'); // Remove o usuário logado
-            window.location.href = 'login.html'; // Redireciona para a página de login
-        }, 5 * 60 * 1000); // 5 minutos
-    }
-}
-
-// Executa a verificação ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    verificarAutenticacao();
-});
-
-// Adiciona a função de logout ao objeto global window
-window.logout = function () {
-    console.log("Logout do usuário:", loggedInUser);
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-};
-
 
 // Mostra a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
@@ -467,8 +409,6 @@ function finalizarAtendimento(nome, cliente, veiculo, dia, linha) {
 // Adiciona a função finalizar atendimento ao objeto global window
 window.finalizarAtendimento = finalizarAtendimento;
 
-
-
 // Função para mostrar a seleção de viagem
 function mostrarSelecaoViagem(nome, dia, linha) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -534,8 +474,6 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
-
-
 // Modificação na função para adicionar veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -574,7 +512,7 @@ async function inicializarMotoristas() {
     const dias = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO']; // Dias da semana em letras maiúsculas
     const tabela = document.getElementById('tabela-motoristas');
 
-    tabela.innerHTML = '';
+    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
@@ -725,8 +663,6 @@ window.atualizarLinhaMotorista = atualizarLinhaMotorista;
 document.getElementById('overlay').addEventListener('click', function() {
     fecharSelecaoStatus();
 });
-
-
 
 // Função para fechar a seleção de status
 function fecharSelecaoStatus() {
