@@ -46,7 +46,7 @@ function atualizarTabela(motorista, dados) {
     linha.dataset.linha = motorista;
 
     // Acessa a semana atual
-    const semanaAtual = dados[`semana${currentWeekIndex}`]; // Acessa a semana corretamente
+    const semanaAtual = dados[`semana${currentWeekIndex}`];
 
     for (let dia = 0; dia < 7; dia++) {
         const celula = document.createElement('div');
@@ -72,86 +72,6 @@ function atualizarTabela(motorista, dados) {
     tabela.appendChild(linha);
 }
 
-// Função para navegar para a semana anterior
-async function semanaAnterior() {
-    if (currentWeekIndex > 1) {
-        currentWeekIndex--;
-    }
-    await carregarMotoristas();
-}
-
-// Função para navegar para a próxima semana
-async function proximaSemana() {
-    if (currentWeekIndex < totalWeeks) {
-        currentWeekIndex++;
-    }
-    await carregarMotoristas();
-}
-
-// Eventos de clique nas setas
-document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
-document.getElementById('seta-direita').addEventListener('click', proximaSemana);
-
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMotoristas().catch(console.error);
-});
-
-// Converte o nome do usuário para maiúsculas
-const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
-console.log("Usuário logado:", loggedInUser);
-
-// Redireciona acessos não autorizados
-const urlsProtegidas = [
-    'https://bloodking1904.github.io/testnoe/index.html',
-    'https://bloodking1904.github.io/testnoe/login.js',
-    'https://bloodking1904.github.io/testnoe/script.js',
-    'https://bloodking1904.github.io/testnoe/styles.css',
-];
-
-// Verifica se a URL atual está nas URLs protegidas e se o usuário não está logado
-if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
-    window.location.href = 'login.html';
-}
-
-// Função para verificar se o usuário está autenticado
-function verificarAutenticacao() {
-    const isAdmin = loggedInUser === 'ADMIN';
-
-    // Se não houver usuário logado, redireciona para a página de login
-    if (!loggedInUser) {
-        window.location.href = 'login.html';
-        return;
-    }
-
-    // Configurações de tempo de sessão
-    if (isAdmin) {
-        // Atualiza a conexão do admin a cada 60 segundos
-        setInterval(() => {
-            console.log("Conexão do admin atualizada.");
-        }, 60000); // 60 segundos
-    } else {
-        // Para motoristas, define um temporizador de 5 minutos
-        setTimeout(() => {
-            alert("Sua sessão expirou. Faça login novamente.");
-            localStorage.removeItem('loggedInUser'); // Remove o usuário logado
-            window.location.href = 'login.html'; // Redireciona para a página de login
-        }, 5 * 60 * 1000); // 5 minutos
-    }
-}
-
-// Executa a verificação ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    verificarAutenticacao();
-});
-
-// Adiciona a função de logout ao objeto global window
-window.logout = function () {
-    console.log("Logout do usuário:", loggedInUser);
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-};
-
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
     try {
@@ -160,7 +80,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
 
         // Atualizar o status no campo apropriado, respeitando a estrutura existente
         await setDoc(motoristaRef, {
-            [`semana${currentWeekIndex}.${dia}`]: {
+            [`semana${currentWeekIndex}.${dia}`]: { // Atualiza o status na semana correta e no dia correto
                 status: status,
                 data: data || null // Garante que data não seja undefined
             }
@@ -191,7 +111,7 @@ async function resetarStatusTodosMotoristas() {
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
             for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [`semana${currentWeekIndex}.${dia}`]: { // Corrigido para usar a estrutura correta
+                    [`semana${currentWeekIndex}.${dia}`]: { // Atualiza o status na semana correta e no dia correto
                         status: 'Disponível', // Define o status para 'Disponível'
                         data: null // Remove a cidade, veículo e cliente
                     }
@@ -306,6 +226,90 @@ function mostrarSelecaoStatus(element) {
 
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
+
+
+
+
+// Função para navegar para a semana anterior
+async function semanaAnterior() {
+    if (currentWeekIndex > 1) {
+        currentWeekIndex--;
+    }
+    await carregarMotoristas();
+}
+
+// Função para navegar para a próxima semana
+async function proximaSemana() {
+    if (currentWeekIndex < totalWeeks) {
+        currentWeekIndex++;
+    }
+    await carregarMotoristas();
+}
+
+// Eventos de clique nas setas
+document.getElementById('seta-esquerda').addEventListener('click', semanaAnterior);
+document.getElementById('seta-direita').addEventListener('click', proximaSemana);
+
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    carregarMotoristas().catch(console.error);
+});
+
+// Converte o nome do usuário para maiúsculas
+const loggedInUser = localStorage.getItem('loggedInUser') ? localStorage.getItem('loggedInUser').toUpperCase() : null;
+console.log("Usuário logado:", loggedInUser);
+
+// Redireciona acessos não autorizados
+const urlsProtegidas = [
+    'https://bloodking1904.github.io/testnoe/index.html',
+    'https://bloodking1904.github.io/testnoe/login.js',
+    'https://bloodking1904.github.io/testnoe/script.js',
+    'https://bloodking1904.github.io/testnoe/styles.css',
+];
+
+// Verifica se a URL atual está nas URLs protegidas e se o usuário não está logado
+if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
+    window.location.href = 'login.html';
+}
+
+// Função para verificar se o usuário está autenticado
+function verificarAutenticacao() {
+    const isAdmin = loggedInUser === 'ADMIN';
+
+    // Se não houver usuário logado, redireciona para a página de login
+    if (!loggedInUser) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    // Configurações de tempo de sessão
+    if (isAdmin) {
+        // Atualiza a conexão do admin a cada 60 segundos
+        setInterval(() => {
+            console.log("Conexão do admin atualizada.");
+        }, 60000); // 60 segundos
+    } else {
+        // Para motoristas, define um temporizador de 5 minutos
+        setTimeout(() => {
+            alert("Sua sessão expirou. Faça login novamente.");
+            localStorage.removeItem('loggedInUser'); // Remove o usuário logado
+            window.location.href = 'login.html'; // Redireciona para a página de login
+        }, 5 * 60 * 1000); // 5 minutos
+    }
+}
+
+// Executa a verificação ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    verificarAutenticacao();
+});
+
+// Adiciona a função de logout ao objeto global window
+window.logout = function () {
+    console.log("Logout do usuário:", loggedInUser);
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+};
+
 
 // Mostra a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
