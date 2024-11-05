@@ -72,6 +72,7 @@ async function carregarMotoristas() {
     tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
     const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+    console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
     motoristasSnapshot.docs.forEach(doc => {
         const motorista = doc.id; 
         const dados = doc.data();
@@ -79,18 +80,18 @@ async function carregarMotoristas() {
     });
 }
 
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-});
-
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
 };
+
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+});
 
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
@@ -102,7 +103,6 @@ function atualizarTabela(motorista, dados) {
     // Acessa a semana atual
     const semanaAtual = dados[`semana${currentWeekIndex}`];
 
-    // Verifica se semanaAtual está definido
     if (!semanaAtual) {
         console.warn(`Dados da semana ${currentWeekIndex} não encontrados para o motorista ${motorista}.`);
         return; // Sai da função se semanaAtual não estiver definido
@@ -113,7 +113,6 @@ function atualizarTabela(motorista, dados) {
         celula.classList.add('celula');
         celula.dataset.dia = dia;
 
-        // Acessa o status do dia com a chave correta
         const statusAtual = semanaAtual[dia] || { status: 'Disponível', data: null };
 
         celula.innerHTML = `
