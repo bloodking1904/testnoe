@@ -102,11 +102,18 @@ function atualizarTabela(motorista, dados) {
     // Acessa a semana atual
     const semanaAtual = dados[`semana${currentWeekIndex}`];
 
+    // Verifica se semanaAtual está definido
+    if (!semanaAtual) {
+        console.warn(`Dados da semana ${currentWeekIndex} não encontrados para o motorista ${motorista}.`);
+        return; // Sai da função se semanaAtual não estiver definido
+    }
+
     for (let dia = 0; dia < 7; dia++) {
         const celula = document.createElement('div');
         celula.classList.add('celula');
         celula.dataset.dia = dia;
 
+        // Acessa o status do dia com a chave correta
         const statusAtual = semanaAtual[dia] || { status: 'Disponível', data: null };
 
         celula.innerHTML = `
