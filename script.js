@@ -671,7 +671,11 @@ async function inicializarMotoristas() {
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
 }
 
-
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+});
 
 // Função para atualizar a linha de um motorista específico
 function atualizarLinhaMotorista(motorista, dados) {
