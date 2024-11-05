@@ -79,11 +79,7 @@ async function carregarMotoristas() {
     });
 }
 
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-});
+
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
