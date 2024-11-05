@@ -73,13 +73,17 @@ async function carregarMotoristas() {
 
     const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
     motoristasSnapshot.docs.forEach(doc => {
-        const motorista = doc.id;
+        const motorista = doc.id; 
         const dados = doc.data();
-
-        // Atualiza a tabela de motoristas com as informações da semana atual
         atualizarTabela(motorista, dados);
     });
 }
+
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+});
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
