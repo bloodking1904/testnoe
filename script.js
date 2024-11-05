@@ -190,9 +190,9 @@ async function resetarStatusTodosMotoristas() {
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
             for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [`semana${currentWeekIndex}.${dia}`]: { // Atualiza o status na semana correta e no dia correto
-                        status: 'Disponível', // Define o status para 'Disponível'
-                        data: null // Remove a cidade, veículo e cliente
+                    [`semana${currentWeekIndex}.${dia}`]: { 
+                        status: 'Disponível', 
+                        data: null 
                     }
                 }, { merge: true });
             }
