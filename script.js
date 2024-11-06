@@ -133,11 +133,6 @@ function atualizarTabela(motorista, dados) {
     tabela.appendChild(linha);
 }
 
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMotoristas().catch(console.error);
-});
-
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
     try {
