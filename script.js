@@ -66,8 +66,16 @@ function verificarAutenticacao() {
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
 const totalWeeks = 6; // Total de semanas
 
+// Variável para controle de carregamento
+let motoristasCarregados = false;
+
 // Função para carregar motoristas
 async function carregarMotoristas() {
+    if (motoristasCarregados) {
+        console.log("Motoristas já carregados, evitando nova carga.");
+        return; // Impede o carregamento se já tiver sido feito
+    }
+
     const tabela = document.getElementById('tabela-motoristas');
     tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
@@ -79,9 +87,11 @@ async function carregarMotoristas() {
         console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
         atualizarTabela(motorista, dados);
     });
+
+    motoristasCarregados = true; // Marca motoristas como carregados
 }
 
-// Adiciona a função de logout ao objeto global window
+/ Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
@@ -132,6 +142,7 @@ function atualizarTabela(motorista, dados) {
 
     tabela.appendChild(linha);
 }
+
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
