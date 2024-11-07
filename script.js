@@ -238,6 +238,7 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     await atualizarStatusFirestore(idMotorista, dia, status, data);
     console.log("Status adicionado com sucesso.");
 }
+window.adicionarStatus = adicionarStatus;
 
 // Adiciona a função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
