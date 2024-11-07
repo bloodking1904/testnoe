@@ -91,6 +91,14 @@ async function carregarMotoristas() {
     motoristasCarregados = true; // Marca motoristas como carregados
 }
 
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    if (!motoristasCarregados) { // Garantindo que só chamamos a função uma vez
+        carregarMotoristas().catch(console.error); // Chamada assíncrona
+    }
+});
+
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
@@ -98,11 +106,6 @@ window.logout = function () {
     window.location.href = 'login.html';
 };
 
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-});
 
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
