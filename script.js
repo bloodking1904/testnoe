@@ -74,6 +74,24 @@ async function carregarMotoristas() {
     const tabela = document.getElementById('tabela-motoristas');
     tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
+    // Criar o cabeçalho da tabela
+    const cabecalho = document.createElement('div');
+    cabecalho.classList.add('linha', 'cabecalho');
+
+    // Definir os dias da semana
+    const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+    diasDaSemana.forEach((dia, index) => {
+        const celula = document.createElement('div');
+        celula.classList.add('celula');
+        const dataAtual = new Date();
+        dataAtual.setDate(dataAtual.getDate() + (index - dataAtual.getDay() + 1)); // Ajusta para o dia correto
+        const dataFormatada = (`0${dataAtual.getDate()}`).slice(-2) + '/' + (`0${dataAtual.getMonth() + 1}`).slice(-2) + '/' + dataAtual.getFullYear(); // Formato DD/MM/AAAA
+        celula.innerHTML = `${dia}<br>${dataFormatada}`; // Adiciona o nome do dia e a data
+        cabecalho.appendChild(celula);
+    });
+
+    tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
+
     if (loggedInUser === 'ADMIN') {
         // Se o usuário logado for admin, exibe todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
@@ -97,7 +115,6 @@ async function carregarMotoristas() {
         }
     }
 }
-
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
