@@ -236,7 +236,7 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
         ` : ''}
     `;
 
-    await atualizarStatusFirestore(idMotorista, dia, status, data);
+    await atualizarStatusFirestore(idMotorista, dia, status, data); // Chama para atualizar o Firestore
     console.log("Status adicionado com sucesso.");
 }
 window.adicionarStatus = adicionarStatus;
