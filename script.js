@@ -167,7 +167,7 @@ async function atualizarStatusFirestore(idMotorista, dia, status, data) {
                 ...await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`]), // Obtém os dados existentes
                 [dia]: { // Atualiza o dia específico
                     status: status,
-                    data: data || null // Agora inclui a data
+                    data: data // Agora inclui a cidade, veículo e cliente
                 }
             }
         }, { merge: true });
