@@ -89,8 +89,12 @@ async function carregarMotoristas() {
         // Para motoristas, exibe os dados apenas do motorista logado
         const motoristaRef = doc(db, 'motoristas', loggedInUser);
         const motoristaSnapshot = await getDoc(motoristaRef);
-        const dados = motoristaSnapshot.data();
-        atualizarTabela(loggedInUser, dados); // Atualiza a tabela com os dados do motorista logado
+        if (motoristaSnapshot.exists()) {
+            const dados = motoristaSnapshot.data();
+            atualizarTabela(loggedInUser, dados); // Atualiza a tabela com os dados do motorista logado
+        } else {
+            console.warn("Motorista não encontrado no Firestore:", loggedInUser);
+        }
     }
 }
 
