@@ -71,32 +71,33 @@ let motoristasCarregados = false;
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
-    if (motoristasCarregados) {
-        console.log("Motoristas já carregados, evitando nova carga.");
-        return; // Impede o carregamento se já tiver sido feito
-    }
-
     const tabela = document.getElementById('tabela-motoristas');
     tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
-    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-    console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
-    motoristasSnapshot.docs.forEach(doc => {
-        const motorista = doc.id; 
-        const dados = doc.data();
-        console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
-        atualizarTabela(motorista, dados);
-    });
+    if (loggedInUser === 'ADMIN') {
+        // Se o usuário logado for admin, exibe todos os motoristas
+        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
 
-    motoristasCarregados = true; // Marca motoristas como carregados
+        motoristasSnapshot.docs.forEach(doc => {
+            const motorista = doc.id; 
+            const dados = doc.data();
+            console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
+            atualizarTabela(motorista, dados); // Atualiza a tabela com os dados dos motoristas
+        });
+    } else {
+        // Para motoristas, exibe os dados apenas do motorista logado
+        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+        const motoristaSnapshot = await getDoc(motoristaRef);
+        const dados = motoristaSnapshot.data();
+        atualizarTabela(loggedInUser, dados); // Atualiza a tabela com os dados do motorista logado
+    }
 }
 
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
-    if (!motoristasCarregados) { // Garantindo que só chamamos a função uma vez
-        carregarMotoristas().catch(console.error); // Chamada assíncrona
-    }
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
 });
 
 // Adiciona a função de logout ao objeto global window
