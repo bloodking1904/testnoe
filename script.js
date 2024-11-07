@@ -142,6 +142,11 @@ function atualizarTabela(motorista, dados) {
                 <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                     ${statusAtual.status}
                 </div>
+                ${statusAtual.data ? ` 
+                    <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
+                    <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
+                    <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
+                ` : ''}
             </div>
         `;
 
@@ -150,7 +155,6 @@ function atualizarTabela(motorista, dados) {
 
     tabela.appendChild(linha);
 }
-
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
