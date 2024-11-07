@@ -142,11 +142,14 @@ function atualizarTabela(motorista, dados) {
                 <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                     ${statusAtual.status}
                 </div>
-                ${statusAtual.data ? ` 
+                ${statusAtual.status !== 'Em Atendimento' && statusAtual.data ? `
                     <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
                     <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
                     <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
-                ` : ''}
+                ` : `
+                    <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data?.veiculo || 'N/A'}</div>
+                    <div><strong>Cliente:</strong> ${statusAtual.data?.cliente || 'N/A'}</div>
+                `}
             </div>
         `;
 
