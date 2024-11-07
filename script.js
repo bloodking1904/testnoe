@@ -184,21 +184,15 @@ async function resetarStatusTodosMotoristas() {
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         const batch = writeBatch(db); // Usar batch para atualizar vários documentos de forma eficiente
 
-        motoristasSnapshot.docs.forEach(async (doc) => {
+        motoristasSnapshot.docs.forEach(doc => {
             const motoristaRef = doc.ref;
-
-            // Obtém os dados existentes da semana atual
-            const semanaAtual = (await getDoc(motoristaRef)).data()[`semana${currentWeekIndex}`] || {};
 
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
             for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [`semana${currentWeekIndex}`]: {
-                        ...semanaAtual, // Espalha os dados existentes da semana
-                        [dia]: { 
-                            status: 'Disponível', 
-                            data: null 
-                        }
+                    [`semana${currentWeekIndex}.${dia}`]: { 
+                        status: 'Disponível', 
+                        data: null 
                     }
                 }, { merge: true });
             }
@@ -215,6 +209,7 @@ async function resetarStatusTodosMotoristas() {
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
     }
 }
+
 // Adiciona a função ao objeto global window
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 
