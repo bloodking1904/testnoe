@@ -142,9 +142,10 @@ function atualizarTabela(motorista, dados) {
                 <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                     ${statusAtual.status}
                 </div>
-                ${statusAtual.status === 'Em Atendimento' ? `
-                    <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data?.veiculo || 'N/A'}</div>
-                    <div><strong>Cliente:</strong> ${statusAtual.data?.cliente || 'N/A'}</div>
+                ${statusAtual.data ? `
+                    <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade || 'N/A'}</div>
+                    <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo || 'N/A'}</div>
+                    <div><strong>Cliente:</strong> ${statusAtual.data.cliente || 'N/A'}</div>
                 ` : ''}
             </div>
         `;
@@ -221,10 +222,10 @@ window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
 
-    // Verifique se data está definido
+    // Prepare data to be sent to Firestore
     const statusData = {
         status: status,
-        data: data || null // Se data não for fornecida, será null
+        data: data || null // Ensure data is not undefined
     };
 
     fecharSelecaoStatus();
@@ -246,10 +247,11 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
         ${data && data.cliente && data.veiculo ? ` 
             <div><strong>Cliente:</strong> ${data.cliente}</div>
             <div><strong>Veículo:</strong> ${data.veiculo}</div>
+            <div><strong>Cidade:</strong> ${data.cidade}</div>
         ` : ''}
     `;
 
-    await atualizarStatusFirestore(idMotorista, dia, statusData);
+    await atualizarStatusFirestore(idMotorista, dia, statusData); // Passa o objeto statusData
     console.log("Status adicionado com sucesso.");
 }
 
