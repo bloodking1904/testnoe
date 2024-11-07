@@ -152,13 +152,22 @@ function atualizarTabela(motorista, dados) {
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
     try {
         console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
+        
+        // Mostra o que está sendo enviado para o Firestore
+        console.log(`Dados a serem enviados:`, {
+            [`semana${currentWeekIndex}.${dia}`]: {
+                status: status,
+                data: data || null // Garante que data não seja undefined
+            }
+        });
+
         const motoristaRef = doc(db, 'motoristas', idMotorista);
 
         // Atualizar o status no campo apropriado
         await setDoc(motoristaRef, {
-            [`semana${currentWeekIndex}.${dia}`]: { // Ex: semana1.0
+            [`semana${currentWeekIndex}.${dia}`]: {
                 status: status,
-                data: data || null // Garante que data não seja undefined
+                data: data || null
             }
         }, { merge: true }); // Merge para não sobrescrever outros dados
 
@@ -213,6 +222,14 @@ window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 // Função para adicionar o status selecionado à célula correspondente
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
+
+    // Mostra os dados que serão atualizados
+    console.log(`Dados que serão enviados ao atualizarStatusFirestore:`, {
+        idMotorista,
+        dia,
+        status,
+        data,
+    });
 
     fecharSelecaoStatus();
 
