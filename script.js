@@ -152,24 +152,15 @@ function atualizarTabela(motorista, dados) {
 async function atualizarStatusFirestore(idMotorista, dia, status, data) {
     try {
         console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
-        
-        // Mostra o que está sendo enviado para o Firestore
-        console.log(`Dados a serem enviados:`, {
-            [`semana${currentWeekIndex}.${dia}`]: {
+        const motoristaRef = doc(db, 'motoristas', idMotorista);
+
+        // Usando merge para atualizar os campos existentes
+        await setDoc(motoristaRef, {
+            [`semana${currentWeekIndex}.${dia}`]: { // Atualizar diretamente o campo existente
                 status: status,
                 data: data || null // Garante que data não seja undefined
             }
-        });
-
-        const motoristaRef = doc(db, 'motoristas', idMotorista);
-
-        // Atualizar o status no campo apropriado
-        await setDoc(motoristaRef, {
-            [`semana${currentWeekIndex}.${dia}`]: {
-                status: status,
-                data: data || null
-            }
-        }, { merge: true }); // Merge para não sobrescrever outros dados
+        }, { merge: true });
 
         console.log("Status atualizado com sucesso.");
     } catch (error) {
