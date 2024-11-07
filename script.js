@@ -156,19 +156,16 @@ function atualizarTabela(motorista, dados) {
 }
 
 // Função para atualizar o status no Firestore
-async function atualizarStatusFirestore(idMotorista, dia, status, data) {
+async function atualizarStatusFirestore(idMotorista, dia, statusData) {
     try {
-        console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${status}`);
+        console.log(`Atualizando status do motorista: ${idMotorista}, Dia: ${dia}, Status: ${statusData.status}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
 
         // Usar merge para atualizar o campo dentro do mapa existente
         await setDoc(motoristaRef, {
             [`semana${currentWeekIndex}`]: { 
                 ...await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`]), // Obtém os dados existentes
-                [dia]: { // Atualiza o dia específico
-                    status: status,
-                    data: data // Agora inclui a cidade, veículo e cliente
-                }
+                [dia]: statusData // Atualiza o dia específico
             }
         }, { merge: true });
 
@@ -224,13 +221,11 @@ window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
 async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
     console.log(`Adicionando status: ${status} para o motorista: ${idMotorista}, Dia: ${dia}, Linha: ${linha}`);
 
-    // Mostra os dados que serão atualizados
-    console.log(`Dados que serão enviados ao atualizarStatusFirestore:`, {
-        idMotorista,
-        dia,
-        status,
-        data,
-    });
+    // Verifique se data está definido
+    const statusData = {
+        status: status,
+        data: data || null // Se data não for fornecida, será null
+    };
 
     fecharSelecaoStatus();
 
@@ -254,9 +249,10 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
         ` : ''}
     `;
 
-    await atualizarStatusFirestore(idMotorista, dia, status, data); // Chama para atualizar o Firestore
+    await atualizarStatusFirestore(idMotorista, dia, statusData);
     console.log("Status adicionado com sucesso.");
 }
+
 window.adicionarStatus = adicionarStatus;
 
 // Adiciona a função para mostrar a seleção de status
