@@ -91,7 +91,7 @@ async function carregarMotoristas() {
     motoristasCarregados = true; // Marca motoristas como carregados
 }
 
-/ Adiciona a função de logout ao objeto global window
+// Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
