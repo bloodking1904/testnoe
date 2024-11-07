@@ -187,12 +187,18 @@ async function resetarStatusTodosMotoristas() {
         motoristasSnapshot.docs.forEach(doc => {
             const motoristaRef = doc.ref;
 
+            // Obtém os dados existentes da semana atual
+            const semanaAtual = await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`]);
+
             // Atualiza o status para 'Disponível' para cada dia da semana (0 a 6)
             for (let dia = 0; dia < 7; dia++) {
                 batch.set(motoristaRef, {
-                    [`semana${currentWeekIndex}.${dia}`]: { 
-                        status: 'Disponível', 
-                        data: null 
+                    [`semana${currentWeekIndex}`]: {
+                        ...semanaAtual, // Espalha os dados existentes da semana
+                        [dia]: { 
+                            status: 'Disponível', 
+                            data: null 
+                        }
                     }
                 }, { merge: true });
             }
