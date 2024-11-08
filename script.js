@@ -68,10 +68,10 @@ function verificarAutenticacao() {
 }
 
 // Inicializa o sistema ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     verificarAutenticacao(); // Chama a verificação de autenticação
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
+    await carregarMotoristas(); // Chamada assíncrona
 });
 
 // Definição das variáveis globais
@@ -94,27 +94,13 @@ async function carregarMotoristas() {
     // Definir os dias da semana
     const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
 
-    // Obter a data atual
-    const dataAtual = new Date();
-
-    // Calcular o dia da semana atual (0 = Domingo, 1 = Segunda, ..., 6 = Sábado)
-    const diaDaSemanaAtual = dataAtual.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
-
-    // Ajusta para o domingo anterior ou o mesmo dia
-    const domingoAnterior = new Date(dataAtual);
-    domingoAnterior.setDate(dataAtual.getDate() - diaDaSemanaAtual); // Retorna ao domingo
-
-    // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
         const celula = document.createElement('div');
         celula.classList.add('celula');
-
-        // Ajusta a data para o dia correto
-        const dataFormatada = new Date(domingoAnterior);
-        dataFormatada.setDate(domingoAnterior.getDate() + index); // Adiciona o índice para cada dia
-        const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
-
-        celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
+        const dataAtual = new Date();
+        dataAtual.setDate(dataAtual.getDate() + (index - dataAtual.getDay() + 1)); // Ajusta para o dia correto
+        const dataFormatada = (`0${dataAtual.getDate()}`).slice(-2) + '/' + (`0${dataAtual.getMonth() + 1}`).slice(-2) + '/' + dataAtual.getFullYear(); // Formato DD/MM/AAAA
+        celula.innerHTML = `${dia}<br>${dataFormatada}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
@@ -144,14 +130,12 @@ async function carregarMotoristas() {
     }
 }
 
-
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
 };
-
 
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
@@ -439,7 +423,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
     veiculos.forEach(veiculo => {
         veiculoOptions += ` 
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="finalizarAtendimento('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">${veiculo}</div>
+                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
         `;
     });
     veiculoOptions += '</div>'; // Fecha a grid
