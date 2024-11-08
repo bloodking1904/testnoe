@@ -78,9 +78,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
 const totalWeeks = 6; // Total de semanas
 
-// Variável para controle de carregamento
-let motoristasCarregados = false;
-
 // Função para carregar motoristas
 async function carregarMotoristas() {
     console.log("Chamando carregarMotoristas()...");
@@ -93,7 +90,6 @@ async function carregarMotoristas() {
 
     // Definir os dias da semana
     const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
-
     diasDaSemana.forEach((dia, index) => {
         const celula = document.createElement('div');
         celula.classList.add('celula');
@@ -180,6 +176,9 @@ function atualizarTabela(motorista, dados) {
 
     tabela.appendChild(linha);
 }
+
+// Adiciona a função ao objeto global window
+window.atualizarTabela = atualizarTabela;
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, statusData) {
@@ -710,7 +709,7 @@ async function inicializarMotoristas() {
 
     console.log("Tabela de motoristas inicializada.");
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-}
+});
 
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
