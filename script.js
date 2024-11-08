@@ -38,20 +38,27 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
 
 // Função para verificar se o usuário está autenticado
 function verificarAutenticacao() {
+    console.log("Verificando autenticação...");
     const isAdmin = loggedInUser === 'ADMIN';
 
     // Se não houver usuário logado, redireciona para a página de login
     if (!loggedInUser) {
+        console.log("Usuário não está logado. Redirecionando para login.");
         window.location.href = 'login.html';
         return;
     }
 
     // Configurações de tempo de sessão
     if (isAdmin) {
+        console.log("Usuário é admin. Atualizando conexão a cada 60 segundos.");
         // Atualiza a conexão do admin a cada 60 segundos
         setInterval(() => {
             console.log("Conexão do admin atualizada.");
         }, 60000); // 60 segundos
+
+        // Aqui você pode adicionar uma chamada a carregarMotoristas(), se necessário
+        console.log("Chamando carregarMotoristas() na verificação de autenticação.");
+        carregarMotoristas().catch(console.error);
     } else {
         // Para motoristas, define um temporizador de 5 minutos
         setTimeout(() => {
@@ -62,6 +69,12 @@ function verificarAutenticacao() {
     }
 }
 
+// Inicializa os motoristas ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+});
+
 // Definição das variáveis globais
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
 const totalWeeks = 6; // Total de semanas
@@ -71,6 +84,7 @@ let motoristasCarregados = false;
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
+    console.log("Chamando carregarMotoristas()...");
     const tabela = document.getElementById('tabela-motoristas');
     tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
@@ -130,11 +144,7 @@ async function carregarMotoristas() {
         }
     }
 }
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-});
+
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
