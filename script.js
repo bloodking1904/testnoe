@@ -96,8 +96,6 @@ async function carregarMotoristas() {
 
     // Obter a data atual
     const dataAtual = new Date();
-
-    // Calcular o dia da semana atual (0 = Domingo, 1 = Segunda, ..., 6 = Sábado)
     const diaDaSemanaAtual = dataAtual.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
 
     // Ajusta para o domingo anterior ou o mesmo dia
@@ -144,14 +142,12 @@ async function carregarMotoristas() {
     }
 }
 
-
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
     console.log("Logout do usuário:", loggedInUser);
     localStorage.removeItem('loggedInUser');
     window.location.href = 'login.html';
 };
-
 
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
@@ -616,122 +612,6 @@ window.adicionarVeiculo = adicionarVeiculo;
 
 // Adiciona a função ao objeto global window
 window.toggleConfirmButton = toggleConfirmButton;
-
-// Inicializa a lista de motoristas
-async function inicializarMotoristas() {
-    console.log("Inicializando motoristas...");
-    const dias = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO']; // Dias da semana em letras maiúsculas
-    const tabela = document.getElementById('tabela-motoristas');
-
-    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
-
-    const cabecalho = document.createElement('div');
-    cabecalho.classList.add('linha', 'cabecalho');
-
-    // Adiciona cabeçalho para todos os dias da semana
-    dias.forEach((dia, index) => {
-        const celula = document.createElement('div');
-        celula.classList.add('celula');
-        const dataAtual = new Date();
-        dataAtual.setDate(dataAtual.getDate() + (index - dataAtual.getDay() + 1)); // Ajusta para o dia correto
-        const dataFormatada = (`0${dataAtual.getDate()}`).slice(-2) + '/' + (`0${dataAtual.getMonth() + 1}`).slice(-2) + '/' + dataAtual.getFullYear(); // Formato DD/MM/AAAA
-        celula.innerHTML = `${dia}<br>${dataFormatada}`; // Adiciona o nome do dia e a data
-        cabecalho.appendChild(celula);
-    });
-
-    tabela.appendChild(cabecalho);
-    console.log("Cabeçalho da tabela criado.");
-
-    // Se o usuário logado for admin, exibe todos os motoristas
-    if (loggedInUser === 'ADMIN') {
-        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-        console.log("Motoristas obtidos do Firestore.");
-
-        motoristasSnapshot.docs.forEach(doc => {
-            const motorista = doc.id; 
-            const dados = doc.data();
-
-            console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
-
-            const linha = document.createElement('div');
-            linha.classList.add('linha');
-            linha.dataset.linha = motorista;
-
-            dias.forEach((dia, diaIndex) => {
-                const celula = document.createElement('div');
-                celula.classList.add('celula');
-                celula.dataset.dia = diaIndex;
-
-                const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
-
-                celula.innerHTML = ` 
-                    <div class="motorista">
-                        <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaIndex}" data-linha="${motorista}"
-                            onclick="mostrarSelecaoStatus(this)">+</button>
-                        <span style="font-weight: bold;">${motorista}</span>
-                        <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
-                            ${statusAtual.status}
-                        </div>
-                        ${statusAtual.data ? ` 
-                            <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
-                            <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
-                            <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
-                        ` : ''}
-                    </div>
-                `;
-
-                linha.appendChild(celula);
-            });
-
-            tabela.appendChild(linha);
-        });
-    } else {
-        // Para motoristas, exibe os dias da semana
-        const motoristaRef = doc(db, 'motoristas', loggedInUser);
-        const motoristaSnapshot = await getDoc(motoristaRef);
-        const dados = motoristaSnapshot.data();
-
-        const linha = document.createElement('div');
-        linha.classList.add('linha');
-        linha.dataset.linha = loggedInUser;
-
-        dias.forEach((dia, diaIndex) => {
-            const celula = document.createElement('div');
-            celula.classList.add('celula');
-            celula.dataset.dia = diaIndex;
-
-            const statusAtual = dados[diaIndex] || { status: 'Disponível', data: null };
-
-            celula.innerHTML = ` 
-                <div class="motorista">
-                    <button class="adicionar" data-id-motorista="${loggedInUser}" data-dia="${diaIndex}" data-linha="${loggedInUser}"
-                        onclick="mostrarSelecaoStatus(this)">+</button>
-                    <span style="font-weight: bold;">${loggedInUser}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
-                        ${statusAtual.status}
-                    </div>
-                    ${statusAtual.data ? ` 
-                        <div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div>
-                        <div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div>
-                        <div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>
-                    ` : ''}
-                </div>
-            `;
-
-            linha.appendChild(celula);
-        });
-
-        tabela.appendChild(linha);
-    }
-
-    console.log("Tabela de motoristas inicializada.");
-    console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-}
-
-// Inicializa os motoristas ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    carregarMotoristas().catch(console.error);
-});
 
 // Função para atualizar a linha de um motorista específico
 function atualizarLinhaMotorista(motorista, dados) {
