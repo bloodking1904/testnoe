@@ -67,9 +67,10 @@ function verificarAutenticacao() {
     }
 }
 
-// Inicializa os motoristas ao carregar a página
+// Inicializa o sistema ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
+    verificarAutenticacao(); // Chama a verificação de autenticação
     carregarMotoristas().catch(console.error); // Chamada assíncrona
 });
 
