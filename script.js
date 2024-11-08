@@ -709,7 +709,7 @@ async function inicializarMotoristas() {
 
     console.log("Tabela de motoristas inicializada.");
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-});
+};
 
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
