@@ -48,6 +48,8 @@ function verificarAutenticacao() {
         return;
     }
 
+    console.log(`Usuário logado: ${loggedInUser}`);
+
     // Configurações de tempo de sessão
     if (isAdmin) {
         console.log("Usuário é admin. Atualizando conexão a cada 60 segundos.");
@@ -55,10 +57,6 @@ function verificarAutenticacao() {
         setInterval(() => {
             console.log("Conexão do admin atualizada.");
         }, 60000); // 60 segundos
-
-        // Aqui você pode adicionar uma chamada a carregarMotoristas(), se necessário
-        console.log("Chamando carregarMotoristas() na verificação de autenticação.");
-        carregarMotoristas().catch(console.error);
     } else {
         // Para motoristas, define um temporizador de 5 minutos
         setTimeout(() => {
