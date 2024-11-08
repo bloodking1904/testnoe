@@ -36,83 +36,114 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
     window.location.href = 'login.html';
 }
 
-// Função para verificar autenticação
+// Função para verificar se o usuário está autenticado
 function verificarAutenticacao() {
     console.log("Verificando autenticação...");
+    const isAdmin = loggedInUser === 'ADMIN';
+
+    // Se não houver usuário logado, redireciona para a página de login
     if (!loggedInUser) {
         console.log("Usuário não está logado. Redirecionando para login.");
         window.location.href = 'login.html';
         return;
     }
+
     console.log(`Usuário logado: ${loggedInUser}`);
-    if (loggedInUser === 'ADMIN') {
+
+    // Configurações de tempo de sessão
+    if (isAdmin) {
         console.log("Usuário é admin. Atualizando conexão a cada 60 segundos.");
+        // Atualiza a conexão do admin a cada 60 segundos
         setInterval(() => {
             console.log("Conexão do admin atualizada.");
         }, 60000); // 60 segundos
     } else {
+        // Para motoristas, define um temporizador de 5 minutos
         setTimeout(() => {
             alert("Sua sessão expirou. Faça login novamente.");
-            localStorage.removeItem('loggedInUser'); 
-            window.location.href = 'login.html'; 
+            localStorage.removeItem('loggedInUser'); // Remove o usuário logado
+            window.location.href = 'login.html'; // Redireciona para a página de login
         }, 5 * 60 * 1000); // 5 minutos
     }
 }
 
 // Inicializa o sistema ao carregar a página
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     verificarAutenticacao(); // Chama a verificação de autenticação
-    await carregarMotoristas(); // Chamada assíncrona
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
 });
 
 // Definição das variáveis globais
 let currentWeekIndex = 1; // Índice da semana atual (0-5)
 const totalWeeks = 6; // Total de semanas
 
+// Variável para controle de carregamento
+let motoristasCarregados = false;
+
 // Função para carregar motoristas
 async function carregarMotoristas() {
     console.log("Chamando carregarMotoristas()...");
     const tabela = document.getElementById('tabela-motoristas');
-    tabela.innerHTML = ''; // Limpa a tabela
+    tabela.innerHTML = ''; // Limpa a tabela antes de adicionar motoristas
 
+    // Criar o cabeçalho da tabela
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
+    // Definir os dias da semana
     const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+
+    // Obter a data atual
+    const dataAtual = new Date();
+
+    // Calcular o dia da semana atual (0 = Domingo, 1 = Segunda, ..., 6 = Sábado)
+    const diaDaSemanaAtual = dataAtual.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
+
+    // Ajusta para o domingo anterior ou o mesmo dia
+    const domingoAnterior = new Date(dataAtual);
+    domingoAnterior.setDate(dataAtual.getDate() - diaDaSemanaAtual); // Retorna ao domingo
+
+    // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
         const celula = document.createElement('div');
         celula.classList.add('celula');
-        const dataAtual = new Date();
-        dataAtual.setDate(dataAtual.getDate() + (index - dataAtual.getDay() + 1));
-        const dataFormatada = (`0${dataAtual.getDate()}`).slice(-2) + '/' + (`0${dataAtual.getMonth() + 1}`).slice(-2) + '/' + dataAtual.getFullYear();
-        celula.innerHTML = `${dia}<br>${dataFormatada}`;
+
+        // Ajusta a data para o dia correto
+        const dataFormatada = new Date(domingoAnterior);
+        dataFormatada.setDate(domingoAnterior.getDate() + index); // Adiciona o índice para cada dia
+        const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
+
+        celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
-    tabela.appendChild(cabecalho);
+    tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
 
     if (loggedInUser === 'ADMIN') {
+        // Se o usuário logado for admin, exibe todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-        console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length);
+        console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
 
         motoristasSnapshot.docs.forEach(doc => {
             const motorista = doc.id; 
             const dados = doc.data();
-            console.log("Motorista:", motorista, "Dados:", dados);
-            atualizarTabela(motorista, dados); 
+            console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
+            atualizarTabela(motorista, dados); // Atualiza a tabela com os dados dos motoristas
         });
     } else {
+        // Para motoristas, exibe os dados apenas do motorista logado
         const motoristaRef = doc(db, 'motoristas', loggedInUser);
         const motoristaSnapshot = await getDoc(motoristaRef);
         if (motoristaSnapshot.exists()) {
             const dados = motoristaSnapshot.data();
-            atualizarTabela(loggedInUser, dados); 
+            atualizarTabela(loggedInUser, dados); // Atualiza a tabela com os dados do motorista logado
         } else {
             console.warn("Motorista não encontrado no Firestore:", loggedInUser);
         }
     }
 }
+
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
@@ -121,6 +152,7 @@ window.logout = function () {
     window.location.href = 'login.html';
 };
 
+
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
     const tabela = document.getElementById('tabela-motoristas');
@@ -128,11 +160,12 @@ function atualizarTabela(motorista, dados) {
     linha.classList.add('linha');
     linha.dataset.linha = motorista;
 
+    // Acessa a semana atual
     const semanaAtual = dados[`semana${currentWeekIndex}`];
 
     if (!semanaAtual) {
         console.warn(`Dados da semana ${currentWeekIndex} não encontrados para o motorista ${motorista}.`);
-        return;
+        return; // Sai da função se semanaAtual não estiver definido
     }
 
     for (let dia = 0; dia < 7; dia++) {
@@ -163,9 +196,6 @@ function atualizarTabela(motorista, dados) {
 
     tabela.appendChild(linha);
 }
-
-// Adiciona a função ao objeto global window
-window.atualizarTabela = atualizarTabela;
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, statusData) {
@@ -409,7 +439,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
     veiculos.forEach(veiculo => {
         veiculoOptions += ` 
             <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="adicionarVeiculo('${nome}', ${dia}, '${linha}', '${cliente}', '${veiculo}')">${veiculo}</div>
+                onclick="finalizarAtendimento('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">${veiculo}</div>
         `;
     });
     veiculoOptions += '</div>'; // Fecha a grid
@@ -696,7 +726,7 @@ async function inicializarMotoristas() {
 
     console.log("Tabela de motoristas inicializada.");
     console.log("IDs das linhas na tabela:", [...tabela.children].map(l => l.getAttribute('data-linha')));
-};
+}
 
 // Inicializa os motoristas ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
