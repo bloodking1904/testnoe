@@ -117,7 +117,7 @@ async function carregarMotoristas() {
 
     // Calcular a data de início da semana com base no currentWeekIndex
     const dataInicioSemana = new Date(segundaAtual);
-    dataInicioSemana.setDate(segundaAtual.getDate() + (currentWeekIndex - 1) * 7); // Ajusta para a semana correta
+    dataInicioSemana.setDate(segundaAtual.getDate() + (currentWeekIndex * 7)); // Ajusta a data para a semana correta
 
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
@@ -129,11 +129,14 @@ async function carregarMotoristas() {
         dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
-        celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
+        celula.innerHTML = `${dia}<br>${diaFormatada}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
     tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
+
+    // Atualizar dados das semanas com base na data atual
+    await atualizarDadosDasSemanas();
 
     // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
@@ -157,6 +160,42 @@ async function carregarMotoristas() {
             console.warn("Motorista não encontrado no Firestore:", loggedInUser);
         }
     }
+}
+
+// Função para atualizar dados das semanas
+async function atualizarDadosDasSemanas() {
+    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+
+    motoristasSnapshot.docs.forEach(async (doc) => {
+        const motoristaRef = doc.ref;
+
+        // Obter dados atuais para o motorista
+        const dados = await getDoc(motoristaRef);
+        const motoristaDados = dados.data();
+
+        // Atualizar cada semana
+        for (let i = 5; i >= 0; i--) {
+            if (i === 0) {
+                // Limpar dados da semana 0
+                await setDoc(motoristaRef, {
+                    [`semana${i}`]: {
+                        0: { status: 'Disponível', data: null },
+                        1: { status: 'Disponível', data: null },
+                        2: { status: 'Disponível', data: null },
+                        3: { status: 'Disponível', data: null },
+                        4: { status: 'Disponível', data: null },
+                        5: { status: 'Disponível', data: null },
+                        6: { status: 'Disponível', data: null },
+                    }
+                }, { merge: true });
+            } else {
+                // Transferir dados da semana anterior
+                await setDoc(motoristaRef, {
+                    [`semana${i}`]: motoristaDados[`semana${i - 1}`]
+                }, { merge: true });
+            }
+        }
+    });
 }
 
 // Adiciona a função de logout ao objeto global window
