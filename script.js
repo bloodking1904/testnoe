@@ -36,6 +36,10 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
     window.location.href = 'login.html';
 }
 
+// Definição das variáveis globais
+let currentWeekIndex = 1; // Índice da semana atual (0-6)
+const totalWeeks = 6; // Total de semanas
+
 // Função para verificar se o usuário está autenticado
 function verificarAutenticacao() {
     console.log("Verificando autenticação...");
@@ -72,14 +76,22 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     verificarAutenticacao(); // Chama a verificação de autenticação
     carregarMotoristas().catch(console.error); // Chamada assíncrona
+
+    // Eventos para os botões de navegação
+    document.getElementById('seta-esquerda').addEventListener('click', () => {
+        if (currentWeekIndex > 0) {
+            currentWeekIndex--;
+            carregarMotoristas().catch(console.error);
+        }
+    });
+
+    document.getElementById('seta-direita').addEventListener('click', () => {
+        if (currentWeekIndex < totalWeeks) {
+            currentWeekIndex++;
+            carregarMotoristas().catch(console.error);
+        }
+    });
 });
-
-// Definição das variáveis globais
-let currentWeekIndex = 1; // Índice da semana atual (0-5)
-const totalWeeks = 6; // Total de semanas
-
-// Variável para controle de carregamento
-let motoristasCarregados = false;
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
@@ -94,11 +106,9 @@ async function carregarMotoristas() {
     // Definir os dias da semana
     const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
 
-    // Obter a data atual
+    // Obter a data atual e formatar as datas
     const dataAtual = new Date();
     const diaDaSemanaAtual = dataAtual.getDay(); // 0 = Domingo, 1 = Segunda, ..., 6 = Sábado
-
-    // Ajusta para o domingo anterior ou o mesmo dia
     const domingoAnterior = new Date(dataAtual);
     domingoAnterior.setDate(dataAtual.getDate() - diaDaSemanaAtual); // Retorna ao domingo
 
@@ -107,7 +117,6 @@ async function carregarMotoristas() {
         const celula = document.createElement('div');
         celula.classList.add('celula');
 
-        // Ajusta a data para o dia correto
         const dataFormatada = new Date(domingoAnterior);
         dataFormatada.setDate(domingoAnterior.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
@@ -141,13 +150,6 @@ async function carregarMotoristas() {
         }
     }
 }
-
-// Adiciona a função de logout ao objeto global window
-window.logout = function () {
-    console.log("Logout do usuário:", loggedInUser);
-    localStorage.removeItem('loggedInUser');
-    window.location.href = 'login.html';
-};
 
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
@@ -230,7 +232,7 @@ async function resetarStatusTodosMotoristas() {
             const motoristaRef = doc.ref;
 
             // Atualiza o status para 'Disponível' para cada semana (de 0 até totalWeeks)
-            for (let semana = 0; semana < totalWeeks; semana++) {
+            for (let semana = 0; semana <= totalWeeks; semana++) {
                 for (let dia = 0; dia < 7; dia++) {
                     batch.set(motoristaRef, {
                         [`semana${semana}`]: {
