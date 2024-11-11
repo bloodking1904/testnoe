@@ -808,7 +808,7 @@ async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha, cidad
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
-            <div><strong>Observações:</strong> ${cidade}</div> <!-- Exibe a observação -->
+            <div><strong>Cidade:</strong> ${cidade}</div>
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
