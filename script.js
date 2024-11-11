@@ -236,9 +236,20 @@ window.logout = function () {
 // Função para atualizar a tabela
 function atualizarTabela(motorista, dados) {
     const tabela = document.getElementById('tabela-motoristas');
-    const linha = document.createElement('div');
-    linha.classList.add('linha');
-    linha.dataset.linha = motorista;
+    
+    // Verifica se a linha já existe
+    let linha = Array.from(tabela.children).find(l => l.dataset.linha === motorista);
+    
+    if (!linha) {
+        // Se a linha não existir, cria uma nova
+        linha = document.createElement('div');
+        linha.classList.add('linha');
+        linha.dataset.linha = motorista;
+        tabela.appendChild(linha);
+    } else {
+        // Se a linha já existir, limpa o conteúdo
+        linha.innerHTML = '';
+    }
 
     // Acessa a semana atual
     const semanaAtual = dados[`semana${currentWeekIndex}`];
@@ -273,8 +284,6 @@ function atualizarTabela(motorista, dados) {
 
         linha.appendChild(celula);
     }
-
-    tabela.appendChild(linha);
 }
 
 
