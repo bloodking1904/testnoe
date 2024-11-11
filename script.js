@@ -754,7 +754,7 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
             <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
                 onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
             <button id="confirmar-com-observacoes" style="background-color: blue; color: white; white-space: break-word;" 
-                onclick="mostrarObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">CONFIRMAR C/ OBSERVAÇÕES</button>
+                onclick="mostrarObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)">CONFIRMAR C/ OBSERVAÇÕES</button>
         </div>
     `;
 
@@ -764,7 +764,7 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
-function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
+function mostrarObservacoes(nome, cliente, veiculo, dia, linha, cidade) {
     const observacoesSelecao = document.getElementById('status-selecao');
 
     const observacaoInput = ` 
@@ -772,7 +772,7 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
             <label>OBSERVAÇÕES:</label>
             <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui..."></textarea>
             <button id="confirmar-observacao" style="background-color: green; color: white;" 
-                onclick="confirmarComObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')" >CONFIRMAR VIAGEM</button>
+                onclick="confirmarComObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', '${cidade}')" >CONFIRMAR VIAGEM</button>
         </div>
     `;
 
@@ -784,18 +784,18 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
 // Adiciona a função ao objeto global window
 window.mostrarObservacoes = mostrarObservacoes;
 
-async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
+async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha, cidade) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo,
-        observacao: observacaoTexto // Adicionando observação
+        cidade: cidade // Agora inclui a cidade
     };
 
     // Atualiza o status no Firestore
-    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
+    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, cidade, data); // Passa o objeto data
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
