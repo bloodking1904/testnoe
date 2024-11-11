@@ -784,6 +784,42 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
 // Adiciona a função ao objeto global window
 window.mostrarObservacoes = mostrarObservacoes;
 
+async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
+    const observacaoTexto = document.getElementById('observacao-texto').value;
+
+    // Prepara o dado para incluir todas as informações necessárias
+    const data = {
+        cliente: cliente,
+        veiculo: veiculo,
+        observacao: observacaoTexto // Adicionando observação
+    };
+
+    // Atualiza o status no Firestore
+    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
+
+    // Atualiza visualmente o motorista
+    const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
+
+    if (motoristaDiv) {
+        motoristaDiv.innerHTML = ` 
+            <button class="adicionar" data-id-motorista="${nome}" data-dia="${dia}" data-linha="${linha}" 
+                onclick="mostrarSelecaoStatus(this)" style="font-size: 1.5em; padding: 10px; background-color: green; color: white; border: none; border-radius: 5px; width: 40px; height: 40px;">+</button>
+            <span style="font-weight: bold;">${nome}</span>
+            <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
+            <div><strong>Veículo:</strong> ${veiculo}</div>
+            <div><strong>Cliente:</strong> ${cliente}</div>
+            <div><strong>Observações:</strong> ${observacaoTexto}</div> <!-- Exibe a observação -->
+        `;
+    } else {
+        console.error("Div do motorista não encontrada ao atualizar visualmente.");
+    }
+
+    fecharSelecaoStatus(); // Fecha todas as seleções 
+}
+
+// Adiciona a função ao objeto global window
+window.confirmarComObservacoes = confirmarComObservacoes;
+
 // Função para habilitar ou desabilitar o botão de confirmar
 function toggleConfirmButton() {
     const cidadeInput = document.getElementById('cidade-destino');
