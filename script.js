@@ -113,14 +113,18 @@ async function carregarMotoristas() {
     const domingoAtual = new Date(dataAtual);
     domingoAtual.setDate(dataAtual.getDate() - dataAtual.getDay()); // Ajusta para o domingo da semana atual
 
+    // Calcular a data de início da semana para a semana atual (semana que corresponde ao currentWeekIndex)
+    const dataInicioSemana = new Date(domingoAtual);
+    dataInicioSemana.setDate(domingoAtual.getDate() + (currentWeekIndex * 7)); // Ajusta para a semana correta
+
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
         const celula = document.createElement('div');
         celula.classList.add('celula');
 
         // Calcular a data para o dia correto da semana
-        const dataFormatada = new Date(domingoAtual);
-        dataFormatada.setDate(domingoAtual.getDate() + index); // Adiciona o índice para cada dia
+        const dataFormatada = new Date(dataInicioSemana);
+        dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
         celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
