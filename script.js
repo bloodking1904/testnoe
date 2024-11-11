@@ -103,19 +103,17 @@ async function carregarMotoristas() {
     const cabecalho = document.createElement('div');
     cabecalho.classList.add('linha', 'cabecalho');
 
-    // Definir os dias da semana
-    const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
+    // Definir os dias da semana começando de SEGUNDA
+    const diasDaSemana = ['SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO', 'DOMINGO'];
 
     // Obter a data atual
     const dataAtual = new Date();
 
-    // Calcular o início da semana da data atual (domingo correspondente)
-    const domingoAtual = new Date(dataAtual);
-    domingoAtual.setDate(dataAtual.getDate() - dataAtual.getDay()); // Ajusta para o domingo da semana atual
-
-    // Calcular a data de início da semana para a semana atual (semana que corresponde ao currentWeekIndex)
-    const dataInicioSemana = new Date(domingoAtual);
-    dataInicioSemana.setDate(domingoAtual.getDate() + (currentWeekIndex * 7)); // Ajusta para a semana correta
+    // Calcular o início da semana (segunda-feira correspondente)
+    const segundaAtual = new Date(dataAtual);
+    const diaDaSemanaAtual = segundaAtual.getDay();
+    const offset = diaDaSemanaAtual === 0 ? -6 : 1 - diaDaSemanaAtual; // Se domingo, ajusta para -6 para pegar a segunda
+    segundaAtual.setDate(dataAtual.getDate() + offset); // Ajusta para a segunda-feira da semana atual
 
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
@@ -123,8 +121,8 @@ async function carregarMotoristas() {
         celula.classList.add('celula');
 
         // Calcular a data para o dia correto da semana
-        const dataFormatada = new Date(dataInicioSemana);
-        dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
+        const dataFormatada = new Date(segundaAtual);
+        dataFormatada.setDate(segundaAtual.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
         celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
