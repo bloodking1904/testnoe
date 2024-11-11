@@ -415,11 +415,8 @@ function mostrarSelecaoStatus(element) {
         const statusAtual = dados[`semana${currentWeekIndex}`][dia] ? dados[`semana${currentWeekIndex}`][dia].status : 'Disponível'; // Obtém o status atual para o dia específico
 
         // Verifica se o usuário logado é um motorista e se o status é "Em Viagem"
-        if (loggedInUser !== 'ADMIN' && statusAtual === 'Em Viagem') {
-            alert("Agenda Bloqueada pelo Administrador."); // Mensagem de alerta
-            return; // Interrompe a execução da função
-        }
-
+        const statusEmViagem = statusAtual === 'Em Viagem';
+        
         const statusSelecao = document.getElementById('status-selecao');
         let statusOptions = ` 
             <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
@@ -427,6 +424,14 @@ function mostrarSelecaoStatus(element) {
             <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
                 onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
         `;
+
+        // Adiciona o botão "OBS. VIAGEM" se o status for "Em Viagem"
+        if (statusEmViagem) {
+            statusOptions += ` 
+                <div class="status" style="background-color: orange; color: black; font-weight: bold;" 
+                    onclick="consultarObservacao('${idMotorista}')">OBS. VIAGEM</div>
+            `;
+        }
 
         // Apenas admins podem ver as opções de viagem e compensando
         if (loggedInUser === 'ADMIN') {
@@ -449,9 +454,68 @@ function mostrarSelecaoStatus(element) {
         console.error("Erro ao obter o status do motorista:", error);
     });
 }
-
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
+
+function consultarObservacao(idMotorista) {
+    const motoristaRef = doc(db, 'motoristas', idMotorista);
+    
+    getDoc(motoristaRef).then((motoristaSnapshot) => {
+        const dados = motoristaSnapshot.data();
+        const observacao = dados.observacao || ''; // Busca a observação, se não existir, usa uma string vazia
+        
+        const observacaoSelecao = document.getElementById('status-selecao');
+        
+        const observacaoInput = `
+            <div class="observacao-input">
+                <label>OBSERVAÇÕES:</label>
+                <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui...">${observacao}</textarea>
+                <button id="editar-observacao" style="background-color: green; color: white;" 
+                    onclick="toggleEditObservacao()">EDITAR</button>
+            </div>
+        `;
+        
+        observacaoSelecao.innerHTML = observacaoInput;
+        
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('status-selecao').style.display = 'flex';
+    }).catch(error => {
+        console.error("Erro ao consultar observação:", error);
+    });
+}
+
+// Adiciona a função ao objeto global window
+window.consultarObservacao = consultarObservacao;
+
+let isEditing = false; // Variável para controlar o estado de edição
+
+function toggleEditObservacao() {
+    const editarButton = document.getElementById('editar-observacao');
+    const observacaoTexto = document.getElementById('observacao-texto');
+
+    if (isEditing) {
+        // Salvar a observação
+        const observacaoNova = observacaoTexto.value;
+        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Assumindo que o motorista logado é o que estamos editando
+
+        // Atualiza a observação no Firestore
+        setDoc(motoristaRef, { observacao: observacaoNova }, { merge: true }).then(() => {
+            alert("Observação salva com sucesso!");
+            fecharSelecaoStatus();
+        }).catch(error => {
+            console.error("Erro ao salvar observação:", error);
+        });
+    } else {
+        // Muda o modo para edição
+        editarButton.innerText = "SALVAR";
+    }
+
+    isEditing = !isEditing; // Alterna o estado de edição
+}
+
+// Adiciona a função ao objeto global window
+window.toggleEditObservacao = toggleEditObservacao;
+
 
 // Função para mostrar a seleção de atendimento
 function mostrarSelecaoAtendimento(nome, dia, linha) {
@@ -689,10 +753,30 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
             <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
             <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
                 onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
+            <button id="confirmar-com-observacoes" style="background-color: blue; color: white; white-space: break-word;" 
+                onclick="mostrarObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">CONFIRMAR C/ OBSERVAÇÕES</button>
         </div>
     `;
 
     statusSelecao.innerHTML = cidadeInput;
+
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
+    const observacoesSelecao = document.getElementById('status-selecao');
+
+    const observacaoInput = ` 
+        <div class="observacao-input">
+            <label>OBSERVAÇÕES:</label>
+            <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui..."></textarea>
+            <button id="confirmar-observacao" style="background-color: green; color: white;" 
+                onclick="confirmarComObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')" >CONFIRMAR VIAGEM</button>
+        </div>
+    `;
+
+    observacoesSelecao.innerHTML = observacaoInput;
 
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
