@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch, onSnapshot} from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -135,8 +135,8 @@ async function carregarMotoristas() {
 
     tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
 
-    // Atualizar dados das semanas com base na data atual
-   // await atualizarDadosDasSemanas();
+    // Escutar as alterações nos motoristas
+    await escutarMotoristas();
 
     // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
@@ -160,6 +160,21 @@ async function carregarMotoristas() {
             console.warn("Motorista não encontrado no Firestore:", loggedInUser);
         }
     }
+}
+
+// Função para escutar as alterações nos motoristas
+async function escutarMotoristas() {
+    const motoristasCollection = collection(db, 'motoristas');
+    onSnapshot(motoristasCollection, (snapshot) => {
+        snapshot.docChanges().forEach(change => {
+            if (change.type === "modified") {
+                // Atualiza a tabela quando um motorista é modificado
+                const motoristaId = change.doc.id;
+                const dadosMotorista = change.doc.data();
+                atualizarTabela(motoristaId, dadosMotorista);
+            }
+        });
+    });
 }
 
 // Função para atualizar dados das semanas
@@ -261,6 +276,7 @@ function atualizarTabela(motorista, dados) {
 
     tabela.appendChild(linha);
 }
+
 
 // Função para atualizar o status no Firestore
 async function atualizarStatusFirestore(idMotorista, dia, statusData) {
