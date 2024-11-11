@@ -127,9 +127,9 @@ async function carregarMotoristas() {
         // Calcular a data para o dia correto da semana
         const dataFormatada = new Date(dataInicioSemana);
         dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
-        const diaFormatada = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
+        const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
-        celula.innerHTML = `${dia}<br>${diaFormatada}`; // Adiciona o nome do dia e a data
+        celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
@@ -195,6 +195,19 @@ async function atualizarDadosDasSemanas() {
                 }, { merge: true });
             }
         }
+        
+        // Adicionar dados da nova semana (semana1)
+        await setDoc(motoristaRef, {
+            [`semana1`]: {
+                0: { status: 'Disponível', data: null },
+                1: { status: 'Disponível', data: null },
+                2: { status: 'Disponível', data: null },
+                3: { status: 'Disponível', data: null },
+                4: { status: 'Disponível', data: null },
+                5: { status: 'Disponível', data: null },
+                6: { status: 'Disponível', data: null },
+            }
+        }, { merge: true });
     });
 }
 
