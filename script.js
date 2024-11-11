@@ -110,9 +110,9 @@ async function carregarMotoristas() {
     const dataAtual = new Date();
 
     // Calcular o início da semana (segunda-feira correspondente)
-    const segundaAtual = new Date(dataAtual);
-    const diaDaSemanaAtual = segundaAtual.getDay();
+    const diaDaSemanaAtual = dataAtual.getDay();
     const offset = diaDaSemanaAtual === 0 ? -6 : 1 - diaDaSemanaAtual; // Se domingo, ajusta para -6 para pegar a segunda
+    const segundaAtual = new Date(dataAtual);
     segundaAtual.setDate(dataAtual.getDate() + offset); // Ajusta para a segunda-feira da semana atual
 
     // Calcular a data de início da semana com base no currentWeekIndex
@@ -129,7 +129,7 @@ async function carregarMotoristas() {
         dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
-        celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
+        celula.innerHTML = `${dia}<br>${diaFormatada}`; // Adiciona o nome do dia e a data
         cabecalho.appendChild(celula);
     });
 
