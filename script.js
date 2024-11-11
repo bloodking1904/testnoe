@@ -117,7 +117,7 @@ async function carregarMotoristas() {
 
     // Calcular a data de início da semana com base no currentWeekIndex
     const dataInicioSemana = new Date(segundaAtual);
-    dataInicioSemana.setDate(segundaAtual.getDate() + (currentWeekIndex * 7)); // Ajusta a data para a semana correta
+    dataInicioSemana.setDate(segundaAtual.getDate() + (currentWeekIndex - 1) * 7); // Ajusta para a semana correta
 
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
