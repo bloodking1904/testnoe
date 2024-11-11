@@ -523,6 +523,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'Agrale QAH8438',
         'Munk Iveco RWI5B17',
         'AXOR QAO4215',
+        'Express DRC 4x2 SLX8B62',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -656,6 +657,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
         'Agrale QAH8438',
         'Munk Iveco RWI5B17',
         'AXOR QAO4215',
+        'Express DRC 4x2 SLX8B62',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
