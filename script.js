@@ -524,6 +524,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'Munk Iveco RWI5B17',
         'AXOR QAO4215',
         'Express DRC 4x2 SLX8B62',
+        'Expert Furgão RWB3D79',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -658,6 +659,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
         'Munk Iveco RWI5B17',
         'AXOR QAO4215',
         'Express DRC 4x2 SLX8B62',
+        'Expert Furgão RWB3D79',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
