@@ -781,6 +781,8 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
 }
+// Adiciona a função ao objeto global window
+window.mostrarObservacoes = mostrarObservacoes;
 
 // Função para habilitar ou desabilitar o botão de confirmar
 function toggleConfirmButton() {
