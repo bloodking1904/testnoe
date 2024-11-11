@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Função para carregar motoristas
-
 async function carregarMotoristas() {
     console.log("Chamando carregarMotoristas()...");
     const tabela = document.getElementById('tabela-motoristas');
@@ -107,9 +106,12 @@ async function carregarMotoristas() {
     // Definir os dias da semana
     const diasDaSemana = ['DOMINGO', 'SEGUNDA', 'TERÇA', 'QUARTA', 'QUINTA', 'SEXTA', 'SÁBADO'];
 
-    // Obter a data de início da semana atual
-    const dataInicioSemana = new Date(); 
-    dataInicioSemana.setDate(dataInicioSemana.getDate() - dataInicioSemana.getDay() + (currentWeekIndex * 7)); // Ajusta para o início da semana atual
+    // Obter a data atual
+    const dataAtual = new Date();
+
+    // Calcular o início da semana da data atual (domingo correspondente)
+    const domingoAtual = new Date(dataAtual);
+    domingoAtual.setDate(dataAtual.getDate() - dataAtual.getDay()); // Ajusta para o domingo da semana atual
 
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
@@ -117,8 +119,8 @@ async function carregarMotoristas() {
         celula.classList.add('celula');
 
         // Calcular a data para o dia correto da semana
-        const dataFormatada = new Date(dataInicioSemana);
-        dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
+        const dataFormatada = new Date(domingoAtual);
+        dataFormatada.setDate(domingoAtual.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
         celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
@@ -127,8 +129,8 @@ async function carregarMotoristas() {
 
     tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
 
+    // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
-        // Se o usuário logado for admin, exibe todos os motoristas
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
 
