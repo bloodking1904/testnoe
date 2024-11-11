@@ -136,7 +136,7 @@ async function carregarMotoristas() {
     tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
 
     // Atualizar dados das semanas com base na data atual
-    await atualizarDadosDasSemanas();
+   // await atualizarDadosDasSemanas();
 
     // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
