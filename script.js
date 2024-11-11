@@ -1,6 +1,6 @@
 // Importando Firebase e Firestore
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
-import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch, onSnapshot  } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, getDocs, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-firestore.js";
 
 // Configuração do Firebase
 const firebaseConfig = {
@@ -135,56 +135,30 @@ async function carregarMotoristas() {
 
     tabela.appendChild(cabecalho); // Adiciona o cabeçalho à tabela
 
-    // Escutar as alterações nos motoristas
-    await escutarMotoristas();
-
     // Atualizar dados das semanas com base na data atual
    // await atualizarDadosDasSemanas();
 
-// Se o usuário logado for admin, exibe todos os motoristas
+    // Se o usuário logado for admin, exibe todos os motoristas
     if (loggedInUser === 'ADMIN') {
-        await atualizarMotoristasDaColecao();
+        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        console.log("Motoristas obtidos do Firestore:", motoristasSnapshot.docs.length); // Log para depuração
+
+        motoristasSnapshot.docs.forEach(doc => {
+            const motorista = doc.id; 
+            const dados = doc.data();
+            console.log("Motorista:", motorista, "Dados:", dados); // Log para depuração
+            atualizarTabela(motorista, dados); // Atualiza a tabela com os dados dos motoristas
+        });
     } else {
         // Para motoristas, exibe os dados apenas do motorista logado
-        await atualizarDadosMotorista(loggedInUser);
-    }
-}
-
-// Função para escutar as alterações nos motoristas
-async function escutarMotoristas() {
-    const motoristasCollection = collection(db, 'motoristas');
-    onSnapshot(motoristasCollection, (snapshot) => {
-        snapshot.docChanges().forEach(change => {
-            if (change.type === "modified") {
-                // Atualiza a tabela quando um motorista é modificado
-                const motoristaId = change.doc.id;
-                const dadosMotorista = change.doc.data();
-                atualizarTabela(motoristaId, dadosMotorista);
-            }
-        });
-    });
-}
-
-// Função para atualizar os motoristas da coleção
-async function atualizarMotoristasDaColecao() {
-    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-    
-    motoristasSnapshot.docs.forEach(doc => {
-        const motorista = doc.id; 
-        const dados = doc.data();
-        atualizarTabela(motorista, dados); // Atualiza a tabela com os dados dos motoristas
-    });
-}
-
-// Função para atualizar os dados do motorista logado
-async function atualizarDadosMotorista(motoristaId) {
-    const motoristaRef = doc(db, 'motoristas', motoristaId);
-    const motoristaSnapshot = await getDoc(motoristaRef);
-    if (motoristaSnapshot.exists()) {
-        const dados = motoristaSnapshot.data();
-        atualizarTabela(motoristaId, dados); // Atualiza a tabela com os dados do motorista logado
-    } else {
-        console.warn("Motorista não encontrado no Firestore:", motoristaId);
+        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+        const motoristaSnapshot = await getDoc(motoristaRef);
+        if (motoristaSnapshot.exists()) {
+            const dados = motoristaSnapshot.data();
+            atualizarTabela(loggedInUser, dados); // Atualiza a tabela com os dados do motorista logado
+        } else {
+            console.warn("Motorista não encontrado no Firestore:", loggedInUser);
+        }
     }
 }
 
