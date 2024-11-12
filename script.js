@@ -605,6 +605,8 @@ window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
 
 // Função para finalizar a viagem
 function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
+    console.log("Finalizando viagem:", { nome, cliente, veiculo, dia, linha, cidade });
+
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
@@ -740,8 +742,6 @@ window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
 // Função para adicionar o veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
-    console.log("Adicionando veículo:", { nome, dia, linha, cliente, veiculo });
-
     const statusSelecao = document.getElementById('status-selecao');
 
     const cidadeInput = ` 
@@ -791,10 +791,8 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-
-    // Verifica se o elemento 'cidade-destino' existe antes de tentar acessar seu valor
-    const cidadeElemento = document.getElementById('cidade-destino');
-    const cidadeTexto = cidadeElemento ? cidadeElemento.value : ""; // Captura a cidade digitada com verificação
+    const cidadeElemento = document.getElementById('cidade-destino'); // Captura o elemento
+    const cidadeTexto = cidadeElemento ? cidadeElemento.value : ""; // Captura o valor da cidade
 
     console.log("Confirmando com observações:", { observacaoTexto, cidadeTexto });
 
