@@ -791,7 +791,10 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-    const cidadeTexto = document.getElementById('cidade-destino') ? document.getElementById('cidade-destino').value : ""; // Captura a cidade digitada com verificação
+
+    // Verifica se o elemento 'cidade-destino' existe antes de tentar acessar seu valor
+    const cidadeElemento = document.getElementById('cidade-destino');
+    const cidadeTexto = cidadeElemento ? cidadeElemento.value : ""; // Captura a cidade digitada com verificação
 
     console.log("Confirmando com observações:", { observacaoTexto, cidadeTexto });
 
