@@ -202,8 +202,9 @@ button.entrar-button:hover {
 .status {
     cursor: pointer;
     padding: 10px;
-    border: 1px solid #ccc;
-    margin: 5px;
+    border-radius: 5px; /* Bordas arredondadas */
+    /*border: 1px solid #ccc;*/
+    margin: 5px 0; /* Adiciona uma margem vertical entre os botões */
     text-align: center;
     width: 100%;
     word-wrap: break-word; /* Quebra palavras longas */
