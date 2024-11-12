@@ -548,17 +548,21 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
 
-// Função para finalizar a viagem
-function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
+// Modificação da função para finalizar a viagem
+async function finalizarViagem(nome, cliente, veiculo, dia, linha) {
+    const cidade = document.getElementById('cidade-destino').value;
+    const observacao = document.getElementById('observacao-texto').value; // Captura a observação
+
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo,
-        cidade: cidade // Agora inclui a cidade
+        cidade: cidade, // Agora inclui a cidade
+        observacao: observacao // Adiciona a observação
     };
 
     // Atualiza o status no Firestore
-    adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
+    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
@@ -683,7 +687,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
-// Modificação na função para adicionar veículo e cidade
+// Função para adicionar o veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
 
@@ -691,8 +695,10 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
         <div class="cidade-input">
             <label>Digite a cidade destino:</label>
             <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
+            <label>Observações:</label>
+            <textarea id="observacao-texto" placeholder="Digite suas observações aqui..." maxlength="700" rows="3"></textarea>
             <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')" disabled>CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
 
@@ -702,6 +708,54 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+// Adiciona a função ao objeto global window
+window.adicionarVeiculo = adicionarVeiculo;
+
+// Função para consultar a observação
+async function consultarObservacao(idMotorista) {
+    const motoristaRef = doc(db, 'motoristas', idMotorista);
+    const motoristaSnapshot = await getDoc(motoristaRef);
+    
+    const observacao = motoristaSnapshot.data().observacao || ""; // Captura a observação ou vazio se não existir
+
+    const detalhesDiv = document.createElement('div');
+    detalhesDiv.innerHTML = ` 
+        <div>
+            <label>Observações:</label>
+            <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
+            <button id="editar-observacao" style="background-color: green; color: white;" 
+                onclick="editarObservacao('${idMotorista}')">EDITAR</button>
+        </div>
+    `;
+    
+    document.getElementById('status-selecao').innerHTML = detalhesDiv.innerHTML;
+    document.getElementById('overlay').style.display = 'flex';
+    document.getElementById('status-selecao').style.display = 'flex';
+}
+
+// Função para editar a observação
+async function editarObservacao(idMotorista) {
+    const novaObservacao = document.getElementById('observacao-editar').value;
+
+    const motoristaRef = doc(db, 'motoristas', idMotorista);
+    await setDoc(motoristaRef, {
+        [`semana${currentWeekIndex}`]: {
+            [dia]: {
+                ...motoristaSnapshot.data()[`semana${currentWeekIndex}`][dia], // Mantém os dados existentes
+                observacao: novaObservacao // Atualiza a observação
+            }
+        }
+    }, { merge: true });
+
+    alert("Observação atualizada com sucesso!");
+    fecharSelecaoStatus(); // Fecha a seleção
+}
+
+// Adiciona a função ao objeto global window
+window.consultarObservacao = consultarObservacao;
+window.editarObservacao = editarObservacao;
+
+
 // Função para habilitar ou desabilitar o botão de confirmar
 function toggleConfirmButton() {
     const cidadeInput = document.getElementById('cidade-destino');
@@ -709,8 +763,7 @@ function toggleConfirmButton() {
     confirmarButton.disabled = cidadeInput.value.trim() === ''; // Habilita o botão se o campo não estiver vazio
 }
 
-// Adiciona a função ao objeto global window
-window.adicionarVeiculo = adicionarVeiculo;
+
 
 // Adiciona a função ao objeto global window
 window.toggleConfirmButton = toggleConfirmButton;
