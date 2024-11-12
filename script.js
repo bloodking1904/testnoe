@@ -718,7 +718,8 @@ async function consultarObservacao(idMotorista, dia) {
     
     if (motoristaSnapshot.exists()) {
         const dados = motoristaSnapshot.data();
-        const observacao = dados[`semana${currentWeekIndex}`]?.[dia]?.observacao || ""; // Captura a observação ou vazio se não existir
+        // Acessa a observação corretamente
+        const observacao = dados[`semana${currentWeekIndex}`]?.[dia]?.data?.observacao || ""; // Captura a observação ou vazio se não existir
 
         const detalhesDiv = document.createElement('div');
         detalhesDiv.innerHTML = ` 
@@ -744,11 +745,15 @@ async function editarObservacao(idMotorista, dia) {
     const novaObservacao = document.getElementById('observacao-editar').value;
 
     const motoristaRef = doc(db, 'motoristas', idMotorista);
+    // Atualiza a observação no campo correto
     await setDoc(motoristaRef, {
         [`semana${currentWeekIndex}`]: {
             [dia]: {
                 ...await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia]), // Mantém os dados existentes
-                observacao: novaObservacao // Atualiza a observação
+                data: {
+                    ...(await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia].data)), // Mantém os dados de data existentes
+                    observacao: novaObservacao // Atualiza a observação
+                }
             }
         }
     }, { merge: true });
@@ -756,7 +761,6 @@ async function editarObservacao(idMotorista, dia) {
     alert("Observação atualizada com sucesso!");
     fecharSelecaoStatus(); // Fecha a seleção
 }
-
 // Adiciona a função ao objeto global window
 window.consultarObservacao = consultarObservacao;
 window.editarObservacao = editarObservacao;
