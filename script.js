@@ -759,6 +759,9 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+// Adiciona a função ao objeto global window
+window.adicionarVeiculo = adicionarVeiculo;
+
 // Função para mostrar a tela de observações
 function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacoesSelecao = document.getElementById('status-selecao');
@@ -784,7 +787,7 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-    const cidadeTexto = document.getElementById('cidade-destino').value; // Captura a cidade digitada
+    const cidadeTexto = document.getElementById('cidade-destino')?.value || ''; // Captura a cidade digitada, com fallback para string vazia
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
