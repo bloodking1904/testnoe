@@ -726,7 +726,7 @@ async function consultarObservacao(idMotorista) {
                 <label>Observações:</label>
                 <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
                 <button id="editar-observacao" style="background-color: green; color: white;" 
-                    onclick="editarObservacao('${idMotorista}')">EDITAR</button>
+                    onclick="editarObservacao('${idMotorista}', ${dia})">EDITAR</button>
             </div>
         `;
         
@@ -740,14 +740,14 @@ async function consultarObservacao(idMotorista) {
 }
 
 // Função para editar a observação
-async function editarObservacao(idMotorista) {
+async function editarObservacao(idMotorista, dia) {
     const novaObservacao = document.getElementById('observacao-editar').value;
 
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     await setDoc(motoristaRef, {
         [`semana${currentWeekIndex}`]: {
             [dia]: {
-                ...motoristaSnapshot.data()[`semana${currentWeekIndex}`][dia], // Mantém os dados existentes
+                ...await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia]), // Mantém os dados existentes
                 observacao: novaObservacao // Atualiza a observação
             }
         }
