@@ -784,11 +784,13 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
+    const cidadeTexto = document.getElementById('cidade-destino').value; // Captura a cidade digitada
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo,
+        cidade: cidadeTexto, // Agora inclui a cidade
         observacao: observacaoTexto // Adicionando observação
     };
 
@@ -806,6 +808,7 @@ async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
+            <div><strong>Cidade:</strong> ${cidadeTexto}</div> <!-- Exibe cidade -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
