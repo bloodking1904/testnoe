@@ -716,21 +716,27 @@ async function consultarObservacao(idMotorista) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     const motoristaSnapshot = await getDoc(motoristaRef);
     
-    const observacao = motoristaSnapshot.data().observacao || ""; // Captura a observação ou vazio se não existir
+    if (motoristaSnapshot.exists()) {
+        const dados = motoristaSnapshot.data();
+        const observacao = dados[`semana${currentWeekIndex}`]?.observacao || ""; // Captura a observação ou vazio se não existir
 
-    const detalhesDiv = document.createElement('div');
-    detalhesDiv.innerHTML = ` 
-        <div>
-            <label>Observações:</label>
-            <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
-            <button id="editar-observacao" style="background-color: green; color: white;" 
-                onclick="editarObservacao('${idMotorista}')">EDITAR</button>
-        </div>
-    `;
-    
-    document.getElementById('status-selecao').innerHTML = detalhesDiv.innerHTML;
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
+        const detalhesDiv = document.createElement('div');
+        detalhesDiv.innerHTML = ` 
+            <div>
+                <label>Observações:</label>
+                <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
+                <button id="editar-observacao" style="background-color: green; color: white;" 
+                    onclick="editarObservacao('${idMotorista}')">EDITAR</button>
+            </div>
+        `;
+        
+        document.getElementById('status-selecao').innerHTML = detalhesDiv.innerHTML;
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('status-selecao').style.display = 'flex';
+    } else {
+        console.error("Motorista não encontrado.");
+        alert("Motorista não encontrado.");
+    }
 }
 
 // Função para editar a observação
