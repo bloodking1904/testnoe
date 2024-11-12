@@ -457,29 +457,31 @@ function mostrarSelecaoStatus(element) {
 // Adiciona a função ao objeto global window
 window.mostrarSelecaoStatus = mostrarSelecaoStatus;
 
-// Função para consultar a observação
-async function consultarObservacao(idMotorista) {
+function consultarObservacao(idMotorista) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     
-    const motoristaSnapshot = await getDoc(motoristaRef);
-    const dados = motoristaSnapshot.data();
-    const observacao = dados.observacao || ''; // Busca a observação
-
-    const observacaoSelecao = document.getElementById('status-selecao');
-
-    const observacaoInput = `
-        <div class="observacao-input">
-            <label>OBSERVAÇÕES:</label>
-            <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui...">${observacao}</textarea>
-            <button id="editar-observacao" style="background-color: green; color: white;" 
-                onclick="toggleEditObservacao('${idMotorista}')">EDITAR</button>
-        </div>
-    `;
-
-    observacaoSelecao.innerHTML = observacaoInput;
-
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
+    getDoc(motoristaRef).then((motoristaSnapshot) => {
+        const dados = motoristaSnapshot.data();
+        const observacao = dados.observacao || ''; // Busca a observação, se não existir, usa uma string vazia
+        
+        const observacaoSelecao = document.getElementById('status-selecao');
+        
+        const observacaoInput = `
+            <div class="observacao-input">
+                <label>OBSERVAÇÕES:</label>
+                <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui...">${observacao}</textarea>
+                <button id="editar-observacao" style="background-color: green; color: white;" 
+                    onclick="toggleEditObservacao()">EDITAR</button>
+            </div>
+        `;
+        
+        observacaoSelecao.innerHTML = observacaoInput;
+        
+        document.getElementById('overlay').style.display = 'flex';
+        document.getElementById('status-selecao').style.display = 'flex';
+    }).catch(error => {
+        console.error("Erro ao consultar observação:", error);
+    });
 }
 
 // Adiciona a função ao objeto global window
@@ -487,25 +489,28 @@ window.consultarObservacao = consultarObservacao;
 
 let isEditing = false; // Variável para controlar o estado de edição
 
-// Função para alternar entre editar e salvar a observação
-async function toggleEditObservacao(idMotorista) {
+function toggleEditObservacao() {
     const editarButton = document.getElementById('editar-observacao');
     const observacaoTexto = document.getElementById('observacao-texto');
 
-    if (editarButton.innerText === "EDITAR") {
-        // Muda o modo para edição
-        editarButton.innerText = "SALVAR";
-        observacaoTexto.disabled = false; // Habilita a caixa de texto
-    } else {
+    if (isEditing) {
         // Salvar a observação
         const observacaoNova = observacaoTexto.value;
+        const motoristaRef = doc(db, 'motoristas', loggedInUser); // Assumindo que o motorista logado é o que estamos editando
 
         // Atualiza a observação no Firestore
-        await setDoc(doc(db, 'motoristas', idMotorista), { observacao: observacaoNova }, { merge: true });
-        
-        alert("Observação salva com sucesso!");
-        fecharSelecaoStatus(); // Fecha a seleção
+        setDoc(motoristaRef, { observacao: observacaoNova }, { merge: true }).then(() => {
+            alert("Observação salva com sucesso!");
+            fecharSelecaoStatus();
+        }).catch(error => {
+            console.error("Erro ao salvar observação:", error);
+        });
+    } else {
+        // Muda o modo para edição
+        editarButton.innerText = "SALVAR";
     }
+
+    isEditing = !isEditing; // Alterna o estado de edição
 }
 
 // Adiciona a função ao objeto global window
@@ -605,8 +610,6 @@ window.mostrarVeiculosParaAtendimento = mostrarVeiculosParaAtendimento;
 
 // Função para finalizar a viagem
 function finalizarViagem(nome, cliente, veiculo, dia, linha, cidade) {
-    console.log("Finalizando viagem:", { nome, cliente, veiculo, dia, linha, cidade });
-
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
@@ -740,18 +743,18 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
-let cidadeDestino = ""; // Variável global para armazenar a cidade
-
-// Função para adicionar o veículo e cidade
+// Modificação na função para adicionar veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
 
     const cidadeInput = ` 
         <div class="cidade-input">
             <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="atualizarCidadeDestino(this.value)">
+            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
             <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', cidadeDestino)" disabled>CONFIRMAR<br>VIAGEM</button>
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
+            <button id="confirmar-com-observacoes" style="background-color: blue; color: white; white-space: break-word;" 
+                onclick="mostrarObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)">CONFIRMAR C/ OBSERVAÇÕES</button>
         </div>
     `;
 
@@ -761,19 +764,7 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
-// Adiciona a função ao objeto global window
-window.adicionarVeiculo = adicionarVeiculo;
-
-// Função para atualizar a variável global
-function atualizarCidadeDestino(valor) {
-    cidadeDestino = valor; // Atualiza a variável global com o valor do campo
-    console.log("Cidade destino atualizada:", cidadeDestino); // Log para verificar a atualização
-}
-
-// Função para mostrar a tela de observações
-function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
-    console.log("Mostrando observações para:", { nome, cliente, veiculo, dia, linha });
-
+function mostrarObservacoes(nome, cliente, veiculo, dia, linha, cidade) {
     const observacoesSelecao = document.getElementById('status-selecao');
 
     const observacaoInput = ` 
@@ -781,7 +772,7 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
             <label>OBSERVAÇÕES:</label>
             <textarea id="observacao-texto" rows="4" maxlength="700" placeholder="Digite suas observações aqui..."></textarea>
             <button id="confirmar-observacao" style="background-color: green; color: white;" 
-                onclick="confirmarComObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">CONFIRMAR VIAGEM</button>
+                onclick="confirmarComObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', '${cidade}')" >CONFIRMAR VIAGEM</button>
         </div>
     `;
 
@@ -790,26 +781,21 @@ function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
     document.getElementById('overlay').style.display = 'flex';
     document.getElementById('status-selecao').style.display = 'flex';
 }
-
 // Adiciona a função ao objeto global window
 window.mostrarObservacoes = mostrarObservacoes;
 
-// Função para confirmar com observações
-async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
+async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha, cidade) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-
-    console.log("Confirmando com observações:", { observacaoTexto, cidadeTexto: cidadeDestino });
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo,
-        cidade: cidadeDestino, // Agora inclui a cidade
-        observacao: observacaoTexto // Adicionando observação
+        cidade: cidade // Agora inclui a cidade
     };
 
     // Atualiza o status no Firestore
-    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, data); // Passa o objeto data
+    await adicionarStatus(nome, 'Em Viagem', 'yellow', dia, linha, cidade, data); // Passa o objeto data
 
     // Atualiza visualmente o motorista
     const motoristaDiv = document.querySelector(`.linha[data-linha="${linha}"] .celula[data-dia="${dia}"] .motorista`);
@@ -822,7 +808,7 @@ async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
-            <div><strong>Cidade:</strong> ${cidadeDestino}</div> <!-- Exibe cidade -->
+            <div><strong>Cidade:</strong> ${cidade}</div>
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
