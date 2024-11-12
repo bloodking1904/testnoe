@@ -787,7 +787,7 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-    const cidadeTexto = document.getElementById('cidade-destino')?.value || ''; // Captura a cidade digitada, com fallback para string vazia
+    const cidadeTexto = document.getElementById('cidade-destino').value; // Captura a cidade digitada
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
