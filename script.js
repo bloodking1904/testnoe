@@ -392,7 +392,7 @@ async function adicionarStatus(idMotorista, status, cor, dia, linha, data) {
 
 window.adicionarStatus = adicionarStatus;
 
-// Adiciona a função para mostrar a seleção de status
+// Função para mostrar a seleção de status
 function mostrarSelecaoStatus(element) {
     if (!element) {
         console.error("Elemento não está definido.");
@@ -415,9 +415,15 @@ function mostrarSelecaoStatus(element) {
         const statusAtual = dados[`semana${currentWeekIndex}`][dia] ? dados[`semana${currentWeekIndex}`][dia].status : 'Disponível'; // Obtém o status atual para o dia específico
 
         // Verifica se o usuário logado é um motorista e se o status é "Em Viagem"
-        const statusEmViagem = statusAtual === 'Em Viagem';
-        
+        if (loggedInUser !== 'ADMIN' && statusAtual === 'Em Viagem') {
+            alert("Agenda Bloqueada pelo Administrador."); // Mensagem de alerta
+            return; // Interrompe a execução da função
+        }
+
         const statusSelecao = document.getElementById('status-selecao');
+        statusSelecao.innerHTML = ''; // Limpa as opções anteriores
+
+        // Criação das opções de status
         let statusOptions = ` 
             <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
                 onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
@@ -426,10 +432,10 @@ function mostrarSelecaoStatus(element) {
         `;
 
         // Adiciona o botão "OBS. VIAGEM" se o status for "Em Viagem"
-        if (statusEmViagem) {
+        if (statusAtual === 'Em Viagem') {
             statusOptions += ` 
-            <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
-                onclick="consultarObservacao('${idMotorista}', ${dia})">OBS. VIAGEM</button>
+                <div class="status" style="background-color: lightyellow; color: black; font-weight: bold;" 
+                    onclick="consultarObservacao('${idMotorista}', ${dia})">OBS. VIAGEM</div>
             `;
         }
 
