@@ -759,6 +759,7 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     document.getElementById('status-selecao').style.display = 'flex';
 }
 
+
 // Adiciona a função ao objeto global window
 window.adicionarVeiculo = adicionarVeiculo;
 
@@ -787,7 +788,7 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-    const cidadeTexto = document.getElementById('cidade-destino').value; // Captura a cidade digitada
+    const cidadeTexto = document.getElementById('cidade-destino') ? document.getElementById('cidade-destino').value : ""; // Captura a cidade digitada com verificação
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
@@ -822,7 +823,6 @@ async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
 
 // Adiciona a função ao objeto global window
 window.confirmarComObservacoes = confirmarComObservacoes;
-
 
 // Função para habilitar ou desabilitar o botão de confirmar
 function toggleConfirmButton() {
