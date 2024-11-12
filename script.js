@@ -740,6 +740,8 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
 // Adiciona a função ao objeto global window
 window.mostrarVeiculosViagem = mostrarVeiculosViagem;
 
+let cidadeDestino = ""; // Variável global para armazenar a cidade
+
 // Função para adicionar o veículo e cidade
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const statusSelecao = document.getElementById('status-selecao');
@@ -747,11 +749,9 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     const cidadeInput = ` 
         <div class="cidade-input">
             <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
+            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="atualizarCidadeDestino(this.value)">
             <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
-                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', document.getElementById('cidade-destino').value)" disabled>CONFIRMAR<br>VIAGEM</button>
-            <button id="confirmar-com-observacoes" style="background-color: blue; color: white; white-space: break-word;" 
-                onclick="mostrarObservacoes('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')">CONFIRMAR C/ OBSERVAÇÕES</button>
+                onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}', cidadeDestino)" disabled>CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
 
@@ -763,6 +763,12 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
 
 // Adiciona a função ao objeto global window
 window.adicionarVeiculo = adicionarVeiculo;
+
+// Função para atualizar a variável global
+function atualizarCidadeDestino(valor) {
+    cidadeDestino = valor; // Atualiza a variável global com o valor do campo
+    console.log("Cidade destino atualizada:", cidadeDestino); // Log para verificar a atualização
+}
 
 // Função para mostrar a tela de observações
 function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
@@ -791,16 +797,14 @@ window.mostrarObservacoes = mostrarObservacoes;
 // Função para confirmar com observações
 async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
     const observacaoTexto = document.getElementById('observacao-texto').value;
-    const cidadeElemento = document.getElementById('cidade-destino'); // Captura o elemento
-    const cidadeTexto = cidadeElemento ? cidadeElemento.value : ""; // Captura o valor da cidade
 
-    console.log("Confirmando com observações:", { observacaoTexto, cidadeTexto });
+    console.log("Confirmando com observações:", { observacaoTexto, cidadeTexto: cidadeDestino });
 
     // Prepara o dado para incluir todas as informações necessárias
     const data = {
         cliente: cliente,
         veiculo: veiculo,
-        cidade: cidadeTexto, // Agora inclui a cidade
+        cidade: cidadeDestino, // Agora inclui a cidade
         observacao: observacaoTexto // Adicionando observação
     };
 
@@ -818,7 +822,7 @@ async function confirmarComObservacoes(nome, cliente, veiculo, dia, linha) {
             <div class="status" style="color: yellow; border: 1px solid black; font-weight: bold;">Em Viagem</div>
             <div><strong>Veículo:</strong> ${veiculo}</div>
             <div><strong>Cliente:</strong> ${cliente}</div>
-            <div><strong>Cidade:</strong> ${cidadeTexto}</div> <!-- Exibe cidade -->
+            <div><strong>Cidade:</strong> ${cidadeDestino}</div> <!-- Exibe cidade -->
         `;
     } else {
         console.error("Div do motorista não encontrada ao atualizar visualmente.");
