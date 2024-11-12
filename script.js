@@ -770,9 +770,6 @@ function atualizarCidadeDestino(valor) {
     console.log("Cidade destino atualizada:", cidadeDestino); // Log para verificar a atualização
 }
 
-// Adiciona a função ao objeto global window
-window.atualizarCidadeDestino = atualizarCidadeDestino;
-
 // Função para mostrar a tela de observações
 function mostrarObservacoes(nome, cliente, veiculo, dia, linha) {
     console.log("Mostrando observações para:", { nome, cliente, veiculo, dia, linha });
