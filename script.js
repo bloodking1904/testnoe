@@ -428,8 +428,8 @@ function mostrarSelecaoStatus(element) {
         // Adiciona o botão "OBS. VIAGEM" se o status for "Em Viagem"
         if (statusEmViagem) {
             statusOptions += ` 
-                <div class="status" style="background-color: orange; color: black; font-weight: bold;" 
-                    onclick="consultarObservacao('${idMotorista}')">OBS. VIAGEM</div>
+                <button class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
+                onclick="consultarObservacao('${idMotorista}', ${dia})">OBS. VIAGEM</button>
             `;
         }
 
@@ -712,13 +712,13 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
 window.adicionarVeiculo = adicionarVeiculo;
 
 // Função para consultar a observação
-async function consultarObservacao(idMotorista) {
+async function consultarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     const motoristaSnapshot = await getDoc(motoristaRef);
     
     if (motoristaSnapshot.exists()) {
         const dados = motoristaSnapshot.data();
-        const observacao = dados[`semana${currentWeekIndex}`]?.observacao || ""; // Captura a observação ou vazio se não existir
+        const observacao = dados[`semana${currentWeekIndex}`]?.[dia]?.observacao || ""; // Captura a observação ou vazio se não existir
 
         const detalhesDiv = document.createElement('div');
         detalhesDiv.innerHTML = ` 
