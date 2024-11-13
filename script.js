@@ -37,7 +37,7 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
 }
 
 // Definição das variáveis globais
-let currentWeekIndex = 1; // Índice da semana atual (0-6)
+let currentWeekIndex = 4; // Índice da semana atual (0-6)
 const totalWeeks = 6; // Total de semanas
 
 // Função para verificar se o usuário está autenticado
@@ -211,9 +211,9 @@ async function atualizarDadosDasSemanas() {
             }
         }
         
-        // Adicionar dados da nova semana (semana1)
+        // Adicionar dados da nova semana (semana4)
         await setDoc(motoristaRef, {
-            [`semana1`]: {
+            [`semana4`]: {
                 0: { status: 'Disponível', data: null },
                 1: { status: 'Disponível', data: null },
                 2: { status: 'Disponível', data: null },
