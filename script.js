@@ -738,7 +738,8 @@ async function consultarObservacao(idMotorista, dia) {
         detalhesDiv.innerHTML = ` 
             <div>
                 <label style="font-size: 2em; font-weight: bold;">Observações:</label><br>
-                <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea><br><br>
+                <textarea id="observacao-editar" rows="4" maxlength="700"
+                style="width: 523px; height: 218px; font-size: 14px;">${observacao}</textarea><br><br>
                 <label style="font-size: 2em; font-weight: bold;">Cidade:</label><br>
                 <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade"><br><br>
                 <label style="font-size: 2em; font-weight: bold;">Cliente:</label><br>
