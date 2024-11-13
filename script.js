@@ -718,21 +718,32 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
 // Adiciona a função ao objeto global window
 window.adicionarVeiculo = adicionarVeiculo;
 
-// Função para consultar a observação
+// Função para consultar a observação e permitir a edição de cidade, cliente e veículo
 async function consultarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     const motoristaSnapshot = await getDoc(motoristaRef);
-    
+
     if (motoristaSnapshot.exists()) {
         const dados = motoristaSnapshot.data();
-        // Acessa a observação corretamente
-        const observacao = dados[`semana${currentWeekIndex}`]?.[dia]?.data?.observacao || ""; // Captura a observação ou vazio se não existir
+        const statusData = dados[`semana${currentWeekIndex}`]?.[dia]?.data || {}; // Captura os dados ou vazio se não existir
+
+        // Captura os dados para a edição
+        const observacao = statusData.observacao || ""; // Captura a observação ou vazio se não existir
+        const cidade = statusData.cidade || ""; // Captura a cidade ou vazio se não existir
+        const cliente = statusData.cliente || ""; // Captura o cliente ou vazio se não existir
+        const veiculo = statusData.veiculo || ""; // Captura o veículo ou vazio se não existir
 
         const detalhesDiv = document.createElement('div');
         detalhesDiv.innerHTML = ` 
             <div>
                 <label>Observações:</label>
                 <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
+                <label>Cidade:</label>
+                <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade">
+                <label>Cliente:</label>
+                <input type="text" id="cliente-editar" value="${cliente}" placeholder="Cliente">
+                <label>Veículo:</label>
+                <input type="text" id="veiculo-editar" value="${veiculo}" placeholder="Veículo">
                 <button id="editar-observacao" style="background-color: green; color: white;" 
                     onclick="editarObservacao('${idMotorista}', ${dia})">EDITAR</button>
             </div>
@@ -747,27 +758,34 @@ async function consultarObservacao(idMotorista, dia) {
     }
 }
 
-// Função para editar a observação
+// Função para editar a observação, cidade, cliente e veículo
 async function editarObservacao(idMotorista, dia) {
     const novaObservacao = document.getElementById('observacao-editar').value;
+    const novaCidade = document.getElementById('cidade-editar').value;
+    const novoCliente = document.getElementById('cliente-editar').value;
+    const novoVeiculo = document.getElementById('veiculo-editar').value;
 
     const motoristaRef = doc(db, 'motoristas', idMotorista);
-    // Atualiza a observação no campo correto
+    
+    // Atualiza os dados no Firestore
     await setDoc(motoristaRef, {
         [`semana${currentWeekIndex}`]: {
             [dia]: {
                 ...await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia]), // Mantém os dados existentes
                 data: {
-                    ...(await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia].data)), // Mantém os dados de data existentes
-                    observacao: novaObservacao // Atualiza a observação
+                    observacao: novaObservacao, // Atualiza a observação
+                    cidade: novaCidade, // Atualiza a cidade
+                    cliente: novoCliente, // Atualiza o cliente
+                    veiculo: novoVeiculo // Atualiza o veículo
                 }
             }
         }
     }, { merge: true });
 
-    alert("Observação atualizada com sucesso!");
+    alert("Dados atualizados com sucesso!");
     fecharSelecaoStatus(); // Fecha a seleção
 }
+
 // Adiciona a função ao objeto global window
 window.consultarObservacao = consultarObservacao;
 window.editarObservacao = editarObservacao;
