@@ -700,11 +700,11 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
 
     const cidadeInput = ` 
         <div class="cidade-input">
-            <label>Digite a cidade destino:</label>
-            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()">
-            <label>Observações:</label>
-            <textarea id="observacao-texto" placeholder="Digite suas observações aqui..." maxlength="700" rows="3"></textarea>
-            <button id="confirmar-viagem" style="background-color: green; color: white; white-space: break-word;" 
+            <label style="font-size: 2em; font-weight: bold;">Digite a cidade destino:</label><br>
+            <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()"><br><br>
+            <label style="font-size: 2em; font-weight: bold;">Observações:</label><br>
+            <textarea id="observacao-texto" placeholder="Digite suas observações aqui..." maxlength="700" rows="3"></textarea><br><br>
+            <button id="confirmar-viagem" style="background-color: green; color: white; font-size: 2em; padding: 10px 20px;" 
                 onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')" disabled>CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
