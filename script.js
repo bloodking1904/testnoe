@@ -736,15 +736,15 @@ async function consultarObservacao(idMotorista, dia) {
         const detalhesDiv = document.createElement('div');
         detalhesDiv.innerHTML = ` 
             <div>
-                <label>Observações:</label>
-                <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea>
-                <label>Cidade:</label>
-                <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade">
-                <label>Cliente:</label>
-                <input type="text" id="cliente-editar" value="${cliente}" placeholder="Cliente">
-                <label>Veículo:</label>
-                <input type="text" id="veiculo-editar" value="${veiculo}" placeholder="Veículo">
-                <button id="editar-observacao" style="background-color: green; color: white;" 
+                <label style="font-size: 2em; font-weight: bold;">Observações:</label><br>
+                <textarea id="observacao-editar" rows="4" maxlength="700">${observacao}</textarea><br><br>
+                <label style="font-size: 2em; font-weight: bold;">Cidade:</label><br>
+                <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade"><br><br>
+                <label style="font-size: 2em; font-weight: bold;">Cliente:</label><br>
+                <input type="text" id="cliente-editar" value="${cliente}" placeholder="Cliente"><br><br>
+                <label style="font-size: 2em; font-weight: bold;">Veículo:</label><br>
+                <input type="text" id="veiculo-editar" value="${veiculo}" placeholder="Veículo"><br><br>
+                <button id="editar-observacao" style="background-color: green; color: white; font-size: 2em; padding: 10px 20px;" 
                     onclick="editarObservacao('${idMotorista}', ${dia})">EDITAR</button>
             </div>
         `;
