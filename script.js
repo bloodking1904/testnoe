@@ -109,15 +109,15 @@ async function carregarMotoristas() {
     // Obter a data atual
     const dataAtual = new Date();
 
-    // Calcular o início da semana atual (semana4) com base na data atual
+    // Calcular o início da semana atual (semana4)
     const diaDaSemanaAtual = dataAtual.getDay();
     const offset = diaDaSemanaAtual === 0 ? -6 : 1 - diaDaSemanaAtual; // Se domingo, ajusta para -6 para pegar a segunda
     const segundaAtual = new Date(dataAtual);
     segundaAtual.setDate(dataAtual.getDate() + offset); // Ajusta para a segunda-feira da semana atual
 
-    // Calcular a data de início da semana 4
-    const dataInicioSemana4 = new Date(segundaAtual);
-    dataInicioSemana4.setDate(segundaAtual.getDate() + (4 - 1) * 7); // Ajusta para a semana4
+    // Calcular a data de início da semana com base no currentWeekIndex
+    const dataInicioSemana = new Date(segundaAtual);
+    dataInicioSemana.setDate(segundaAtual.getDate() + (currentWeekIndex - 4) * 7); // Ajusta para a semana correta
 
     // Adicionar cabeçalho com as datas
     diasDaSemana.forEach((dia, index) => {
@@ -125,8 +125,8 @@ async function carregarMotoristas() {
         celula.classList.add('celula');
 
         // Calcular a data para o dia correto da semana
-        const dataFormatada = new Date(dataInicioSemana4);
-        dataFormatada.setDate(dataInicioSemana4.getDate() + index); // Adiciona o índice para cada dia
+        const dataFormatada = new Date(dataInicioSemana);
+        dataFormatada.setDate(dataInicioSemana.getDate() + index); // Adiciona o índice para cada dia
         const diaFormatado = (`0${dataFormatada.getDate()}`).slice(-2) + '/' + (`0${dataFormatada.getMonth() + 1}`).slice(-2) + '/' + dataFormatada.getFullYear(); // Formato DD/MM/AAAA
 
         celula.innerHTML = `${dia}<br>${diaFormatado}`; // Adiciona o nome do dia e a data
