@@ -703,8 +703,9 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
             <label style="font-size: 2em; font-weight: bold;">Digite a cidade destino:</label><br>
             <input type="text" id="cidade-destino" placeholder="Cidade destino" oninput="toggleConfirmButton()"><br><br>
             <label style="font-size: 2em; font-weight: bold;">Observações:</label><br>
-            <textarea id="observacao-texto" placeholder="Digite suas observações aqui..." maxlength="700" rows="3"></textarea><br><br>
-            <button id="confirmar-viagem" style="background-color: green; color: white; font-size: 2em; padding: 5px 10px;" 
+            <textarea id="observacao-texto" placeholder="Digite suas observações aqui..." maxlength="700" rows="3" 
+                style="width: 523px; height: 218px; font-size: 14px;"></textarea><br><br>
+            <button id="confirmar-viagem" style="background-color: green; color: white; font-size: 1.2em; padding: 8px 16px;" 
                 onclick="finalizarViagem('${nome}', '${cliente}', '${veiculo}', ${dia}, '${linha}')" disabled>CONFIRMAR<br>VIAGEM</button>
         </div>
     `;
