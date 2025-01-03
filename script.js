@@ -36,29 +36,6 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
     window.location.href = 'login.html';
 }
 
-// Inicializa o sistema ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    await verificarSemanaPassada(); // Chama a verificação de semana passada
-    verificarAutenticacao(); // Chama a verificação de autenticação
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-
-    // Eventos para os botões de navegação
-    document.getElementById('seta-esquerda').addEventListener('click', () => {
-        if (currentWeekIndex > 0) {
-            currentWeekIndex--;
-            carregarMotoristas().catch(console.error);
-        }
-    });
-
-    document.getElementById('seta-direita').addEventListener('click', () => {
-        if (currentWeekIndex < totalWeeks) {
-            currentWeekIndex++;
-            carregarMotoristas().catch(console.error);
-        }
-    });
-});
-
 // Definição das variáveis globais
 let currentWeekIndex = 4; // Índice da semana atual (0-6)
 const totalWeeks = 6; // Total de semanas
@@ -867,3 +844,27 @@ function fecharSelecaoStatus() {
 }
 
 window.fecharSelecaoStatus = fecharSelecaoStatus;
+
+
+// Inicializa o sistema ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    await verificarSemanaPassada(); // Chama a verificação de semana passada
+    verificarAutenticacao(); // Chama a verificação de autenticação
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+
+    // Eventos para os botões de navegação
+    document.getElementById('seta-esquerda').addEventListener('click', () => {
+        if (currentWeekIndex > 0) {
+            currentWeekIndex--;
+            carregarMotoristas().catch(console.error);
+        }
+    });
+
+    document.getElementById('seta-direita').addEventListener('click', () => {
+        if (currentWeekIndex < totalWeeks) {
+            currentWeekIndex++;
+            carregarMotoristas().catch(console.error);
+        }
+    });
+});
