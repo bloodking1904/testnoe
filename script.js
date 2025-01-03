@@ -212,7 +212,7 @@ async function verificarSemanaPassada() {
     const dataAtual = new Date();
 
     if (!ultimaAtualizacao || new Date(ultimaAtualizacao) < new Date(dataAtual - 7 * 24 * 60 * 60 * 1000)) {
-        await moverDadosDasSemanas();
+        await atualizarDadosDasSemanas();
         localStorage.setItem('ultimaAtualizacao', dataAtual);
     }
 }
