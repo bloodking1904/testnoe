@@ -36,6 +36,29 @@ if (urlsProtegidas.includes(window.location.href) && !loggedInUser) {
     window.location.href = 'login.html';
 }
 
+// Inicializa o sistema ao carregar a página
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM totalmente carregado. Inicializando motoristas...");
+    await verificarSemanaPassada(); // Chama a verificação de semana passada
+    verificarAutenticacao(); // Chama a verificação de autenticação
+    carregarMotoristas().catch(console.error); // Chamada assíncrona
+
+    // Eventos para os botões de navegação
+    document.getElementById('seta-esquerda').addEventListener('click', () => {
+        if (currentWeekIndex > 0) {
+            currentWeekIndex--;
+            carregarMotoristas().catch(console.error);
+        }
+    });
+
+    document.getElementById('seta-direita').addEventListener('click', () => {
+        if (currentWeekIndex < totalWeeks) {
+            currentWeekIndex++;
+            carregarMotoristas().catch(console.error);
+        }
+    });
+});
+
 // Definição das variáveis globais
 let currentWeekIndex = 4; // Índice da semana atual (0-6)
 const totalWeeks = 6; // Total de semanas
@@ -71,27 +94,6 @@ function verificarAutenticacao() {
     }
 }
 
-// Inicializa o sistema ao carregar a página
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM totalmente carregado. Inicializando motoristas...");
-    verificarAutenticacao(); // Chama a verificação de autenticação
-    carregarMotoristas().catch(console.error); // Chamada assíncrona
-
-    // Eventos para os botões de navegação
-    document.getElementById('seta-esquerda').addEventListener('click', () => {
-        if (currentWeekIndex > 0) {
-            currentWeekIndex--;
-            carregarMotoristas().catch(console.error);
-        }
-    });
-
-    document.getElementById('seta-direita').addEventListener('click', () => {
-        if (currentWeekIndex < totalWeeks) {
-            currentWeekIndex++;
-            carregarMotoristas().catch(console.error);
-        }
-    });
-});
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
@@ -189,32 +191,32 @@ async function atualizarDadosDasSemanas() {
         const dados = await getDoc(motoristaRef);
         const motoristaDados = dados.data();
 
-        // Atualizar cada semana
-        for (let i = 5; i >= 0; i--) {
-            if (i === 0) {
-                // Limpar dados da semana 0
+        // Loop para transferir dados entre as semanas
+        for (let i = 0; i < 6; i++) { // De 0 até 5
+            // Limpar dados da semana atual
+            await setDoc(motoristaRef, {
+                [`semana${i}`]: {
+                    0: { status: 'Disponível', data: null },
+                    1: { status: 'Disponível', data: null },
+                    2: { status: 'Disponível', data: null },
+                    3: { status: 'Disponível', data: null },
+                    4: { status: 'Disponível', data: null },
+                    5: { status: 'Disponível', data: null },
+                    6: { status: 'Disponível', data: null },
+                }
+            }, { merge: true });
+
+            // Transferir dados da semana seguinte
+            if (i < 5) { // Não transferir dados para a semana 6
                 await setDoc(motoristaRef, {
-                    [`semana${i}`]: {
-                        0: { status: 'Disponível', data: null },
-                        1: { status: 'Disponível', data: null },
-                        2: { status: 'Disponível', data: null },
-                        3: { status: 'Disponível', data: null },
-                        4: { status: 'Disponível', data: null },
-                        5: { status: 'Disponível', data: null },
-                        6: { status: 'Disponível', data: null },
-                    }
-                }, { merge: true });
-            } else {
-                // Transferir dados da semana anterior
-                await setDoc(motoristaRef, {
-                    [`semana${i}`]: motoristaDados[`semana${i - 1}`]
+                    [`semana${i}`]: motoristaDados[`semana${i + 1}`]
                 }, { merge: true });
             }
         }
-        
-        // Adicionar dados da nova semana (semana4)
+
+        // Para a semana 6, apenas limpar dados
         await setDoc(motoristaRef, {
-            [`semana4`]: {
+            [`semana6`]: {
                 0: { status: 'Disponível', data: null },
                 1: { status: 'Disponível', data: null },
                 2: { status: 'Disponível', data: null },
@@ -225,6 +227,17 @@ async function atualizarDadosDasSemanas() {
             }
         }, { merge: true });
     });
+}
+
+// Função para verificar se uma semana passou e mover os dados
+async function verificarSemanaPassada() {
+    const ultimaAtualizacao = localStorage.getItem('ultimaAtualizacao');
+    const dataAtual = new Date();
+
+    if (!ultimaAtualizacao || new Date(ultimaAtualizacao) < new Date(dataAtual - 7 * 24 * 60 * 60 * 1000)) {
+        await moverDadosDasSemanas();
+        localStorage.setItem('ultimaAtualizacao', dataAtual);
+    }
 }
 
 // Adiciona a função de logout ao objeto global window
