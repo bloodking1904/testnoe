@@ -168,32 +168,32 @@ async function atualizarDadosDasSemanas() {
         const dados = await getDoc(motoristaRef);
         const motoristaDados = dados.data();
 
-        // Loop para transferir dados entre as semanas
-        for (let i = 0; i < 6; i++) { // De 0 até 5
-            // Limpar dados da semana atual
-            await setDoc(motoristaRef, {
-                [`semana${i}`]: {
-                    0: { status: 'Disponível', data: null },
-                    1: { status: 'Disponível', data: null },
-                    2: { status: 'Disponível', data: null },
-                    3: { status: 'Disponível', data: null },
-                    4: { status: 'Disponível', data: null },
-                    5: { status: 'Disponível', data: null },
-                    6: { status: 'Disponível', data: null },
-                }
-            }, { merge: true });
-
-            // Transferir dados da semana seguinte
-            if (i < 5) { // Não transferir dados para a semana 6
+        // Transferir dados da semana anterior
+        for (let i = 5; i >= 0; i--) {
+            if (i === 0) {
+                // Limpar dados da semana 0
                 await setDoc(motoristaRef, {
-                    [`semana${i}`]: motoristaDados[`semana${i + 1}`]
+                    [`semana${i}`]: {
+                        0: { status: 'Disponível', data: null },
+                        1: { status: 'Disponível', data: null },
+                        2: { status: 'Disponível', data: null },
+                        3: { status: 'Disponível', data: null },
+                        4: { status: 'Disponível', data: null },
+                        5: { status: 'Disponível', data: null },
+                        6: { status: 'Disponível', data: null },
+                    }
+                }, { merge: true });
+            } else {
+                // Transferir dados da semana anterior
+                await setDoc(motoristaRef, {
+                    [`semana${i}`]: motoristaDados[`semana${i - 1}`]
                 }, { merge: true });
             }
         }
 
-        // Para a semana 6, apenas limpar dados
+        // Adicionar dados da nova semana (semana4)
         await setDoc(motoristaRef, {
-            [`semana6`]: {
+            [`semana4`]: {
                 0: { status: 'Disponível', data: null },
                 1: { status: 'Disponível', data: null },
                 2: { status: 'Disponível', data: null },
@@ -847,12 +847,14 @@ window.fecharSelecaoStatus = fecharSelecaoStatus;
 
 
 // Inicializa o sistema ao carregar a página
-document.addEventListener('DOMContentLoaded', async () => { // Use async aqui
+document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
 
     await verificarSemanaPassada(); // Chama a verificação de semana passada
 
     verificarAutenticacao(); // Chama a verificação de autenticação
+
+    await atualizarDadosDasSemanas(); // Chama a atualização das semanas
 
     carregarMotoristas().catch(console.error); // Chamada assíncrona
 
