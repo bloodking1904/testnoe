@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     verificarAutenticacao(); // Chama a verificação de autenticação
 
-    await atualizarDadosDasSemanas(); // Chama a atualização das semanas
+   // await atualizarDadosDasSemanas(); // Chama a atualização das semanas -----comentado ultima atualização
 
     carregarMotoristas().catch(console.error); // Chamada assíncrona
 
