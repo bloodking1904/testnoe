@@ -168,32 +168,32 @@ async function atualizarDadosDasSemanas() {
         const dados = await getDoc(motoristaRef);
         const motoristaDados = dados.data();
 
-        // Transferir dados da semana anterior
-        for (let i = 5; i >= 0; i--) {
-            if (i === 0) {
-                // Limpar dados da semana 0
+        // Loop para transferir dados entre as semanas
+        for (let i = 0; i < 6; i++) { // De 0 até 5
+            // Limpar dados da semana atual
+            await setDoc(motoristaRef, {
+                [`semana${i}`]: {
+                    0: { status: 'Disponível', data: null },
+                    1: { status: 'Disponível', data: null },
+                    2: { status: 'Disponível', data: null },
+                    3: { status: 'Disponível', data: null },
+                    4: { status: 'Disponível', data: null },
+                    5: { status: 'Disponível', data: null },
+                    6: { status: 'Disponível', data: null },
+                }
+            }, { merge: true });
+
+            // Transferir dados da semana seguinte
+            if (i < 5) { // Não transferir dados para a semana 6
                 await setDoc(motoristaRef, {
-                    [`semana${i}`]: {
-                        0: { status: 'Disponível', data: null },
-                        1: { status: 'Disponível', data: null },
-                        2: { status: 'Disponível', data: null },
-                        3: { status: 'Disponível', data: null },
-                        4: { status: 'Disponível', data: null },
-                        5: { status: 'Disponível', data: null },
-                        6: { status: 'Disponível', data: null },
-                    }
-                }, { merge: true });
-            } else {
-                // Transferir dados da semana anterior
-                await setDoc(motoristaRef, {
-                    [`semana${i}`]: motoristaDados[`semana${i - 1}`]
+                    [`semana${i}`]: motoristaDados[`semana${i + 1}`]
                 }, { merge: true });
             }
         }
 
-        // Adicionar dados da nova semana (semana4)
+        // Para a semana 6, apenas limpar dados
         await setDoc(motoristaRef, {
-            [`semana4`]: {
+            [`semana6`]: {
                 0: { status: 'Disponível', data: null },
                 1: { status: 'Disponível', data: null },
                 2: { status: 'Disponível', data: null },
