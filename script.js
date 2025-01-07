@@ -208,14 +208,48 @@ async function atualizarDadosDasSemanas() {
 
 // Função para verificar se uma semana passou e mover os dados
 async function verificarSemanaPassada() {
-    const ultimaAtualizacao = localStorage.getItem('ultimaAtualizacao');
-    const dataAtual = new Date();
+    const dataAtualFirestore = await obterDataAtual(); // Obtém a data atual do Firestore
+    const dataAtual = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
-    if (!ultimaAtualizacao || new Date(ultimaAtualizacao) < new Date(dataAtual - 7 * 24 * 60 * 60 * 1000)) {
-        await atualizarDadosDasSemanas();
-        localStorage.setItem('ultimaAtualizacao', dataAtual);
+    if (dataAtualFirestore.split('T')[0] !== dataAtual) {
+        await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
+        console.log("Dados das semanas atualizados.");
+    } else {
+        console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
     }
 }
+
+
+// Função para obter a data atual do Firestore
+async function obterDataAtual() {
+    const dataRef = doc(db, 'configuracoes', 'dataAtual'); // Referência ao documento que armazena a data
+    const dataSnapshot = await getDoc(dataRef);
+
+    if (dataSnapshot.exists()) {
+        return dataSnapshot.data().data; // Retorna a data atual armazenada
+    } else {
+        // Se o documento não existir, cria um com a data atual
+        const dataAtual = new Date().toISOString();
+        await setDoc(dataRef, { data: dataAtual });
+        return dataAtual;
+    }
+}
+
+// Função para verificar e atualizar a data se necessário
+async function verificarData() {
+    const dataAtualFirestore = await obterDataAtual();
+    const dataAtualLocal = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+    if (dataAtualFirestore.split('T')[0] !== dataAtualLocal) {
+        // Se a data do Firestore for diferente da data local, atualize o Firestore
+        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
+        console.log("Data atualizada no Firestore.");
+    } else {
+        console.log("Data do Firestore está atual.");
+    }
+}
+
+
 
 // Adiciona a função de logout ao objeto global window
 window.logout = function () {
@@ -849,9 +883,8 @@ window.fecharSelecaoStatus = fecharSelecaoStatus;
 // Inicializa o sistema ao carregar a página
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
-
+    await verificarData(); // Verifica e atualiza a data se necessário
     await verificarSemanaPassada(); // Chama a verificação de semana passada
-
     verificarAutenticacao(); // Chama a verificação de autenticação
 
    // await atualizarDadosDasSemanas(); // Chama a atualização das semanas -----comentado ultima atualização
