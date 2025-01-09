@@ -209,6 +209,7 @@ async function atualizarDadosDasSemanas() {
 // Função para verificar se uma semana passou e mover os dados
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual(); // Obtém a data atual do Firestore
+
     const dataAtual = new Date("2025-01-09T18:05:52.396Z"); // Data do sistema 
 
     // Determinar a última segunda-feira
@@ -217,16 +218,14 @@ async function verificarSemanaPassada() {
     const diasParaSegunda = (diaDaSemanaAtual + 6) % 7; // Para ajustar para a última segunda-feira
 
     const ultimaSegunda = new Date(dataAtual); // Cria uma nova data com o valor da data atual
+
     if (diasParaSegunda !== 0) {
         ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
     }
-
     // Verifica se 7 dias se passaram desde a última atualização
     if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - 7 * 24 * 60 * 60 * 1000)) {
-
         await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
         console.log("Dados das semanas atualizados.");
-
         // Atualiza a data no Firestore
         await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
         // Define a data atual no Firestore como a data formatada
