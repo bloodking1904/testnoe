@@ -210,7 +210,7 @@ async function atualizarDadosDasSemanas() {
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual(); // Obtém a data atual do Firestore
 
-    const dataAtual = new Date("2025-01-09T18:05:52.396Z"); // Data do sistema 
+    const dataAtual = new Date(); // Data do sistema 
 
     // Determinar a última segunda-feira
     const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
