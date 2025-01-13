@@ -241,12 +241,12 @@ async function verificarSemanaPassada() {
   
     const ultimaSegunda = new Date(dataAtual);
     ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
-    console.log("Última segunda-feira ajustada:", ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda));
+    console.log("Última segunda-feira ajustada:", ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda).toISOString);
 
     // Verifica se 7 dias se passaram desde a última atualização
     const dataLimite = new Date(ultimaSegunda);
     dataLimite.setDate(ultimaSegunda.getDate() - 7); // 7 dias atrás
-    console.log("Verifica se passaram 7dias desde a ult atual:", dataLimite.setDate(ultimaSegunda.getDate() - 7));
+    console.log("Verifica se passaram 7dias desde a ult atual:", dataLimite.setDate(ultimaSegunda.getDate() - 7).toISOString);
 
     console.log("Data do Firestore:", dataAtualFirestore);
 
