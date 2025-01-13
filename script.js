@@ -233,11 +233,15 @@ async function verificarSemanaPassada() {
     const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
     console.log("Dia da semana atual (0 para segunda):", diaDaSemanaAtual);
 
-    const diasParaSegunda = (diaDaSemanaAtual === 0) ? 0 : (diaDaSemanaAtual + 6) % 7; 
+    const diasParaSegunda = diaDaSemanaAtual === 0 ? 7 : diaDaSemanaAtual; // Se hoje é segunda, 7 dias para a última segunda
     console.log("Dias para a última segunda-feira:", diasParaSegunda);
 
-    const ultimaSegunda = new Date(dataAtual);
-    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
+    const ultimaSegunda = new Date(dataAtual); // Cria uma nova data com o valor da data atual
+    if (diasParaSegunda !== 0) {
+        ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
+    }
+
+    // Log para verificar a última segunda-feira
     console.log("Última segunda-feira:", ultimaSegunda.toISOString());
 
     // Verifica se 7 dias se passaram desde a última atualização
