@@ -248,6 +248,7 @@ async function verificarSemanaPassada() {
     // Verifica se é um novo dia da semana
     const ultimaData = new Date(dataAtualFirestore);
     const diasDiferenca = Math.floor((dataAtual - ultimaData) / (1000 * 60 * 60 * 24));
+    console.log("DiasDiferenca:", diasDiferenca);
 
     // Se for um novo dia da semana e ainda não foi atualizado
     if (atualizado === 'não' && diasDiferenca >= 7) {
