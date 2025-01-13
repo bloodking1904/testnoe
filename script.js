@@ -225,42 +225,42 @@ async function obterDataAtual() {
 }
 
 // Função para verificar se uma semana passou e mover os dados
-
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual();
     const dataAtual = new Date();
-    console.log("Data atual do sistema:", dataAtual.toISOString());
 
-    const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
-    console.log("Dia da semana atual (0 para segunda):", diaDaSemanaAtual);
+    const diaDaSemanaAtual = dataAtual.getDay(); // 0 (domingo) a 6 (sábado)
+    const diaDaSemanaString = ['domingo', 'segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado'][diaDaSemanaAtual];
 
-    const diasParaSegunda = diaDaSemanaAtual === 0 ? 7 : diaDaSemanaAtual; // Se hoje é segunda, 7 dias para a última segunda
-    console.log("Dias para a última segunda-feira:", diasParaSegunda);
+    // Atualiza ou cria o campo diaSemana e atualizado no Firestore
+    const configDoc = doc(db, 'configuracoes', 'dataAtual');
+    const configSnapshot = await getDoc(configDoc);
 
-    const ultimaSegunda = new Date(dataAtual); // Cria uma nova data com o valor da data atual
-    if (diasParaSegunda !== 0) {
-    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
+    if (!configSnapshot.exists()) {
+        await setDoc(configDoc, { data: dataAtual.toISOString(), diaSemana: diaDaSemanaString, atualizado: 'não' });
+    } else {
+        await setDoc(configDoc, { diaSemana: diaDaSemanaString }, { merge: true });
     }
 
-// Log para verificar a última segunda-feira
+    // Verifica o campo atualizado
+    const atualizado = configSnapshot.exists() ? configSnapshot.data().atualizado : 'não';
 
-    console.log("Última segunda-feira:", ultimaSegunda.toISOString());
+    // Verifica se é um novo dia da semana
+    const ultimaData = new Date(dataAtualFirestore);
+    const diasDiferenca = Math.floor((dataAtual - ultimaData) / (1000 * 60 * 60 * 24));
 
-// Verifica se 7 dias se passaram desde a última atualização
-    console.log("Data do Firestore:", dataAtualFirestore);
-    console.log("Comparando com:", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)).toISOString());
-    console.log("dataAtualFirestore", !dataAtualFirestore);
-    console.log("new Date(dataAtualFirestore)", new Date(dataAtualFirestore));
-    console.log("new Date(ultimaSegunda.....", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)));
-
-    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
-    await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
-    console.log("Dados das semanas atualizados.");
-    // Atualiza a data no Firestore
-    await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
-    console.log("Data atualizada no Firestore.");
+    // Se for um novo dia da semana e ainda não foi atualizado
+    if (atualizado === 'não' && diasDiferenca >= 7) {
+        await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
+        await setDoc(configDoc, { atualizado: 'sim' }); // Atualiza o campo para sim
+        console.log("Dados das semanas atualizados e o status atualizado para 'sim'.");
     } else {
-    console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
+        console.log("Nenhuma atualização necessária. O status está:", atualizado);
+    }
+
+    // Se for uma nova semana
+    if (diasDiferenca >= 7) {
+        await setDoc(configDoc, { atualizado: 'não' }); // Reseta para 'não' na próxima semana
     }
 }
 
