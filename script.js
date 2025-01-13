@@ -898,7 +898,7 @@ window.fecharSelecaoStatus = fecharSelecaoStatus;
 // Inicializa o sistema ao carregar a página
 document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
-    await verificarData(); // Verifica e atualiza a data se necessário
+  //  await verificarData(); // Verifica e atualiza a data se necessário
     await verificarSemanaPassada(); // Chama a verificação de semana passada
     verificarAutenticacao(); // Chama a verificação de autenticação
 
