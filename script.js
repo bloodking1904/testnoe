@@ -260,7 +260,7 @@ async function verificarSemanaPassada() {
     }
 }
 
-Função para verificar e atualizar a data se necessário
+// Função para verificar e atualizar a data se necessário
 async function verificarData() {
     const dataAtualFirestore = await obterDataAtual();
     const dataAtualLocal = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
