@@ -228,32 +228,27 @@ async function obterDataAtual() {
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual();
     const dataAtual = new Date();
+
     console.log("Data atual do sistema:", dataAtual.toISOString());
 
-    const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
-    console.log("Dia da semana atual (0 para segunda):", diaDaSemanaAtual);
+    // Obtém o dia da semana atual (0 para domingo, 1 para segunda, etc.)
+    const diaDaSemanaAtual = dataAtual.getDay();
 
-    const diasParaSegunda = diaDaSemanaAtual === 0 ? 7 : diaDaSemanaAtual; // Se hoje é segunda, 7 dias para a última segunda
-    console.log("Dias para a última segunda-feira:", diasParaSegunda);
+    // Calcula a última segunda-feira
+    const diasParaSegunda = (diaDaSemanaAtual + 6) % 7; // Ajusta para que segunda-feira seja 0
+    const ultimaSegunda = new Date(dataAtual);
+    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
 
-    const ultimaSegunda = new Date(dataAtual); // Cria uma nova data com o valor da data atual
-    if (diasParaSegunda !== 0) {
-        ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
-    }
-
-    // Log para verificar a última segunda-feira
     console.log("Última segunda-feira:", ultimaSegunda.toISOString());
 
     // Verifica se 7 dias se passaram desde a última atualização
+    const dataLimite = new Date(ultimaSegunda);
+    dataLimite.setDate(ultimaSegunda.getDate() - 7); // 7 dias atrás
+
+    console.log("Data limite para atualização:", dataLimite.toISOString());
     console.log("Data do Firestore:", dataAtualFirestore);
-    console.log("Comparando com:", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)).toISOString());
 
-
-    console.log("dataAtualFirestore", !dataAtualFirestore);
-    console.log("new Date(dataAtualFirestore)", new Date(dataAtualFirestore));
-    console.log("new Date(ultimaSegunda.....", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)));
-    
-    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
+    if (!dataAtualFirestore || new Date(dataAtualFirestore) < dataLimite) {
         await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
         console.log("Dados das semanas atualizados.");
 
@@ -264,6 +259,7 @@ async function verificarSemanaPassada() {
         console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
     }
 }
+
 
 // Função para verificar e atualizar a data se necessário
 async function verificarData() {
