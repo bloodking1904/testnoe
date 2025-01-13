@@ -233,19 +233,21 @@ async function verificarSemanaPassada() {
 
     // Obtém o dia da semana atual (0 para domingo, 1 para segunda, etc.)
     const diaDaSemanaAtual = dataAtual.getDay();
+    console.log("dados de diaDaSemanaAtual:", diaDaSemanaAtual);
 
     // Calcula a última segunda-feira
     const diasParaSegunda = (diaDaSemanaAtual + 6) % 7; // Ajusta para que segunda-feira seja 0
+        console.log("dados de diasParaSegunda:", diasParaSegunda);
+  
     const ultimaSegunda = new Date(dataAtual);
     ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
-
-    console.log("Última segunda-feira:", ultimaSegunda.toISOString());
+    console.log("Última segunda-feira ajustada:", ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda));
 
     // Verifica se 7 dias se passaram desde a última atualização
     const dataLimite = new Date(ultimaSegunda);
     dataLimite.setDate(ultimaSegunda.getDate() - 7); // 7 dias atrás
+    console.log("Verifica se passaram 7dias desde a ult atual:", dataLimite.setDate(ultimaSegunda.getDate() - 7));
 
-    console.log("Data limite para atualização:", dataLimite.toISOString());
     console.log("Data do Firestore:", dataAtualFirestore);
 
     if (!dataAtualFirestore || new Date(dataAtualFirestore) < dataLimite) {
