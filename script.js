@@ -208,27 +208,28 @@ async function atualizarDadosDasSemanas() {
 
 // Função para verificar se uma semana passou e mover os dados
 async function verificarSemanaPassada() {
-    const dataAtualFirestore = await obterDataAtual(); // Obtém a data atual do Firestore
+    // Obtém a data atual do Firestore
+    const dataAtualFirestore = await obterDataAtual();
 
-    const dataAtual = new Date(); // Data do sistema 
+    // Data do sistema
+    const dataAtual = new Date();
 
     // Determinar a última segunda-feira
     const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
+    const diasParaSegunda = (diaDaSemanaAtual === 0) ? 0 : (diaDaSemanaAtual + 6) % 7; 
 
-    const diasParaSegunda = (diaDaSemanaAtual + 6) % 7; // Para ajustar para a última segunda-feira
+    // Calcular a última segunda-feira
+    const ultimaSegunda = new Date(dataAtual);
+    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
 
-    const ultimaSegunda = new Date(dataAtual); // Cria uma nova data com o valor da data atual
-
-    if (diasParaSegunda !== 0) {
-        ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
-    }
     // Verifica se 7 dias se passaram desde a última atualização
-    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - 7 * 24 * 60 * 60 * 1000)) {
+    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
         await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
-        console.log("Dados das semanas atualizados.");
+        console.log("Dados das semanas atualizados."); 
+
         // Atualiza a data no Firestore
         await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
-        // Define a data atual no Firestore como a data formatada
+        console.log("Data atualizada no Firestore.");
     } else {
         console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
     }
