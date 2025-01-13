@@ -247,6 +247,11 @@ async function verificarSemanaPassada() {
     // Verifica se 7 dias se passaram desde a última atualização
     console.log("Data do Firestore:", dataAtualFirestore);
     console.log("Comparando com:", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)).toISOString());
+
+
+    console.log("dataAtualFirestore", !dataAtualFirestore);
+    console.log("new Date(dataAtualFirestore)", new Date(dataAtualFirestore));
+    console.log("new Date(ultimaSegunda.....", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)));
     
     if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
         await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
