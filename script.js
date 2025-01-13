@@ -251,18 +251,18 @@ async function obterDataAtual() {
 }
 
 // Função para verificar e atualizar a data se necessário
-async function verificarData() {
-    const dataAtualFirestore = await obterDataAtual();
-    const dataAtualLocal = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+//async function verificarData() {
+//    const dataAtualFirestore = await obterDataAtual();
+//    const dataAtualLocal = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
-    if (dataAtualFirestore.split('T')[0] !== dataAtualLocal) {
+//    if (dataAtualFirestore.split('T')[0] !== dataAtualLocal) {
         // Se a data do Firestore for diferente da data local, atualize o Firestore
-        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
-        console.log("Data atualizada no Firestore.");
-    } else {
-        console.log("Data do Firestore está atual.");
-    }
-}
+//        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
+//        console.log("Data atualizada no Firestore.");
+//    } else {
+//        console.log("Data do Firestore está atual.");
+//    }
+//}
 
 
 
