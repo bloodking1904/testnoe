@@ -206,47 +206,53 @@ async function atualizarDadosDasSemanas() {
     });
 }
 
-// Função para verificar se uma semana passou e mover os dados
-async function verificarSemanaPassada() {
-    // Obtém a data atual do Firestore
-    const dataAtualFirestore = await obterDataAtual();
-
-    // Data do sistema
-    const dataAtual = new Date();
-
-    // Determinar a última segunda-feira
-    const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
-    const diasParaSegunda = (diaDaSemanaAtual === 0) ? 0 : (diaDaSemanaAtual + 6) % 7; 
-
-    // Calcular a última segunda-feira
-    const ultimaSegunda = new Date(dataAtual);
-    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
-
-    // Verifica se 7 dias se passaram desde a última atualização
-    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
-        await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
-        console.log("Dados das semanas atualizados."); 
-
-        // Atualiza a data no Firestore
-        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
-        console.log("Data atualizada no Firestore.");
-    } else {
-        console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
-    }
-}
-
 // Função para obter a data atual do Firestore
 async function obterDataAtual() {
     const dataRef = doc(db, 'configuracoes', 'dataAtual'); // Referência ao documento que armazena a data
     const dataSnapshot = await getDoc(dataRef);
 
     if (dataSnapshot.exists()) {
-        return dataSnapshot.data().data; // Retorna a data atual armazenada
+        const dataAtualFirestore = dataSnapshot.data().data; // Retorna a data atual armazenada
+        console.log("Data atual do Firestore:", dataAtualFirestore);
+        return dataAtualFirestore;
     } else {
         // Se o documento não existir, cria um com a data atual
         const dataAtual = new Date().toISOString();
         await setDoc(dataRef, { data: dataAtual });
+        console.log("Data atual criada no Firestore:", dataAtual);
         return dataAtual;
+    }
+}
+
+// Função para verificar se uma semana passou e mover os dados
+async function verificarSemanaPassada() {
+    const dataAtualFirestore = await obterDataAtual();
+    const dataAtual = new Date();
+    console.log("Data atual do sistema:", dataAtual.toISOString());
+
+    const diaDaSemanaAtual = (dataAtual.getDay() + 6) % 7; // Ajuste para que segunda-feira seja 0
+    console.log("Dia da semana atual (0 para segunda):", diaDaSemanaAtual);
+
+    const diasParaSegunda = (diaDaSemanaAtual === 0) ? 0 : (diaDaSemanaAtual + 6) % 7; 
+    console.log("Dias para a última segunda-feira:", diasParaSegunda);
+
+    const ultimaSegunda = new Date(dataAtual);
+    ultimaSegunda.setDate(dataAtual.getDate() - diasParaSegunda); // Ajusta para a última segunda-feira
+    console.log("Última segunda-feira:", ultimaSegunda.toISOString());
+
+    // Verifica se 7 dias se passaram desde a última atualização
+    console.log("Data do Firestore:", dataAtualFirestore);
+    console.log("Comparando com:", new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000)).toISOString());
+    
+    if (!dataAtualFirestore || new Date(dataAtualFirestore) < new Date(ultimaSegunda - (7 * 24 * 60 * 60 * 1000))) {
+        await atualizarDadosDasSemanas(); // Chama a função para atualizar os dados das semanas
+        console.log("Dados das semanas atualizados.");
+
+        // Atualiza a data no Firestore
+        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
+        console.log("Data atualizada no Firestore.");
+    } else {
+        console.log("A data do Firestore está atual. Nenhuma atualização necessária.");
     }
 }
 
