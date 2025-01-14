@@ -890,9 +890,9 @@ window.fecharSelecaoStatus = fecharSelecaoStatus;
 
 // Inicializa o sistema ao carregar a página
 document.addEventListener('DOMContentLoaded', async () => {
+    verificarAutenticacao(); // Chama a verificação de autenticação
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     await verificarSemanaPassada(); // Chama a verificação de semana passada
-    verificarAutenticacao(); // Chama a verificação de autenticação
 
     carregarMotoristas().catch(console.error); // Chamada assíncrona
 
