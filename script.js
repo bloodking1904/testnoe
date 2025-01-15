@@ -170,6 +170,8 @@ async function atualizarDadosDasSemanas() {
 
         // Loop para transferir dados entre as semanas
         for (let i = 0; i < 6; i++) { // De 0 até 5
+            console.log(`Limpando dados da semana ${i} para motorista: ${motoristaRef.id}`);
+
             // Limpar dados da semana atual
             await setDoc(motoristaRef, {
                 [`semana${i}`]: {
@@ -185,13 +187,21 @@ async function atualizarDadosDasSemanas() {
 
             // Transferir dados da semana seguinte
             if (i < 5) { // Não transferir dados para a semana 6
-                await setDoc(motoristaRef, {
-                    [`semana${i}`]: motoristaDados[`semana${i + 1}`]
-                }, { merge: true });
+                const dadosSemanaSeguinte = motoristaDados[`semana${i + 1}`];
+                console.log(`Transferindo dados da semana ${i + 1} para semana ${i} para motorista: ${motoristaRef.id}`);
+
+                if (dadosSemanaSeguinte) {
+                    await setDoc(motoristaRef, {
+                        [`semana${i}`]: dadosSemanaSeguinte
+                    }, { merge: true });
+                } else {
+                    console.warn(`Nenhum dado encontrado para a semana ${i + 1} do motorista: ${motoristaRef.id}`);
+                }
             }
         }
 
         // Para a semana 6, apenas limpar dados
+        console.log(`Limpando dados da semana 6 para motorista: ${motoristaRef.id}`);
         await setDoc(motoristaRef, {
             [`semana6`]: {
                 0: { status: 'Disponível', data: null },
@@ -203,6 +213,8 @@ async function atualizarDadosDasSemanas() {
                 6: { status: 'Disponível', data: null },
             }
         }, { merge: true });
+
+        console.log(`Atualização de dados concluída para motorista: ${motoristaRef.id}`);
     });
 }
 
