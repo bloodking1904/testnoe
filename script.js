@@ -370,6 +370,9 @@ window.confirmarResetarStatus = function () {
 // Função para resetar o status de todos os motoristas
 async function resetarStatusTodosMotoristas() {
     try {
+        // Mostrar o loader
+        document.getElementById('loading').style.display = 'flex';
+
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
         const batch = writeBatch(db); // Usar batch para atualizar vários documentos de forma eficiente
 
@@ -392,12 +395,18 @@ async function resetarStatusTodosMotoristas() {
         });
 
         await batch.commit(); // Executa todas as operações em um único lote
-        alert("Status de todos os motoristas foi resetado para 'Disponível'.");
+
+        // Ocultar o loader
+        document.getElementById('loading').style.display = 'none';
+
         console.log("Status de todos os motoristas resetados com sucesso.");
 
         // Chama a função para atualizar visualmente os motoristas
         await carregarMotoristas(); // Atualiza a tabela de motoristas
     } catch (error) {
+        // Ocultar o loader em caso de erro
+        document.getElementById('loading').style.display = 'none';
+        
         console.error("Erro ao resetar status:", error);
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
     }
