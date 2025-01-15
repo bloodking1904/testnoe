@@ -248,9 +248,12 @@ async function verificarSemanaPassada() {
     // Verifica se a data atual é maior que o último dia da semana do Firestore
     if (dataAtual > ultimoDiaDaSemanaFirestore) {
         console.log("Uma nova semana passou.");
-        // Aqui você pode chamar a função para atualizar os dados das semanas
-        await atualizarDadosDasSemanas();
-        await verificarData(); // Verifica e atualiza a data
+        // Chama a função para atualizar os dados das semanas
+        await atualizarDadosDasSemanas(); // Aguarda a conclusão da atualização
+
+        // Após a atualização, chama carregarMotoristas
+        await carregarMotoristas(); // Carrega os motoristas após a atualização
+        await verificarData(); // Verifica e atualiza a data se necessário
     } else {
         console.log("Ainda está na mesma semana.");
     }
