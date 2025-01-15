@@ -249,9 +249,11 @@ async function verificarSemanaPassada() {
     if (dataAtual > ultimoDiaDaSemanaFirestore) {
         console.log("Uma nova semana passou.");
         // Chama a função para atualizar os dados das semanas
-        alert("Atualizando Status dos Motoristas, aguarde...");
+        // Mostrar o loader
+        document.getElementById('loading').style.display = 'flex';
         await atualizarDadosDasSemanas(); // Aguarda a conclusão da atualização
-        alert("Status atualizados com êxito!");
+        // Ocultar o loader
+        document.getElementById('loading').style.display = 'none';
         // Após a atualização, chama carregarMotoristas
         await carregarMotoristas(); // Carrega os motoristas após a atualização
         await verificarData(); // Verifica e atualiza a data se necessário
