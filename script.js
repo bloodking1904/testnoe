@@ -186,7 +186,7 @@ async function atualizarDadosDasSemanas() {
             }, { merge: true });
 
             // Transferir dados da semana seguinte
-            if (i < 5) { // Não transferir dados para a semana 6
+            if (i =< 5) { // Não transferir dados para a semana 6
                 const dadosSemanaSeguinte = motoristaDados[`semana${i + 1}`];
                 console.log(`Transferindo dados da semana ${i + 1} para semana ${i} para motorista: ${motoristaRef.id}`);
 
