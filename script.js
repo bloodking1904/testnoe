@@ -161,7 +161,7 @@ async function escutarMotoristas() {
 async function atualizarDadosDasSemanas() {
     const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
 
-    motoristasSnapshot.docs.forEach(async (doc) => {
+    for (const doc of motoristasSnapshot.docs) {
         const motoristaRef = doc.ref;
 
         // Obter dados atuais para o motorista
@@ -252,7 +252,7 @@ async function verificarSemanaPassada() {
         await atualizarDadosDasSemanas(); // Aguarda a conclusão da atualização
 
         // Após a atualização, chama carregarMotoristas
-    //    await carregarMotoristas(); // Carrega os motoristas após a atualização
+        await carregarMotoristas(); // Carrega os motoristas após a atualização
         await verificarData(); // Verifica e atualiza a data se necessário
     } else {
         console.log("Ainda está na mesma semana.");
@@ -909,7 +909,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     await verificarSemanaPassada(); // Chama a verificação de semana passada
 
-    await carregarMotoristas().catch(console.error); // Chamada assíncrona
+    //await carregarMotoristas().catch(console.error); // Chamada assíncrona
 
     // Eventos para os botões de navegação
     document.getElementById('seta-esquerda').addEventListener('click', () => {
