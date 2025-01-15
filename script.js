@@ -215,7 +215,7 @@ async function atualizarDadosDasSemanas() {
         }, { merge: true });
 
         console.log(`Atualização de dados concluída para motorista: ${motoristaRef.id}`);
-    });
+    };
 }
 
 // Função para obter a data atual do Firestore
