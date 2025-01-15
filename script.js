@@ -250,7 +250,7 @@ async function verificarSemanaPassada() {
         console.log("Uma nova semana passou.");
         // Chama a função para atualizar os dados das semanas
         await atualizarDadosDasSemanas(); // Aguarda a conclusão da atualização
-
+        alert("Atualizando Status dos Motoristas, aguarde...");
         // Após a atualização, chama carregarMotoristas
         await carregarMotoristas(); // Carrega os motoristas após a atualização
         await verificarData(); // Verifica e atualiza a data se necessário
