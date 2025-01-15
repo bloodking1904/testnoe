@@ -256,6 +256,8 @@ async function verificarSemanaPassada() {
         await verificarData(); // Verifica e atualiza a data se necessário
     } else {
         console.log("Ainda está na mesma semana.");
+        await carregarMotoristas(); // Carrega os motoristas após a atualização
+        await verificarData(); // Verifica e atualiza a data se necessário
     }
 }
 
