@@ -244,7 +244,7 @@ async function verificarSemanaPassada() {
     // Obtém o último dia da semana correspondente à data do Firestore
     const ultimoDiaDaSemanaFirestore = new Date(dataFirestore);
     ultimoDiaDaSemanaFirestore.setDate(dataFirestore.getDate() + (6 - dataFirestore.getDay())); // Ajusta para o próximo domingo
-
+    console.log("data do firestore em date:", ultimoDiaDaSemanaFirestore);
     // Verifica se a data atual é maior que o último dia da semana do Firestore
     if (dataAtual > ultimoDiaDaSemanaFirestore) {
         console.log("Uma nova semana passou.");
