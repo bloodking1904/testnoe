@@ -233,27 +233,36 @@ async function obterDataAtual() {
     }
 }
 
-// Função para verificar se uma semana passou e mover os dados
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual(); // Obtém a data atual do Firestore
     const dataAtual = new Date(); // Data atual do sistema
 
     // Converte a data do Firestore para objeto Date
     const dataFirestore = new Date(dataAtualFirestore);
-     console.log("data do firestore em date:", dataFirestore);
-    // Obtém o último dia da semana correspondente à data do Firestore
+    console.log("Data do Firestore em date:", dataFirestore);
+
+    // Obtém o último dia da semana correspondente à data do Firestore (ajustado para domingo)
     const ultimoDiaDaSemanaFirestore = new Date(dataFirestore);
-    ultimoDiaDaSemanaFirestore.setDate(dataFirestore.getDate() + (6 - dataFirestore.getDay())); // Ajusta para o próximo domingo
-    console.log("data do firestore em date:", ultimoDiaDaSemanaFirestore);
+    
+    // Ajusta para o próximo domingo
+    const diaDaSemana = dataFirestore.getDay();
+    const diasParaAdicionar = (7 - diaDaSemana) % 7; // Se for domingo, não adiciona nada; caso contrário, adiciona a quantidade necessária
+    ultimoDiaDaSemanaFirestore.setDate(dataFirestore.getDate() + diasParaAdicionar);
+
+    console.log("Último dia da semana do Firestore:", ultimoDiaDaSemanaFirestore);
+
     // Verifica se a data atual é maior que o último dia da semana do Firestore
     if (dataAtual > ultimoDiaDaSemanaFirestore) {
         console.log("Uma nova semana passou.");
-        // Chama a função para atualizar os dados das semanas
+
         // Mostrar o loader
         document.getElementById('loading').style.display = 'flex';
+
         await atualizarDadosDasSemanas(); // Aguarda a conclusão da atualização
+
         // Ocultar o loader
         document.getElementById('loading').style.display = 'none';
+
         // Após a atualização, chama carregarMotoristas
         await carregarMotoristas(); // Carrega os motoristas após a atualização
         await verificarData(); // Verifica e atualiza a data se necessário
