@@ -144,17 +144,31 @@ async function carregarMotoristas() {
 
 // Função para escutar as alterações nos motoristas
 async function escutarMotoristas() {
-    const motoristasCollection = collection(db, 'motoristas');
-    onSnapshot(motoristasCollection, (snapshot) => {
-        snapshot.docChanges().forEach(change => {
-            if (change.type === "modified") {
-                // Atualiza a tabela quando um motorista é modificado
-                const motoristaId = change.doc.id;
-                const dadosMotorista = change.doc.data();
-                atualizarTabela(motoristaId, dadosMotorista);
+    if (loggedInUser === 'ADMIN') {
+        // Se o usuário logado for admin, escuta todas as alterações na coleção de motoristas
+        const motoristasCollection = collection(db, 'motoristas');
+
+        onSnapshot(motoristasCollection, (snapshot) => {
+            snapshot.docChanges().forEach(change => {
+                if (change.type === "modified") {
+                    // Atualiza a tabela quando um motorista é modificado
+                    const motoristaId = change.doc.id;
+                    const dadosMotorista = change.doc.data();
+                    atualizarTabela(motoristaId, dadosMotorista);
+                }
+            });
+        });
+    } else {
+        // Se o usuário logado for um motorista, escuta apenas o documento desse motorista
+        const motoristaRef = doc(db, 'motoristas', loggedInUser);
+
+        onSnapshot(motoristaRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const dadosMotorista = snapshot.data(); // Obtém os dados do motorista logado
+                atualizarTabela(loggedInUser, dadosMotorista); // Atualiza a tabela com os dados do motorista logado
             }
         });
-    });
+    }
 }
 
 // Função para atualizar dados das semanas
