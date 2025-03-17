@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -8,22 +7,25 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://bloodking1904.github.io/testnoe/icone.ico" type="image/x-icon">
-</head>
     
+    <!-- Declaração da biblioteca html2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+
 <body>
     <div class="header">
-    <h1>Agenda dos Motoristas</h1>
-    <button id="seta-esquerda" class="sair-button">←</button> <!-- Seta esquerda -->
-    <button id="seta-direita" class="sair-button">→</button> <!-- Seta direita -->
-    <button onclick="logout()" class="sair-button">Sair</button>
-    <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
-</div>
-    
-    <div id="loading" class="loading" style="display: none;">
-    <div class="loader"></div>
-    <p>Aguarde, atualizando status dos motoristas...</p>
+        <h1>Agenda dos Motoristas</h1>
+        <button id="seta-esquerda" class="sair-button">←</button> <!-- Seta esquerda -->
+        <button id="seta-direita" class="sair-button">→</button> <!-- Seta direita -->
+        <button onclick="logout()" class="sair-button">Sair</button>
+        <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
     </div>
-    
+
+    <div id="loading" class="loading" style="display: none;">
+        <div class="loader"></div>
+        <p>Aguarde, atualizando status dos motoristas...</p>
+    </div>
+
     <div class="tabela" id="tabela-motoristas">
         <div class="linha cabecalho">
             <div class="celula">DOMINGO</div>
@@ -46,6 +48,8 @@
         <button onclick="fecharSelecaoStatus()" class="entrar-button">Fechar</button>
     </div>
 
+    <button id="shareButton" class="share-button">Compartilhar</button> <!-- Botão flutuante de compartilhar -->
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-analytics.js";
@@ -66,7 +70,6 @@
         const db = getFirestore(app);
     </script>
 
-    
     <script>
         // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
         document.addEventListener('DOMContentLoaded', function() {
@@ -76,6 +79,36 @@
             }
         });
     </script>
+
+    <script>
+        // Função para compartilhar
+        document.getElementById('shareButton').addEventListener('click', async () => {
+            const { default: html2canvas } = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+            const canvas = await html2canvas(document.body);
+            const dataURL = canvas.toDataURL('image/png');
+
+            const shareOptions = `
+                <div style="position: fixed; bottom: 100px; right: 20px; background: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
+                    <h3>Compartilhar</h3>
+                    <a href="whatsapp://send?text=Veja esta imagem: ${dataURL}" target="_blank">WhatsApp</a><br>
+                    <button id="copyButton">Copiar para a Área de Transferência</button><br>
+                    <a href="mailto:?subject=Imagem da Agenda&amp;body=Veja esta imagem: ${dataURL}">E-mail</a>
+                </div>
+            `;
+
+            const shareDiv = document.createElement('div');
+            shareDiv.innerHTML = shareOptions;
+            document.body.appendChild(shareDiv);
+
+            document.getElementById('copyButton').addEventListener('click', () => {
+                navigator.clipboard.writeText(dataURL).then(() => {
+                    alert('Imagem copiada para a área de transferência!');
+                });
+            });
+        });
+    </script>
+
     <script type="module" src="script.js"></script>
 </body>
+
 </html>
