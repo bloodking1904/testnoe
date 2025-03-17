@@ -80,10 +80,10 @@
         });
     </script>
 
-    <script>
+       <script>
         // Função para compartilhar
         document.getElementById('shareButton').addEventListener('click', async () => {
-            const { default: html2canvas } = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+            // Captura a tela usando html2canvas
             const canvas = await html2canvas(document.body);
             const dataURL = canvas.toDataURL('image/png');
 
