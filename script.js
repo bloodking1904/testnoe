@@ -71,6 +71,37 @@ function verificarAutenticacao() {
     }
 }
 
+const shareButton = document.getElementById('shareButton');
+
+shareButton.addEventListener('click', async () => {
+    // Faz a captura de tela usando html2canvas
+    const { default: html2canvas } = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+    const canvas = await html2canvas(document.body);
+    const dataURL = canvas.toDataURL('image/png');
+
+    // Cria um novo elemento de link para o compartilhamento
+    const shareOptions = `
+        <div style="position: fixed; bottom: 100px; right: 20px; background: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
+            <h3>Compartilhar</h3>
+            <a href="whatsapp://send?text=Veja esta imagem: ${dataURL}" target="_blank">WhatsApp</a><br>
+            <button id="copyButton">Copiar para a Área de Transferência</button><br>
+            <a href="mailto:?subject=Imagem da Agenda&amp;body=Veja esta imagem: ${dataURL}">E-mail</a>
+        </div>
+    `;
+
+    // Adiciona as opções de compartilhamento à página
+    const shareDiv = document.createElement('div');
+    shareDiv.innerHTML = shareOptions;
+    document.body.appendChild(shareDiv);
+
+    // Adiciona funcionalidade de copiar imagem
+    document.getElementById('copyButton').addEventListener('click', () => {
+        navigator.clipboard.writeText(dataURL).then(() => {
+            alert('Imagem copiada para a área de transferência!');
+        });
+    });
+});
+
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
