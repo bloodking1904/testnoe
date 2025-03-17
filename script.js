@@ -189,13 +189,13 @@ async function atualizarDadosDasSemanas() {
             // Limpar dados da semana atual
             await setDoc(motoristaRef, {
                 [`semana${i}`]: {
-                    0: { status: 'Disponível', data: null },
-                    1: { status: 'Disponível', data: null },
-                    2: { status: 'Disponível', data: null },
-                    3: { status: 'Disponível', data: null },
-                    4: { status: 'Disponível', data: null },
-                    5: { status: 'Disponível', data: null },
-                    6: { status: 'Disponível', data: null },
+                    0: { status: 'DR (Por Demanda)', data: null },
+                    1: { status: 'DR (Por Demanda)', data: null },
+                    2: { status: 'DR (Por Demanda)', data: null },
+                    3: { status: 'DR (Por Demanda)', data: null },
+                    4: { status: 'DR (Por Demanda)', data: null },
+                    5: { status: 'DR (Por Demanda)', data: null },
+                    6: { status: 'DR (Por Demanda)', data: null },
                 }
             }, { merge: true });
 
@@ -218,13 +218,13 @@ async function atualizarDadosDasSemanas() {
         console.log(`Limpando dados da semana 6 para motorista: ${motoristaRef.id}`);
         await setDoc(motoristaRef, {
             [`semana6`]: {
-                0: { status: 'Disponível', data: null },
-                1: { status: 'Disponível', data: null },
-                2: { status: 'Disponível', data: null },
-                3: { status: 'Disponível', data: null },
-                4: { status: 'Disponível', data: null },
-                5: { status: 'Disponível', data: null },
-                6: { status: 'Disponível', data: null },
+                0: { status: 'DR (Por Demanda)', data: null },
+                1: { status: 'DR (Por Demanda)', data: null },
+                2: { status: 'DR (Por Demanda)', data: null },
+                3: { status: 'DR (Por Demanda)', data: null },
+                4: { status: 'DR (Por Demanda)', data: null },
+                5: { status: 'DR (Por Demanda)', data: null },
+                6: { status: 'DR (Por Demanda)', data: null },
             }
         }, { merge: true });
 
@@ -340,14 +340,14 @@ function atualizarTabela(motorista, dados) {
         celula.classList.add('celula');
         celula.dataset.dia = dia;
 
-        const statusAtual = semanaAtual[dia] || { status: 'Disponível', data: null };
+        const statusAtual = semanaAtual[dia] || { status: 'DR (Por Demanda)', data: null };
 
         celula.innerHTML = `
             <div class="motorista">
                 <button class="adicionar" data-id-motorista="${motorista}" data-dia="${dia}" data-linha="${motorista}"
                     onclick="mostrarSelecaoStatus(this)">+</button>
                 <span style="font-weight: bold;">${motorista}</span>
-                <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'DR (Por Demanda)' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                     ${statusAtual.status}
                 </div>
                 ${statusAtual.data ? `
@@ -402,13 +402,13 @@ async function resetarStatusTodosMotoristas() {
         motoristasSnapshot.docs.forEach(doc => {
             const motoristaRef = doc.ref;
 
-            // Atualiza o status para 'Disponível' para cada semana (de 0 até totalWeeks)
+            // Atualiza o status para 'DR (Por Demanda)' para cada semana (de 0 até totalWeeks)
             for (let semana = 0; semana <= totalWeeks; semana++) {
                 for (let dia = 0; dia < 7; dia++) {
                     batch.set(motoristaRef, {
                         [`semana${semana}`]: {
                             [dia]: { 
-                                status: 'Disponível', 
+                                status: 'DR (Por Demanda)', 
                                 data: null 
                             }
                         }
@@ -497,7 +497,7 @@ function mostrarSelecaoStatus(element) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     getDoc(motoristaRef).then((motoristaSnapshot) => {
         const dados = motoristaSnapshot.data();
-        const statusAtual = dados[`semana${currentWeekIndex}`][dia] ? dados[`semana${currentWeekIndex}`][dia].status : 'Disponível'; // Obtém o status atual para o dia específico
+        const statusAtual = dados[`semana${currentWeekIndex}`][dia] ? dados[`semana${currentWeekIndex}`][dia].status : 'DR (Por Demanda)'; // Obtém o status atual para o dia específico
 
         // Verifica se o usuário logado é um motorista e se o status é "Em Viagem"
         if (loggedInUser !== 'ADMIN' && statusAtual === 'Em Viagem') {
@@ -511,7 +511,7 @@ function mostrarSelecaoStatus(element) {
         // Criação das opções de status
         let statusOptions = ` 
             <div class="status" style="background-color: lightgreen; color: black; font-weight: bold;" 
-                onclick="adicionarStatus('${idMotorista}', 'Disponível', 'green', ${dia}, '${linha}')">Disponível</div>
+                onclick="adicionarStatus('${idMotorista}', 'DR (Por Demanda)', 'green', ${dia}, '${linha}')">DR (Por Demanda)</div>
             <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" 
                 onclick="mostrarSelecaoAtendimento('${idMotorista}', ${dia}, '${linha}')">Em Atendimento</div>
         `;
@@ -562,6 +562,9 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'Anatole', ${dia}, '${linha}')">Anatole</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'Presidente', ${dia}, '${linha}')">Presidente</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'CPL', ${dia}, '${linha}')">CPL</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'SESI - COSUP', ${dia}, '${linha}')">SESI COSUP</div>
+        <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'SENAI - ISI BIOMASSA', ${dia}, '${linha}')">SENAI - ISI BIOMASSA</div>
+		<div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'Diretoria - Sustentabilidade', ${dia}, '${linha}')">Diretoria - Sustentabilidade</div>
     `;
 
     statusSelecao.innerHTML = atendimentoOptions;
@@ -620,6 +623,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'AXOR QAO4215',
         'Express DRC 4x2 SLX8B62',
         'Expert Furgão RWB3D79',
+		'Caminhão Baú Senai HSI6390',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -900,7 +904,7 @@ function atualizarLinhaMotorista(motorista, dados) {
         const diaAtual = (new Date().getDay() + 6) % 7; // Ajusta o dia atual para começar na segunda-feira
 
         const celula = linha.querySelector(`.celula[data-dia="${diaAtual}"]`);
-        const statusAtual = dados[diaAtual] || { status: 'Disponível', data: null };
+        const statusAtual = dados[diaAtual] || { status: 'DR (Por Demanda)', data: null };
 
         if (celula) {
             celula.innerHTML = ` 
@@ -908,7 +912,7 @@ function atualizarLinhaMotorista(motorista, dados) {
                     <button class="adicionar" data-id-motorista="${motorista}" data-dia="${diaAtual}" data-linha="${motorista}" 
                         onclick="mostrarSelecaoStatus(this)">+</button>
                     <span style="font-weight: bold;">${motorista}</span>
-                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'Disponível' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
+                    <div class="status" style="color: ${statusAtual.status === 'Em Viagem' ? 'yellow' : (statusAtual.status === 'DR (Por Demanda)' ? 'green' : 'red')}; border: 1px solid black; font-weight: bold;">
                         ${statusAtual.status}
                     </div>
                     ${statusAtual.data ? `<div style="white-space: nowrap;"><strong>Cidade:</strong> ${statusAtual.data.cidade}</div><div style="white-space: break-word;"><strong>Veículo:</strong> ${statusAtual.data.veiculo}</div><div><strong>Cliente:</strong> ${statusAtual.data.cliente}</div>` : ''}
