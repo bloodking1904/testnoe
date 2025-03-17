@@ -75,8 +75,7 @@ const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', async () => {
     // Faz a captura de tela usando html2canvas
-    const { default: html2canvas } = await import('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
-    const canvas = await html2canvas(document.body);
+    const canvas = await html2canvas(document.body); // Usando a função global html2canvas
     const dataURL = canvas.toDataURL('image/png');
 
     // Cria um novo elemento de link para o compartilhamento
