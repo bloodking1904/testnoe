@@ -564,7 +564,7 @@ function mostrarSelecaoAtendimento(nome, dia, linha) {
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'CPL', ${dia}, '${linha}')">CPL</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'SESI - COSUP', ${dia}, '${linha}')">SESI COSUP</div>
         <div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'SENAI - ISI BIOMASSA', ${dia}, '${linha}')">SENAI - ISI BIOMASSA</div>
-		<div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'Diretoria - Sustentabilidade', ${dia}, '${linha}')">Diretoria - Sustentabilidade</div>
+	<div class="status" style="background-color: lightcoral; color: black; font-weight: bold;" onclick="mostrarVeiculosParaAtendimento('${nome}', 'Diretoria - Sustentabilidade', ${dia}, '${linha}')">Diretoria - Sustentabilidade</div>
     `;
 
     statusSelecao.innerHTML = atendimentoOptions;
@@ -623,7 +623,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'AXOR QAO4215',
         'Express DRC 4x2 SLX8B62',
         'Expert Furgão RWB3D79',
-		'Caminhão Baú Senai HSI6390',
+	'Caminhão Baú Senai HSI6390',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -763,6 +763,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
         'AXOR QAO4215',
         'Express DRC 4x2 SLX8B62',
         'Expert Furgão RWB3D79',
+	'Caminhão Baú Senai HSI6390',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
