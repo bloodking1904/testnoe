@@ -71,11 +71,12 @@ function verificarAutenticacao() {
     }
 }
 
+// Função para compartilhar a captura da tela
 const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', async () => {
     // Faz a captura de tela usando html2canvas
-    const canvas = await html2canvas(document.body); // Usando a função global html2canvas
+    const canvas = await html2canvas(document.body);
     const dataURL = canvas.toDataURL('image/png');
 
     // Cria um novo elemento de link para o compartilhamento
@@ -94,13 +95,18 @@ shareButton.addEventListener('click', async () => {
     document.body.appendChild(shareDiv);
 
     // Adiciona funcionalidade de copiar imagem
-    document.getElementById('copyButton').addEventListener('click', () => {
-        navigator.clipboard.writeText(dataURL).then(() => {
+    document.getElementById('copyButton').addEventListener('click', async () => {
+        try {
+            const response = await fetch(dataURL);
+            const blob = await response.blob();
+            const item = new ClipboardItem({ "image/png": blob });
+            await navigator.clipboard.write([item]);
             alert('Imagem copiada para a área de transferência!');
-        });
+        } catch (err) {
+            console.error('Erro ao copiar para a área de transferência:', err);
+        }
     });
 });
-
 
 // Função para carregar motoristas
 async function carregarMotoristas() {
