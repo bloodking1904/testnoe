@@ -80,33 +80,7 @@
         });
     </script>
 
-       <script>
-        // Função para compartilhar
-        document.getElementById('shareButton').addEventListener('click', async () => {
-            // Captura a tela usando html2canvas
-            const canvas = await html2canvas(document.body);
-            const dataURL = canvas.toDataURL('image/png');
 
-            const shareOptions = `
-                <div style="position: fixed; bottom: 100px; right: 20px; background: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
-                    <h3>Compartilhar</h3>
-                    <a href="whatsapp://send?text=Veja esta imagem: ${dataURL}" target="_blank">WhatsApp</a><br>
-                    <button id="copyButton">Copiar para a Área de Transferência</button><br>
-                    <a href="mailto:?subject=Imagem da Agenda&amp;body=Veja esta imagem: ${dataURL}">E-mail</a>
-                </div>
-            `;
-
-            const shareDiv = document.createElement('div');
-            shareDiv.innerHTML = shareOptions;
-            document.body.appendChild(shareDiv);
-
-            document.getElementById('copyButton').addEventListener('click', () => {
-                navigator.clipboard.writeText(dataURL).then(() => {
-                    alert('Imagem copiada para a área de transferência!');
-                });
-            });
-        });
-    </script>
 
     <script type="module" src="script.js"></script>
 </body>
