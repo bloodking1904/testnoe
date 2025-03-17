@@ -624,6 +624,7 @@ function mostrarVeiculosParaAtendimento(nome, cliente, dia, linha) {
         'Express DRC 4x2 SLX8B62',
         'Expert Furgão RWB3D79',
 	'Caminhão Baú Senai HSI6390',
+	'Trailer Odontológico',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
@@ -764,6 +765,7 @@ function mostrarVeiculosViagem(nome, dia, linha, cliente) {
         'Express DRC 4x2 SLX8B62',
         'Expert Furgão RWB3D79',
 	'Caminhão Baú Senai HSI6390',
+	'Trailer Odontológico',
     ];
 
     let veiculoOptions = '<div class="veiculo-grid">'; // Inicia a grid
