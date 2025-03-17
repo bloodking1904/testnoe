@@ -75,8 +75,12 @@ function verificarAutenticacao() {
 const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', async () => {
-    // Faz a captura de tela usando html2canvas
-    const canvas = await html2canvas(document.body);
+    // Ajuste tamanho do canvas
+    const canvas = await html2canvas(document.body, {
+        width: 1920,
+        height: 1080,
+        scale: 1 // Defina a escala se necessário
+    });
     const dataURL = canvas.toDataURL('image/png');
 
     // Cria um novo elemento de link para o compartilhamento
