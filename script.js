@@ -86,7 +86,6 @@ shareButton.addEventListener('click', async () => {
             height: fullHeight,
             //scrollY: -window.scrollY, // Permite compensar a rolagem vertical
             scale: 2 // Aumenta a escala para melhor qualidade
-	    useCORS: true,
         });
     const dataURL = canvas.toDataURL('image/png');
 
