@@ -76,11 +76,17 @@ const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', async () => {
     // Ajuste tamanho do canvas
-  //  const canvas = await html2canvas(document.body, {
+
+	// Calcula a altura total da tabela
+        const fullHeight = tabela.scrollHeight;
+	
 	const tabela = document.getElementById('tabela-motoristas');
         const canvas = await html2canvas(tabela, {
+	    width: 1920,
+            height: fullHeight,
             scrollY: -window.scrollY, // Permite compensar a rolagem vertical
             scale: 2 // Aumenta a escala para melhor qualidade
+	    useCORS: true,
         });
     const dataURL = canvas.toDataURL('image/png');
 
