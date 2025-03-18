@@ -78,11 +78,7 @@ shareButton.addEventListener('click', async () => {
     // Ajuste tamanho do canvas
   //  const canvas = await html2canvas(document.body, {
 	const tabela = document.getElementById('tabela-motoristas');
-   	const canvas = await html2canvas(tabela, {
-        width: 1920,
-        height: 1080,
-        scale: 1 // Defina a escala se necessário
-    });
+   	const canvas = await html2canvas(tabela);
     const dataURL = canvas.toDataURL('image/png');
 
     // Cria um novo elemento de link para o compartilhamento
