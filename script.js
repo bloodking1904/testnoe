@@ -78,7 +78,7 @@ shareButton.addEventListener('click', async () => {
     // Ajuste tamanho do canvas
 
 	// Calcula a altura total da tabela
-        const fullHeight = tabela.scrollHeight;
+        const fullHeight = tabela-motoristas.scrollHeight;
 	
 	const tabela = document.getElementById('tabela-motoristas');
         const canvas = await html2canvas(tabela, {
