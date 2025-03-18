@@ -71,51 +71,6 @@ function verificarAutenticacao() {
     }
 }
 
-// Função para compartilhar a captura da tela
-const shareButton = document.getElementById('shareButton');
-
-shareButton.addEventListener('click', async () => {
-    // Ajuste tamanho do canvas
-
-
-	
-	const tabela = document.getElementById('tabela-motoristas');
-
-        const canvas = await html2canvas(tabela, {
-            scrollY: -window.scrollY, // Permite compensar a rolagem vertical
-            scale: 2 // Aumenta a escala para melhor qualidade
-        });
-    const dataURL = canvas.toDataURL('image/png');
-
-    // Cria um novo elemento de link para o compartilhamento
-    const shareOptions = `
-        <div style="position: fixed; bottom: 100px; right: 20px; background: white; border: 1px solid #ccc; padding: 10px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
-            <h3>Compartilhar</h3>
-            <a href="whatsapp://send?text=Veja esta imagem: ${dataURL}" target="_blank">WhatsApp</a><br>
-            <button id="copyButton">Copiar para a Área de Transferência</button><br>
-            <a href="mailto:?subject=Imagem da Agenda&amp;body=Veja esta imagem: ${dataURL}">E-mail</a>
-        </div>
-    `;
-
-    // Adiciona as opções de compartilhamento à página
-    const shareDiv = document.createElement('div');
-    shareDiv.innerHTML = shareOptions;
-    document.body.appendChild(shareDiv);
-
-    // Adiciona funcionalidade de copiar imagem
-    document.getElementById('copyButton').addEventListener('click', async () => {
-        try {
-            const response = await fetch(dataURL);
-            const blob = await response.blob();
-            const item = new ClipboardItem({ "image/png": blob });
-            await navigator.clipboard.write([item]);
-            alert('Imagem copiada para a área de transferência!');
-        } catch (err) {
-            console.error('Erro ao copiar para a área de transferência:', err);
-        }
-    });
-});
-
 // Função para carregar motoristas
 async function carregarMotoristas() {
     console.log("Chamando carregarMotoristas()...");
