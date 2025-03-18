@@ -76,7 +76,9 @@ const shareButton = document.getElementById('shareButton');
 
 shareButton.addEventListener('click', async () => {
     // Ajuste tamanho do canvas
-    const canvas = await html2canvas(document.body, {
+  //  const canvas = await html2canvas(document.body, {
+	const tabela = document.getElementById('tabela');
+   	const canvas = await html2canvas(tabela, {
         width: 1920,
         height: 1080,
         scale: 1 // Defina a escala se necessário
