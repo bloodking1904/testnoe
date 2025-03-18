@@ -84,7 +84,7 @@ shareButton.addEventListener('click', async () => {
         const canvas = await html2canvas(tabela, {
 	    width: 1920,
             height: fullHeight,
-            scrollY: -window.scrollY, // Permite compensar a rolagem vertical
+            //scrollY: -window.scrollY, // Permite compensar a rolagem vertical
             scale: 2 // Aumenta a escala para melhor qualidade
 	    useCORS: true,
         });
