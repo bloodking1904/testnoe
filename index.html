@@ -18,7 +18,7 @@
         <button onclick="logout()" class="sair-button">Sair</button>
         <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
     </div>
-    
+
     <div id="loading" class="loading" style="display: none;">
     <div class="loader"></div>
     <p id="loading-message">Aguarde, atualizando status...</p>
@@ -30,6 +30,14 @@
     <p id="progress-status" style="margin-top: 10px; font-size: 0.9em;"></p>
     </div>
 
+    <div class="export-container">
+    <label for="start-date">Histórico de:</label>
+    <input type="date" id="start-date">
+    <label for="end-date">Até:</label>
+    <input type="date" id="end-date">
+    <button id="download-csv-btn" class="sair-button" style="background-color: #17a2b8;">Baixar CSV</button>
+    </div>
+    
     <div id="calendario" class="calendar" style="display: none;">
     <div id="calendarHeader" class="calendar-header">
         <button id="seta-esquerda-calendario" onclick="navegarSemana(-1)">←</button>
