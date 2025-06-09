@@ -766,4 +766,133 @@ document.addEventListener('DOMContentLoaded', async () => {
             carregarMotoristas().catch(console.error);
         }
     });
+
+
+// --- FUNÇÕES DE EXPORTAÇÃO PARA CSV (NOVAS) ---
+
+/**
+ * Função principal que coleta os dados e inicia a geração do CSV.
+ */
+async function exportHistoryToCSV() {
+    const startDateInput = document.getElementById('start-date').value;
+    const endDateInput = document.getElementById('end-date').value;
+
+    if (!startDateInput || !endDateInput) {
+        alert("Por favor, selecione as datas de início e fim para gerar o histórico.");
+        return;
+    }
+
+    // Adiciona a hora para garantir que o período completo seja considerado
+    const startDate = new Date(startDateInput + 'T00:00:00');
+    const endDate = new Date(endDateInput + 'T23:59:59');
+
+    if (startDate > endDate) {
+        alert("A data de início não pode ser posterior à data de fim.");
+        return;
+    }
+
+    document.getElementById('loading').style.display = 'flex';
+
+    try {
+        const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+        const historyRecords = [];
+        const semanas = await getSemanas(); // Reutiliza a função que calcula as datas das semanas
+
+        // Itera sobre cada documento de motorista
+        for (const motoristaDoc of motoristasSnapshot.docs) {
+            const motoristaNome = motoristaDoc.id;
+            const motoristaDados = motoristaDoc.data();
+
+            // Itera sobre todas as semanas possíveis (0 a 6)
+            for (let semanaIdx = 0; semanaIdx < semanas.length; semanaIdx++) {
+                const semanaDados = motoristaDados[`semana${semanaIdx}`];
+
+                if (semanaDados) {
+                    // Itera sobre cada dia da semana (0 a 6)
+                    for (let diaIdx = 0; diaIdx < 7; diaIdx++) {
+                        const diaDados = semanaDados[diaIdx];
+
+                        // Considera um registro válido se o status NÃO for "DR (Por Demanda)"
+                        if (diaDados && diaDados.status && diaDados.status !== 'DR (Por Demanda)') {
+                            // Calcula a data exata deste registro
+                            const inicioSemana = semanas[semanaIdx].inicio;
+                            const dataDoAtendimento = new Date(inicioSemana);
+                            dataDoAtendimento.setDate(inicioSemana.getDate() + diaIdx);
+
+                            // Verifica se o registro está dentro do período selecionado
+                            if (dataDoAtendimento >= startDate && dataDoAtendimento <= endDate) {
+                                const record = {
+                                    Data: getFormattedDate(dataDoAtendimento),
+                                    Motorista: motoristaNome,
+                                    Status: diaDados.status,
+                                    Cliente: diaDados.data?.cliente || '',
+                                    Veiculo: diaDados.data?.veiculo || '',
+                                    Cidade: diaDados.data?.cidade || '',
+                                    Observacao: diaDados.data?.observacao || ''
+                                };
+                                historyRecords.push(record);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        document.getElementById('loading').style.display = 'none';
+
+        if (historyRecords.length === 0) {
+            alert("Nenhum atendimento encontrado para o período selecionado.");
+            return;
+        }
+
+        // Ordena os registros por data antes de gerar o CSV
+        historyRecords.sort((a, b) => new Date(a.Data.split('/').reverse().join('-')) - new Date(b.Data.split('/').reverse().join('-')));
+        
+        generateAndDownloadCSV(historyRecords);
+
+    } catch (error) {
+        console.error("Erro ao gerar o histórico:", error);
+        alert("Ocorreu um erro ao gerar o histórico. Verifique o console para mais detalhes.");
+        document.getElementById('loading').style.display = 'none';
+    }
+}
+
+/**
+ * Função auxiliar que formata os dados e dispara o download do arquivo CSV.
+ */
+function generateAndDownloadCSV(records) {
+    const headers = ["Data", "Motorista", "Status", "Cliente", "Veiculo", "Cidade", "Observacao"];
+    
+    // Função para garantir que o texto com vírgulas ou aspas não quebre o CSV
+    const escapeCSV = (str) => {
+        if (str === null || str === undefined) return '';
+        let result = String(str).replace(/"/g, '""'); // Escapa aspas duplas
+        if (result.includes(',') || result.includes('"') || result.includes('\n')) {
+            result = `"${result}"`; // Envolve com aspas duplas
+        }
+        return result;
+    };
+
+    // Monta o conteúdo do CSV
+    let csvContent = headers.join(',') + '\r\n';
+    records.forEach(record => {
+        const row = headers.map(header => escapeCSV(record[header]));
+        csvContent += row.join(',') + '\r\n';
+    });
+
+    // Cria um "Blob" (Binary Large Object) e simula o clique em um link para baixar
+    const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' }); // \uFEFF para compatibilidade com Excel
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `historico_atendimentos_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Adicione esta linha para conectar o botão de download à função
+document.getElementById('download-csv-btn').addEventListener('click', exportHistoryToCSV);
+    
 });
