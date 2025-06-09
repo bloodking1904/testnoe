@@ -243,7 +243,7 @@ button.entrar-button:hover {
   align-items: center;
   overflow-y: auto; /* Adiciona barra de rolagem se a lista for grande */
 
-  z-index: 1000;
+  z-index: 999;
 }
 
 
