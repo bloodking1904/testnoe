@@ -550,6 +550,10 @@ function getFormattedDate(date) {
     return `${dia}/${mes}/${ano}`;
 }
 
+/**
+ * FUNÇÃO CORRIGIDA
+ * Mostra o calendário e desabilita as datas fora do período total de semanas.
+ */
 async function mostrarCalendario() {
     const calendar = document.getElementById('calendario');
     const calendarHeader = document.getElementById('header-data');
@@ -561,6 +565,11 @@ async function mostrarCalendario() {
 
     const semanas = await getSemanas();
     if (currentWeekIndex < 0 || currentWeekIndex >= semanas.length) return;
+
+    // Determina o intervalo de datas válido (do início da semana 0 ao fim da última semana)
+    const dataInicioValida = semanas[0].inicio;
+    const dataFimValida = semanas[totalWeeks].fim; // totalWeeks é sua variável global
+
     const { inicio } = semanas[currentWeekIndex];
     calendarHeader.textContent = `De ${getFormattedDate(semanas[currentWeekIndex].inicio)} a ${getFormattedDate(semanas[currentWeekIndex].fim)}`;
     ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SAB', 'DOM'].forEach(d => weekdaysDiv.innerHTML += `<div>${d}</div>`);
@@ -573,22 +582,30 @@ async function mostrarCalendario() {
         dayElement.textContent = dataDia.getDate();
         dayElement.classList.add('calendar-day');
         dayElement.dataset.dayIndex = i;
-        if (diasSelecionados.includes(i)) {
-            dayElement.classList.add('selected');
-        }
-        dayElement.onclick = () => {
-            const weekKey = `semana_${currentWeekIndex}`;
-            if (!selecoesDeViagemMultiSemana[weekKey]) selecoesDeViagemMultiSemana[weekKey] = [];
-            const dayIdx = parseInt(dayElement.dataset.dayIndex);
-            const selectionIndex = selecoesDeViagemMultiSemana[weekKey].indexOf(dayIdx);
-            if (selectionIndex === -1) {
-                selecoesDeViagemMultiSemana[weekKey].push(dayIdx);
+
+        // --- LÓGICA DE VALIDAÇÃO DA DATA ---
+        if (dataDia < dataInicioValida || dataDia > dataFimValida) {
+            dayElement.classList.add('disabled'); // Adiciona a classe para desabilitar
+        } else {
+            // Adiciona o evento de clique apenas para dias válidos
+            if (diasSelecionados.includes(i)) {
                 dayElement.classList.add('selected');
-            } else {
-                selecoesDeViagemMultiSemana[weekKey].splice(selectionIndex, 1);
-                dayElement.classList.remove('selected');
             }
-        };
+            dayElement.onclick = () => {
+                const weekKey = `semana_${currentWeekIndex}`;
+                if (!selecoesDeViagemMultiSemana[weekKey]) selecoesDeViagemMultiSemana[weekKey] = [];
+                const dayIdx = parseInt(dayElement.dataset.dayIndex);
+                const selectionIndex = selecoesDeViagemMultiSemana[weekKey].indexOf(dayIdx);
+
+                if (selectionIndex === -1) {
+                    selecoesDeViagemMultiSemana[weekKey].push(dayIdx);
+                    dayElement.classList.add('selected');
+                } else {
+                    selecoesDeViagemMultiSemana[weekKey].splice(selectionIndex, 1);
+                    dayElement.classList.remove('selected');
+                }
+            };
+        }
         daysDiv.appendChild(dayElement);
     }
 }
@@ -610,9 +627,7 @@ window.fecharCalendario = fecharCalendario;
 // --- FUNÇÕES UTILITÁRIAS E DE INICIALIZAÇÃO ---
 
 function fecharSelecaoStatus() {
-    document.getElementById('status-selecao').style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-    fecharCalendario(); // Garante que o calendário feche junto
+    fecharPopup('status-selecao');
 }
 window.fecharSelecaoStatus = fecharSelecaoStatus;
 
@@ -687,6 +702,23 @@ window.confirmarResetarStatus = function () {
         resetarStatusTodosMotoristas();
     }
 };
+
+// --- FUNÇÕES DE CONTROLE DE POP-UP (NOVAS) ---
+function mostrarPopup(popupId) {
+    document.getElementById(popupId).style.display = 'flex';
+    document.getElementById('overlay').style.display = 'block';
+}
+window.mostrarPopup = mostrarPopup;
+
+function fecharPopup(popupId) {
+    document.getElementById(popupId).style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    // Se for o popup de status, também fecha o calendário
+    if (popupId === 'status-selecao') {
+        fecharCalendario();
+    }
+}
+window.fecharPopup = fecharPopup;
 
 async function resetarStatusTodosMotoristas() {
     // --- Referências aos elementos do Loader ---
