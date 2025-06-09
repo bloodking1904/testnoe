@@ -172,13 +172,87 @@ async function atualizarStatusFirestore(idMotorista, semana, dia, statusData) {
     try {
         console.log(`Atualizando status para motorista: ${idMotorista}, Semana: ${semana}, Dia: ${dia}`);
         const motoristaRef = doc(db, 'motoristas', idMotorista);
-        // A chave do objeto é construída dinamicamente para atualizar o dia correto na semana correta
         await setDoc(motoristaRef, {
             [`semana${semana}`]: { [dia]: statusData }
-        }, { merge: true }); // Merge: true é crucial para não sobrescrever outros dias da semana
+        }, { merge: true });
         console.log("Status atualizado com sucesso.");
     } catch (error) {
         console.error("Erro ao atualizar status:", error);
+    }
+}
+
+async function atualizarDadosDasSemanas() {
+    const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
+    for (const docSnapshot of motoristasSnapshot.docs) {
+        const motoristaRef = docSnapshot.ref;
+        const dados = await getDoc(motoristaRef);
+        const motoristaDados = dados.data();
+        for (let i = 0; i < 6; i++) {
+            const dadosSemanaSeguinte = motoristaDados[`semana${i + 1}`] || {
+                0: { status: 'DR (Por Demanda)', data: null }, 1: { status: 'DR (Por Demanda)', data: null },
+                2: { status: 'DR (Por Demanda)', data: null }, 3: { status: 'DR (Por Demanda)', data: null },
+                4: { status: 'DR (Por Demanda)', data: null }, 5: { status: 'DR (Por Demanda)', data: null },
+                6: { status: 'DR (Por Demanda)', data: null },
+            };
+            await setDoc(motoristaRef, { [`semana${i}`]: dadosSemanaSeguinte }, { merge: true });
+        }
+        await setDoc(motoristaRef, {
+            [`semana6`]: {
+                0: { status: 'DR (Por Demanda)', data: null }, 1: { status: 'DR (Por Demanda)', data: null },
+                2: { status: 'DR (Por Demanda)', data: null }, 3: { status: 'DR (Por Demanda)', data: null },
+                4: { status: 'DR (Por Demanda)', data: null }, 5: { status: 'DR (Por Demanda)', data: null },
+                6: { status: 'DR (Por Demanda)', data: null },
+            }
+        }, { merge: true });
+    }
+}
+
+async function obterDataAtual() {
+    const dataRef = doc(db, 'configuracoes', 'dataAtual');
+    const dataSnapshot = await getDoc(dataRef);
+    if (dataSnapshot.exists()) {
+        return dataSnapshot.data().data;
+    } else {
+        const dataAtual = new Date().toISOString();
+        await setDoc(dataRef, { data: dataAtual });
+        return dataAtual;
+    }
+}
+
+async function verificarSemanaPassada() {
+    const dataAtualFirestore = await obterDataAtual();
+    const dataAtual = new Date();
+    const dataFirestore = new Date(dataAtualFirestore);
+    console.log("Data do Firestore em date:", dataFirestore);
+
+    const ultimoDiaDaSemanaFirestore = new Date(dataFirestore);
+    const diaDaSemana = dataFirestore.getDay();
+    const diasParaAdicionar = (7 - diaDaSemana) % 7;
+    ultimoDiaDaSemanaFirestore.setDate(dataFirestore.getDate() + diasParaAdicionar);
+    console.log("Último dia da semana do Firestore:", ultimoDiaDaSemanaFirestore);
+
+    if (dataAtual > ultimoDiaDaSemanaFirestore) {
+        console.log("Uma nova semana passou.");
+        document.getElementById('loading').style.display = 'flex';
+        await atualizarDadosDasSemanas();
+        document.getElementById('loading').style.display = 'none';
+        await carregarMotoristas();
+        await verificarData();
+    } else {
+        console.log("Ainda está na mesma semana.");
+        await carregarMotoristas();
+        await verificarData();
+    }
+}
+
+async function verificarData() {
+    const dataAtualFirestore = await obterDataAtual();
+    const dataAtualLocal = new Date().toISOString().split('T')[0];
+    if (dataAtualFirestore.split('T')[0] !== dataAtualLocal) {
+        await setDoc(doc(db, 'configuracoes', 'dataAtual'), { data: new Date().toISOString() });
+        console.log("Data atualizada no Firestore.");
+    } else {
+        console.log("Data do Firestore está atual.");
     }
 }
 
@@ -356,8 +430,6 @@ function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     `;
 
     statusSelecao.innerHTML = cidadeInput;
-    document.getElementById('overlay').style.display = 'flex';
-    document.getElementById('status-selecao').style.display = 'flex';
 }
 window.adicionarVeiculo = adicionarVeiculo;
 
@@ -379,14 +451,13 @@ async function finalizarPeriodoViagem(motorista, cliente, veiculo) {
                 status: 'Em Viagem',
                 data: { cidade, observacao, cliente, veiculo }
             };
-            // Chama a nova função de atualização que aceita o índice da semana
             await atualizarStatusFirestore(motorista, semanaIdx, diaIndex, statusData);
         }
     }
     console.log("Viagem de múltiplos dias salva com sucesso.");
     document.getElementById('loading').style.display = 'none';
     fecharSelecaoStatus();
-    await carregarMotoristas(); // Atualiza a visualização
+    await carregarMotoristas();
 }
 window.finalizarPeriodoViagem = finalizarPeriodoViagem;
 
@@ -401,7 +472,7 @@ async function getSemanas() {
     const segunda = new Date(dataAtual);
     segunda.setDate(dataAtual.getDate() + offset);
     const inicioRef = new Date(segunda);
-    inicioRef.setDate(segunda.getDate() - 7 * 4); // Ajusta para o início do período (semana 4 é o centro)
+    inicioRef.setDate(segunda.getDate() - 7 * 4);
     for (let i = 0; i <= totalWeeks; i++) {
         const inicioSemana = new Date(inicioRef);
         inicioSemana.setDate(inicioRef.getDate() + (i * 7));
@@ -518,26 +589,36 @@ window.consultarObservacao = consultarObservacao;
 
 async function editarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
-    const dadosAnteriores = await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia].data);
+    const dadosAnteriores = await getDoc(motoristaRef).then(snapshot => snapshot.data()[`semana${currentWeekIndex}`][dia]);
     const data = {
-        ...dadosAnteriores,
+        ...dadosAnteriores.data,
         observacao: document.getElementById('observacao-editar').value,
         cidade: document.getElementById('cidade-editar').value,
         cliente: document.getElementById('cliente-editar').value,
         veiculo: document.getElementById('veiculo-editar').value,
     };
     await setDoc(motoristaRef, {
-        [`semana${currentWeekIndex}`]: { [dia]: { data: data } }
+        [`semana${currentWeekIndex}`]: { [dia]: { status: dadosAnteriores.status, data: data } }
     }, { merge: true });
     alert("Dados atualizados com sucesso!");
     fecharSelecaoStatus();
+    await carregarMotoristas();
 }
 window.editarObservacao = editarObservacao;
 
 function toggleConfirmButton() {
-    document.getElementById('confirmar-viagem').disabled = document.getElementById('cidade-destino').value.trim() === '';
+    const cidadeInput = document.getElementById('cidade-destino');
+    if (cidadeInput) {
+       document.getElementById('confirmar-viagem').disabled = cidadeInput.value.trim() === '';
+    }
 }
 window.toggleConfirmButton = toggleConfirmButton;
+
+window.logout = function () {
+    console.log("Logout do usuário:", loggedInUser);
+    localStorage.removeItem('loggedInUser');
+    window.location.href = 'login.html';
+};
 
 window.confirmarResetarStatus = function () {
     if (confirm("Tem certeza que deseja resetar o status de todos os motoristas?")) {
