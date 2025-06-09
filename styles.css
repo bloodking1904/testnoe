@@ -233,9 +233,9 @@ button.entrar-button:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%; /* Ocupa 90% da largura da tela */
+  width: 75%; /* Ocupa 90% da largura da tela */
   max-width: 800px; /* Mas no máximo 800px de largura */
-  max-height: 85vh; /* E no máximo 85% da altura da tela */
+  max-height: 60vh; /* E no máximo 85% da altura da tela */
   
   /* Comportamento do Conteúdo */
   display: none; /* O JavaScript vai controlar a exibição */
