@@ -393,6 +393,13 @@ body {
     color: white;
     border-color: #004085;
 }
+/* Estilo para dias desabilitados no calendário */
+.calendar-day.disabled {
+    background-color: #f8f9fa; /* Fundo cinza claro */
+    color: #ced4da; /* Cor do texto apagada */
+    cursor: not-allowed; /* Mostra um cursor de "proibido" */
+    text-decoration: line-through; /* Tacha o número */
+}
 
 #calendar-ok-button {
     display: block;
@@ -417,21 +424,15 @@ body {
 
 /* Estilos para a seção de exportação de CSV */
 .export-container {
-    position: fixed;           /* Fixa o elemento na tela */
-    top: 0;                    /* Alinha ao topo */
-    right: 0;                  /* Alinha à direita */
-    margin-top: 10px;          /* Espaço do topo (pode ser ajustado) */
-    padding: 8px;
-    background-color: rgba(0,0,0,0.2);
+    padding: 15px;
+    background-color: rgba(0,0,0,0.05);
+    border: 1px solid #ddd;
     border-radius: 8px;
     display: inline-flex;
-    flex-wrap: wrap;           /* Permite quebrar a linha em telas pequenas */
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px;
-    z-index: 1000;             /* Garante que fique acima de outros elementos */
-    transform: scale(0.75);      /* Reduz o tamanho total do elemento para 75% */
-    transform-origin: top right; /* Fixa o ponto de origem da escala no canto superior direito */
+    gap: 10px;
 }
 
 .export-container label {
