@@ -328,6 +328,7 @@ body {
     width: 50px;
     height: 50px;
     animation: spin 1s linear infinite;
+    z-index: 1000; /* Garante que fique acima de outros elementos */
 }
 
 /* Estilos para o Calendário Pop-up */
