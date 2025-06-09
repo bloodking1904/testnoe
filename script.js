@@ -644,31 +644,63 @@ function fecharTodosPopups() {
 window.fecharPopup = fecharTodosPopups;
 window.fecharSelecaoStatus = fecharTodosPopups;
 
+/**
+ * FUNÇÃO MODERNIZADA
+ * Exibe os detalhes da viagem em um formulário limpo e moderno dentro do pop-up.
+ */
 async function consultarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
     const motoristaSnapshot = await getDoc(motoristaRef);
+
     if (motoristaSnapshot.exists()) {
         const dados = motoristaSnapshot.data();
         const statusData = dados[`semana${currentWeekIndex}`]?.[dia]?.data || {};
-        const { observacao = "", cidade = "", cliente = "", veiculo = "" } = statusData;
-        const detalhesDiv = document.createElement('div');
-        detalhesDiv.innerHTML = `
-            <div>
-                <label style="font-size: 2em; font-weight: bold;">Observações:</label><br>
-                <textarea id="observacao-editar" rows="4" maxlength="700" style="width: 523px; height: 218px; font-size: 14px;">${observacao}</textarea><br><br>
-                <label style="font-size: 2em; font-weight: bold;">Cidade:</label><br>
-                <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade"><br><br>
-                <label style="font-size: 2em; font-weight: bold;">Cliente:</label><br>
-                <input type="text" id="cliente-editar" value="${cliente}" placeholder="Cliente"><br><br>
-                <label style="font-size: 2em; font-weight: bold;">Veículo:</label><br>
-                <input type="text" id="veiculo-editar" value="${veiculo}" placeholder="Veículo"><br><br>
-                <button id="editar-observacao" style="background-color: green; color: white; font-size: 2em; padding: 10px 20px;" onclick="editarObservacao('${idMotorista}', ${dia})">EDITAR</button>
+
+        // Captura os dados para preencher o formulário
+        const observacao = statusData.observacao || "";
+        const cidade = statusData.cidade || "";
+        const cliente = statusData.cliente || "";
+        const veiculo = statusData.veiculo || "";
+
+        // Nova estrutura HTML, mais limpa e sem estilos inline
+        const detalhesHtml = `
+            <div class="popup-form-container">
+                <h2 class="popup-title">Detalhes da Viagem</h2>
+
+                <div class="form-group">
+                    <label for="cidade-editar">Cidade</label>
+                    <input type="text" id="cidade-editar" value="${cidade}" placeholder="Cidade de destino">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cliente-editar">Cliente</label>
+                    <input type="text" id="cliente-editar" value="${cliente}" placeholder="Cliente atendido">
+                </div>
+                
+                <div class="form-group">
+                    <label for="veiculo-editar">Veículo</label>
+                    <input type="text" id="veiculo-editar" value="${veiculo}" placeholder="Veículo utilizado">
+                </div>
+
+                <div class="form-group">
+                    <label for="observacao-editar">Observações</label>
+                    <textarea id="observacao-editar" rows="4" placeholder="Digite as observações...">${observacao}</textarea>
+                </div>
+
+                <div class="popup-actions">
+                    <button class="popup-button secondary" onclick="fecharTodosPopups()">Cancelar</button>
+                    <button class="popup-button primary" onclick="editarObservacao('${idMotorista}', ${dia})">Salvar Alterações</button>
+                </div>
             </div>
         `;
-        document.getElementById('status-selecao').innerHTML = detalhesDiv.innerHTML;
-        document.getElementById('overlay').style.display = 'flex';
-        document.getElementById('status-selecao').style.display = 'flex';
+        
+        // Abre o pop-up e insere o novo formulário
+        const statusSelecao = document.getElementById('status-selecao');
+        statusSelecao.innerHTML = detalhesHtml;
+        mostrarPopup('status-selecao'); // Usa a função genérica para mostrar o pop-up
+
     } else {
+        console.error("Motorista não encontrado.");
         alert("Motorista não encontrado.");
     }
 }
