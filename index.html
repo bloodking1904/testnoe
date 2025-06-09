@@ -7,46 +7,44 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="https://bloodking1904.github.io/testnoe/icone.ico" type="image/x-icon">
-    
 </head>
 
 <body>
     <div class="header">
         <h1>Agenda dos Motoristas</h1>
-        <button id="seta-esquerda" class="sair-button">←</button> <!-- Seta esquerda -->
-        <button id="seta-direita" class="sair-button">→</button> <!-- Seta direita -->
-        <button onclick="logout()" class="sair-button">Sair</button>
-        <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
+
+        <div class="header-center-buttons">
+            <button id="seta-esquerda" class="sair-button">←</button>
+            <button id="seta-direita" class="sair-button">→</button>
+            <button onclick="logout()" class="sair-button">Sair</button>
+        </div>
+
+        <div class="header-right-buttons">
+            <button id="resetar-status" onclick="confirmarResetarStatus()" style="display: none;" class="resetar-status-button">Resetar Status</button>
+            <button id="historico-btn" onclick="mostrarPopup('historico-popup')" class="sair-button" style="background-color: #17a2b8;">Histórico</button>
+        </div>
     </div>
 
     <div id="loading" class="loading" style="display: none;">
-    <div class="loader"></div>
-    <p id="loading-message">Aguarde, atualizando status...</p>
-    <div class="progress-bar-container" style="width: 80%; max-width: 400px; background-color: #555; border-radius: 5px; margin-top: 15px;">
-        <div id="progress-bar" style="width: 0%; height: 22px; background-color: #28a745; border-radius: 5px; text-align: center; line-height: 22px; color: white; transition: width 0.3s ease;">
-            0%
+        <div class="loader"></div>
+        <p id="loading-message">Aguarde, atualizando status...</p>
+        <div class="progress-bar-container" style="width: 80%; max-width: 400px; background-color: #555; border-radius: 5px; margin-top: 15px;">
+            <div id="progress-bar" style="width: 0%; height: 22px; background-color: #28a745; border-radius: 5px; text-align: center; line-height: 22px; color: white; transition: width 0.3s ease;">
+                0%
+            </div>
         </div>
-    </div>
-    <p id="progress-status" style="margin-top: 10px; font-size: 0.9em;"></p>
+        <p id="progress-status" style="margin-top: 10px; font-size: 0.9em;"></p>
     </div>
 
-    <div class="export-container">
-    <label for="start-date">Histórico de:</label>
-    <input type="date" id="start-date">
-    <label for="end-date">Até:</label>
-    <input type="date" id="end-date">
-    <button id="download-csv-btn" class="sair-button" style="background-color: #17a2b8;">Baixar CSV</button>
-    </div>
-    
     <div id="calendario" class="calendar" style="display: none;">
-    <div id="calendarHeader" class="calendar-header">
-        <button id="seta-esquerda-calendario" onclick="navegarSemana(-1)">←</button>
-        <span id="header-data"></span>
-        <button id="seta-direita-calendario" onclick="navegarSemana(1)">→</button>
-    </div>
-    <div id="calendarWeekdays" class="calendar-days"></div>
-    <div id="calendarDays" class="calendar-days"></div>
-    <button id="calendar-ok-button" onclick="fecharCalendario()">OK</button>
+        <div id="calendarHeader" class="calendar-header">
+            <button id="seta-esquerda-calendario" onclick="navegarSemana(-1)">←</button>
+            <span id="header-data"></span>
+            <button id="seta-direita-calendario" onclick="navegarSemana(1)">→</button>
+        </div>
+        <div id="calendarWeekdays" class="calendar-days"></div>
+        <div id="calendarDays" class="calendar-days"></div>
+        <button id="calendar-ok-button" onclick="fecharCalendario()">OK</button>
     </div>
 
     <div class="tabela" id="tabela-motoristas">
@@ -61,15 +59,27 @@
         </div>
     </div>
 
-    <div class="motoristas-container">
-        <!-- Os motoristas serão preenchidos aqui dinamicamente através do JavaScript -->
+    <div id="overlay" class="overlay" style="display:none;"></div>
+
+    <div id="status-selecao" class="selecao-status" style="display:none;">
+        <button onclick="fecharPopup('status-selecao')" class="entrar-button" style="margin-top: 20px;">Fechar</button>
     </div>
 
-    <div id="overlay" class="overlay" style="display:none;"></div>
-    <div id="status-selecao" class="selecao-status" style="display:none;">
-        <div id="status-selecao-opcoes"></div>
-        <button onclick="fecharSelecaoStatus()" class="entrar-button">Fechar</button>
+    <div id="historico-popup" class="selecao-status" style="display:none;">
+        <h2 style="margin-top:0; color: #333;">Exportar Histórico</h2>
+        <p style="margin: 0 0 15px 0; font-size: 14px; color: #555;">Selecione o período desejado para baixar o relatório.</p>
+        
+        <div class="export-container">
+            <label for="start-date">De:</label>
+            <input type="date" id="start-date">
+            <label for="end-date">Até:</label>
+            <input type="date" id="end-date">
+            <button id="download-csv-btn" class="sair-button">Baixar CSV</button>
+        </div>
+
+        <button onclick="fecharPopup('historico-popup')" class="entrar-button" style="margin-top: 20px; background-color: #6c757d;">Fechar</button>
     </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
@@ -92,7 +102,7 @@
     </script>
 
     <script>
-        // Função para verificar se o usuário logado é admin e exibir o botão "Limpar Cache"
+        // Função para verificar se o usuário logado é admin e exibir o botão "Resetar Status"
         document.addEventListener('DOMContentLoaded', function() {
             const loggedInUser = localStorage.getItem('loggedInUser');
             if (loggedInUser === 'admin') {
@@ -101,9 +111,6 @@
         });
     </script>
 
-
-
     <script type="module" src="script.js"></script>
 </body>
-
 </html>
