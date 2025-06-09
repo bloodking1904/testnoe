@@ -91,38 +91,76 @@ body {
     text-align: center; /* Centraliza o texto dentro do contêiner */
 }
 
-.login-container label {
-    width: 100%; /* Garante que os rótulos ocupem toda a largura */
-    text-align: left; /* Alinha o texto dos rótulos à esquerda */
-    margin-bottom: 10px; /* Espaço abaixo dos rótulos */
+/* Estilos do Container de Login */
+.login-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 350px; /* Um pouco maior */
+    margin: 120px auto 20px auto; /* Margem para o header e para o final */
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px; /* Bordas mais suaves */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra mais definida */
+    box-sizing: border-box;
+    text-align: center;
 }
 
-/* Estilos para os Campos de Entrada e Botão */
+.login-container label {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 8px; /* Ajuste */
+    font-weight: 600;
+    color: #495057;
+}
+
 .login-container input[type="text"],
 .login-container input[type="password"] {
-    width: calc(100% - 20px); /* Reduz a largura em 20px para adicionar padding */
-    padding: 10px;
-    margin: 10px 0; /* Margem entre os campos */
-    border: 1px solid #ccc; /* Borda leve */
-    border-radius: 5px; /* Bordas arredondadas */
-    box-sizing: border-box; /* Inclui padding e border na largura total */
+    width: 100%; /* Ocupa toda a largura, o padding interno controla o texto */
+    padding: 10px 12px;
+    margin-bottom: 15px; /* Aumenta espaço abaixo */
+    margin-top: 5px;
+    border: 1px solid #ced4da; /* Borda padrão Bootstrap */
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
 }
+.login-container input[type="text"]:focus,
+.login-container input[type="password"]:focus {
+    border-color: #80bdff;
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 
 .login-container button.entrar-button {
-    background-color: blue; /* Cor do botão */
-    color: white; /* Cor do texto do botão */
-    border: none; /* Remove a borda padrão */
-    border-radius: 5px; /* Bordas arredondadas */
-    cursor: pointer; /* Cursor de pointer para indicar interatividade */
-    padding: 10px 20px; /* Padding interno do botão */
-    font-size: 16px; /* Tamanho do texto */
-    transition: background 0.3s; /* Transição suave para mudança de cor */
-    width: 100%; /* Ocupa toda a largura do contêiner */
+    background-color: #0056b3; /* Azul corporativo principal */
+    color: white;
+    border: 1px solid #0056b3; /* Adicionada borda da mesma cor para consistência */
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 20px; /* Padding bom para um botão principal */
+    font-size: 1em;  /* Usar 'em' para consistência, 16px é geralmente 1em */
+    font-weight: 600;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    width: 100%;
+    margin-top: 15px; /* Um pouco mais de espaço acima */
+    text-transform: uppercase;
+    letter-spacing: 0.75px; /* Espaçamento entre letras um pouco maior */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra sutil para dar profundidade */
 }
 
-button.entrar-button:hover {
-    background-color: darkblue; /* Cor do botão ao passar o mouse */
+.login-container button.entrar-button:hover,
+.login-container button.entrar-button:focus {
+    background-color: #004085; /* Azul mais escuro */
+    border-color: #00376e;   /* Borda um pouco mais escura que o hover */
+    color: white;
+    outline: none; /* Remove o outline padrão do navegador no foco */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.35); /* Destaque de foco similar ao Bootstrap */
 }
+
 
 
 /* Estilos para a Tabela */
