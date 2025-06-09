@@ -444,7 +444,22 @@ async function finalizarPeriodoViagem(motorista, cliente, veiculo) {
     const cidade = document.getElementById('cidade-destino-viagem').value;
     const observacao = document.getElementById('observacao-texto-viagem').value;
 
-    document.getElementById('loading').style.display = 'flex';
+    // --- Referências aos elementos do Loader ---
+    const loadingDiv = document.getElementById('loading');
+    const loadingMessage = document.getElementById('loading-message');
+    const progressBar = document.getElementById('progress-bar');
+    const progressStatus = document.getElementById('progress-status');
+    
+    // --- Prepara e exibe o Loader ---
+    loadingMessage.textContent = "Salvando viagem...";
+    progressBar.style.width = '0%';
+    progressBar.textContent = '0%';
+    progressStatus.textContent = '';
+    loadingDiv.style.display = 'flex';
+
+    // --- Lógica de Progresso ---
+    let totalOperacoes = Object.values(selecoesDeViagemMultiSemana).reduce((acc, curr) => acc + curr.length, 0);
+    let operacoesConcluidas = 0;
 
     for (const semanaKey in selecoesDeViagemMultiSemana) {
         const semanaIdx = parseInt(semanaKey.split('_')[1]);
@@ -454,12 +469,25 @@ async function finalizarPeriodoViagem(motorista, cliente, veiculo) {
                 data: { cidade, observacao, cliente, veiculo }
             };
             await atualizarStatusFirestore(motorista, semanaIdx, diaIndex, statusData);
+            
+            // --- Atualiza o progresso a cada dia salvo ---
+            operacoesConcluidas++;
+            const percentual = Math.round((operacoesConcluidas / totalOperacoes) * 100);
+            progressBar.style.width = percentual + '%';
+            progressBar.textContent = percentual + '%';
+            progressStatus.textContent = `Processando dia ${operacoesConcluidas} de ${totalOperacoes}...`;
         }
     }
+    
     console.log("Viagem de múltiplos dias salva com sucesso.");
-    document.getElementById('loading').style.display = 'none';
-    fecharSelecaoStatus();
-    await carregarMotoristas();
+    loadingMessage.textContent = "Concluído!";
+    
+    // Aguarda um instante para o usuário ver a conclusão antes de fechar
+    setTimeout(async () => {
+        loadingDiv.style.display = 'none';
+        fecharSelecaoStatus();
+        await carregarMotoristas(); // Atualiza a visualização
+    }, 500);
 }
 window.finalizarPeriodoViagem = finalizarPeriodoViagem;
 
@@ -631,12 +659,29 @@ window.confirmarResetarStatus = function () {
 };
 
 async function resetarStatusTodosMotoristas() {
+    // --- Referências aos elementos do Loader ---
+    const loadingDiv = document.getElementById('loading');
+    const loadingMessage = document.getElementById('loading-message');
+    const progressBar = document.getElementById('progress-bar');
+    const progressStatus = document.getElementById('progress-status');
+
     try {
-        document.getElementById('loading').style.display = 'flex';
+        // --- Prepara e exibe o Loader ---
+        loadingMessage.textContent = "Resetando status...";
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
+        progressStatus.textContent = '';
+        loadingDiv.style.display = 'flex';
+        
         const motoristasSnapshot = await getDocs(collection(db, 'motoristas'));
-        const batch = writeBatch(db);
+        const totalMotoristas = motoristasSnapshot.docs.length;
+        let motoristasProcessados = 0;
+
         const statusReset = { status: 'DR (Por Demanda)', data: null };
-        motoristasSnapshot.docs.forEach(doc => {
+        
+        // Processa um motorista de cada vez para permitir a atualização da UI
+        for (const doc of motoristasSnapshot.docs) {
+            const batch = writeBatch(db);
             for (let semana = 0; semana <= totalWeeks; semana++) {
                 let semanaUpdate = {};
                 for (let dia = 0; dia < 7; dia++) {
@@ -644,15 +689,28 @@ async function resetarStatusTodosMotoristas() {
                 }
                 batch.set(doc.ref, { [`semana${semana}`]: semanaUpdate }, { merge: true });
             }
-        });
-        await batch.commit();
+            await batch.commit(); // Salva o lote para o motorista atual
+            
+            // --- Atualiza o progresso a cada motorista resetado ---
+            motoristasProcessados++;
+            const percentual = Math.round((motoristasProcessados / totalMotoristas) * 100);
+            progressBar.style.width = percentual + '%';
+            progressBar.textContent = percentual + '%';
+            progressStatus.textContent = `Resetando motorista ${motoristasProcessados} de ${totalMotoristas}...`;
+        }
+
         console.log("Status de todos os motoristas resetados com sucesso.");
+        loadingMessage.textContent = "Concluído!";
+
+        setTimeout(async () => {
+            loadingDiv.style.display = 'none';
+            await carregarMotoristas();
+        }, 500);
+
     } catch (error) {
         console.error("Erro ao resetar status:", error);
         alert("Ocorreu um erro ao resetar o status dos motoristas.");
-    } finally {
-        document.getElementById('loading').style.display = 'none';
-        await carregarMotoristas();
+        loadingDiv.style.display = 'none';
     }
 }
 window.resetarStatusTodosMotoristas = resetarStatusTodosMotoristas;
