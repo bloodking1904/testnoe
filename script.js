@@ -894,30 +894,40 @@ async function exportHistoryToCSV() {
 }
 
 /**
- * Função auxiliar que formata os dados e dispara o download do arquivo CSV.
+ * FUNÇÃO CORRIGIDA
+ * Gera os dados e dispara o download do arquivo CSV, usando PONTO E VÍRGULA (;)
+ * como separador para garantir a compatibilidade com o Excel no Brasil.
  */
 function generateAndDownloadCSV(records) {
     const headers = ["Data", "Motorista", "Status", "Cliente", "Veiculo", "Cidade", "Observacao"];
-    
-    // Função para garantir que o texto com vírgulas ou aspas não quebre o CSV
+    const DELIMITER = ';'; // <<< MUDANÇA PRINCIPAL: Usando ponto e vírgula
+
+    // Função para garantir que o texto com o delimitador não quebre o CSV
     const escapeCSV = (str) => {
         if (str === null || str === undefined) return '';
-        let result = String(str).replace(/"/g, '""'); // Escapa aspas duplas
-        if (result.includes(',') || result.includes('"') || result.includes('\n')) {
-            result = `"${result}"`; // Envolve com aspas duplas
+        
+        // Substitui aspas duplas por duas aspas duplas
+        let result = String(str).replace(/"/g, '""');
+        
+        // Se o texto contiver o delimitador, aspas ou quebra de linha, envolve com aspas
+        if (result.includes(DELIMITER) || result.includes('"') || result.includes('\n')) {
+            result = `"${result}"`;
         }
         return result;
     };
 
-    // Monta o conteúdo do CSV
-    let csvContent = headers.join(',') + '\r\n';
+    // Monta o cabeçalho do CSV
+    let csvContent = headers.join(DELIMITER) + '\r\n';
+
+    // Monta cada linha do CSV
     records.forEach(record => {
         const row = headers.map(header => escapeCSV(record[header]));
-        csvContent += row.join(',') + '\r\n';
+        csvContent += row.join(DELIMITER) + '\r\n';
     });
 
-    // Cria um "Blob" (Binary Large Object) e simula o clique em um link para baixar
-    const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' }); // \uFEFF para compatibilidade com Excel
+    // Cria um "Blob" (arquivo em memória) e simula o clique em um link para baixar
+    // O \uFEFF (BOM) ajuda o Excel a entender a codificação UTF-8 corretamente (para acentos)
+    const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement("a");
     const url = URL.createObjectURL(blob);
     link.setAttribute("href", url);
