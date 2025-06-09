@@ -449,6 +449,90 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
+
+/* ================================================= */
+/* === Estilos para o Formulário Pop-up Moderno === */
+/* ================================================= */
+
+.popup-form-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-title {
+    margin: 0 0 20px 0;
+    color: #333;
+    font-size: 22px;
+    text-align: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box; /* Garante que o padding não aumente a largura */
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.25);
+}
+
+.popup-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+    gap: 10px;
+}
+
+.popup-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.popup-button.primary {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+.popup-button.primary:hover {
+    background-color: #218838;
+}
+
+.popup-button.secondary {
+    background-color: #6c757d; /* Cinza */
+    color: white;
+}
+.popup-button.secondary:hover {
+    background-color: #5a6268;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
