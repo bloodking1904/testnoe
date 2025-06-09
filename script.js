@@ -626,11 +626,23 @@ window.fecharCalendario = fecharCalendario;
 
 // --- FUNÇÕES UTILITÁRIAS E DE INICIALIZAÇÃO ---
 
-function fecharSelecaoStatus() {
-    fecharPopup('status-selecao');
+/**
+ * NOVA FUNÇÃO UNIFICADA
+ * Fecha TODOS os pop-ups abertos (status, histórico) e o overlay.
+ * Também garante que o calendário seja fechado junto.
+ */
+function fecharTodosPopups() {
+    // Esconde todos os elementos de pop-up
+    document.getElementById('status-selecao').style.display = 'none';
+    document.getElementById('historico-popup').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
+    
+    // Chama a função para fechar o calendário, caso ele esteja aberto
+    fecharCalendario();
 }
-window.fecharSelecaoStatus = fecharSelecaoStatus;
-
+// Mantemos as chamadas antigas por compatibilidade, agora elas usam a nova função.
+window.fecharPopup = fecharTodosPopups;
+window.fecharSelecaoStatus = fecharTodosPopups;
 
 async function consultarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
@@ -710,15 +722,7 @@ function mostrarPopup(popupId) {
 }
 window.mostrarPopup = mostrarPopup;
 
-function fecharPopup(popupId) {
-    document.getElementById(popupId).style.display = 'none';
-    document.getElementById('overlay').style.display = 'none';
-    // Se for o popup de status, também fecha o calendário
-    if (popupId === 'status-selecao') {
-        fecharCalendario();
-    }
-}
-window.fecharPopup = fecharPopup;
+
 
 async function resetarStatusTodosMotoristas() {
     // --- Referências aos elementos do Loader ---
@@ -784,7 +788,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log("DOM totalmente carregado. Inicializando motoristas...");
     await verificarSemanaPassada();
 
-    document.getElementById('overlay').addEventListener('click', fecharSelecaoStatus);
+    document.getElementById('overlay').addEventListener('click', fecharTodosPopups);
 
     document.getElementById('seta-esquerda').addEventListener('click', () => {
         if (currentWeekIndex > 0) {
