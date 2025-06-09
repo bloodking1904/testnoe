@@ -219,6 +219,21 @@ async function obterDataAtual() {
     }
 }
 
+function toggleConfirmarViagemButton() {
+    const cidadeInput = document.getElementById('cidade-destino-viagem');
+    const confirmarButton = document.getElementById('confirmar-viagem-multi');
+
+    // A verificação `if (cidadeInput && confirmarButton)` garante que o código não quebre
+    // caso os elementos não estejam na tela.
+    if (cidadeInput && confirmarButton) {
+        // O botão será desabilitado se o campo da cidade, sem espaços, estiver vazio.
+        confirmarButton.disabled = cidadeInput.value.trim() === '';
+    }
+}
+// Adiciona a função à 'window' para que possa ser chamada pelo 'oninput' no HTML
+window.toggleConfirmarViagemButton = toggleConfirmarViagemButton;
+
+
 async function verificarSemanaPassada() {
     const dataAtualFirestore = await obterDataAtual();
     const dataAtual = new Date();
@@ -410,23 +425,38 @@ window.finalizarViagem = finalizarViagem;
 
 // --- PONTO DE MUDANÇA: NOVA LÓGICA DO CALENDÁRIO ---
 
-// MODIFICADA: Esta função agora abre o novo pop-up com a seleção de período.
+/**
+ * FUNÇÃO MODIFICADA
+ * Abre o pop-up com a seleção de período, agora com validação no campo da cidade.
+ */
 function adicionarVeiculo(nome, dia, linha, cliente, veiculo) {
     selecoesDeViagemMultiSemana = {}; // Reseta seleções anteriores
     const statusSelecao = document.getElementById('status-selecao');
 
-    // Cria a nova interface dentro do pop-up
+    // Cria a nova interface dentro do pop-up com as alterações de validação
     const cidadeInput = `
         <div class="cidade-input" style="text-align: left; width: 100%;">
             <label style="font-weight: bold; display: block; margin-bottom: 5px;">Cidade Destino:</label>
-            <input type="text" id="cidade-destino-viagem" placeholder="Ex: Dourados" style="width: 100%; box-sizing: border-box; padding: 8px; margin-bottom: 10px;">
+            <input 
+                type="text" 
+                id="cidade-destino-viagem" 
+                oninput="toggleConfirmarViagemButton()" 
+                placeholder="Ex: Dourados" 
+                style="width: 100%; box-sizing: border-box; padding: 8px; margin-bottom: 10px;"
+            >
 
             <label style="font-weight: bold; display: block; margin-bottom: 5px;">Observações:</label>
             <textarea id="observacao-texto-viagem" placeholder="Digite as observações..." rows="4" style="width: 100%; box-sizing: border-box; padding: 8px; margin-bottom: 15px;"></textarea>
 
             <div class="action-buttons-container" style="display: flex; justify-content: space-between; margin-top: 15px;">
                 <button class="sair-button" style="background-color: #007bff;" onclick="mostrarCalendario()">Selecionar Período</button>
-                <button class="sair-button" style="background-color: #28a745;" onclick="finalizarPeriodoViagem('${nome}', '${cliente}', '${veiculo}')">CONFIRMAR</button>
+                <button 
+                    id="confirmar-viagem-multi" 
+                    class="sair-button" 
+                    style="background-color: #28a745;" 
+                    onclick="finalizarPeriodoViagem('${nome}', '${cliente}', '${veiculo}')" 
+                    disabled
+                >CONFIRMAR</button>
             </div>
         </div>
     `;
