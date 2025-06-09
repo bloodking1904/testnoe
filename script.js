@@ -245,6 +245,8 @@ async function verificarSemanaPassada() {
     }
 }
 
+window.verificarSemanaPassada = verificarSemanaPassada;
+
 async function verificarData() {
     const dataAtualFirestore = await obterDataAtual();
     const dataAtualLocal = new Date().toISOString().split('T')[0];
@@ -586,6 +588,8 @@ async function consultarObservacao(idMotorista, dia) {
     }
 }
 window.consultarObservacao = consultarObservacao;
+
+
 
 async function editarObservacao(idMotorista, dia) {
     const motoristaRef = doc(db, 'motoristas', idMotorista);
