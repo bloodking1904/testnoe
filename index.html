@@ -24,6 +24,17 @@
         <p>Aguarde, atualizando status dos motoristas...</p>
     </div>
 
+    <div id="calendario" class="calendar" style="display: none;">
+    <div id="calendarHeader" class="calendar-header">
+        <button id="seta-esquerda-calendario" onclick="navegarSemana(-1)">←</button>
+        <span id="header-data"></span>
+        <button id="seta-direita-calendario" onclick="navegarSemana(1)">→</button>
+    </div>
+    <div id="calendarWeekdays" class="calendar-days"></div>
+    <div id="calendarDays" class="calendar-days"></div>
+    <button id="calendar-ok-button" onclick="fecharCalendario()">OK</button>
+    </div>
+
     <div class="tabela" id="tabela-motoristas">
         <div class="linha cabecalho">
             <div class="celula">DOMINGO</div>
