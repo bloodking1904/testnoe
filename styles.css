@@ -430,6 +430,8 @@ body {
     align-items: center;
     gap: 8px;
     z-index: 1000;             /* Garante que fique acima de outros elementos */
+    transform: scale(0.75);      /* Reduz o tamanho total do elemento para 75% */
+    transform-origin: top right; /* Fixa o ponto de origem da escala no canto superior direito */
 }
 
 .export-container label {
