@@ -417,15 +417,19 @@ body {
 
 /* Estilos para a seção de exportação de CSV */
 .export-container {
-    margin-top: 10px;
+    position: fixed;           /* Fixa o elemento na tela */
+    top: 0;                    /* Alinha ao topo */
+    right: 0;                  /* Alinha à direita */
+    margin-top: 10px;          /* Espaço do topo (pode ser ajustado) */
     padding: 8px;
     background-color: rgba(0,0,0,0.2);
     border-radius: 8px;
     display: inline-flex;
-    flex-wrap: wrap; /* Permite quebrar a linha em telas pequenas */
+    flex-wrap: wrap;           /* Permite quebrar a linha em telas pequenas */
     justify-content: center;
     align-items: center;
     gap: 8px;
+    z-index: 1000;             /* Garante que fique acima de outros elementos */
 }
 
 .export-container label {
