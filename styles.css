@@ -28,7 +28,7 @@ body {
     margin-bottom: 20px;
    /* box-sizing: border-box; /* Inclui padding e border na largura total */
     background-color: rgba(255, 255, 255, 0.8); /* Fundo levemente transparente para o cabeçalho */
-    z-index: 1000; /* Garante que o cabeçalho fique acima de outros elementos */
+    z-index: 998; /* Garante que o cabeçalho fique acima de outros elementos */
 }
 
 .header h1 {
