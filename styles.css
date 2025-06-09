@@ -415,6 +415,32 @@ body {
     border-radius: 5px;
 }
 
+/* Estilos para a seção de exportação de CSV */
+.export-container {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    display: inline-flex;
+    flex-wrap: wrap; /* Permite quebrar a linha em telas pequenas */
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.export-container label {
+    color: white;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.export-container input[type="date"] {
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-family: 'Arial', sans-serif;
+}
+
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
